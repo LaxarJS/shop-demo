@@ -1,0 +1,11 @@
+#!/bin/bash
+
+git merge --no-ff --no-edit master
+npm install
+./node_modules/.bin/grunt dist
+
+git add bower_components var
+
+echo
+echo "Updated shop_demo from master, installed bower_components and rebuilt static files"
+echo "Ready to commit!"
