@@ -1,0 +1,9 @@
+{
+   "id": "ORD001",
+   "details": {
+      "id": "001",
+      "name": "T-Shirt",
+      "htmlDescription": "A LaxarJS T-shirt with shining orange",
+      "price": 24.99
+   }
+}

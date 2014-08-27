@@ -1,0 +1,64 @@
+/**
+ * Copyright 2014
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+@charset "UTF-8";
+
+@import "variables_all";
+
+.shopping-cart-widget {
+
+   .app-col-1 { width: 60px; }
+   .app-col-3 { width: 85px; }
+   .app-col-4 { width: 55px; }
+   .app-col-5 { width: 20px; }
+
+   table {
+      table-layout: fixed;
+   }
+
+   .app-no-articles {
+      color: $brand-danger;
+      text-align: center;
+   }
+
+   h3.app-articles {
+      color: $brand-success;
+
+      i {
+         background-color: $brand-success;
+      }
+   }
+
+   table.app-articles {
+      border-color: $brand-success;
+
+      > thead > tr > th {
+         background-color: $brand-success;
+         color: white;
+      }
+
+      > tfoot > tr > td {
+         border-top-color: lighten( $brand-success, 30% );
+         background-color: lighten( $brand-success, 30% );
+         color: darken( $brand-success, 15% );
+      }
+   }
+
+   .app-increase-quantity {
+      text-align: right !important;
+   }
+
+   .app-increase-buttons {
+      padding: 0;
+      padding-top: 3px;
+      position: relative;
+
+      button {
+         float: left;
+         padding: 0;
+         line-height: 14px;
+      }
+   }
+}

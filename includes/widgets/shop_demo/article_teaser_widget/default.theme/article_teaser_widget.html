@@ -1,0 +1,29 @@
+<h3 data-ng-class="{ 'app-selection': resources.display.details.name }">
+   <i class='fa fa-search'></i> {{ features.display.headline }}
+</h3>
+<div class="app-teaser-wrapper"
+     data-ng-class="{ 'app-selection': resources.display.details.name }">
+
+   <h5 data-ng-class="{ 'app-no-selection': !resources.display.details.name }"
+      >{{ resources.display.details.name || features.display.noArticleLabel }}</h5>
+
+   <dl class="dl-horizontal">
+      <dt data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
+          data-ng-bind-html="features.display.htmlIdLabel"></dt>
+      <dd>{{ resources.display.details.id }}</dd>
+
+      <dt data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
+          data-ng-bind-html="features.display.htmlDescriptionLabel"></dt>
+      <dd data-ng-bind-html="resources.display.details.htmlDescription"></dd>
+
+      <dt data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
+          data-ng-bind-html="features.display.htmlPriceLabel" ></dt>
+      <dd>{{ resources.display.details.price | currency : "€ " }}</dd>
+   </dl>
+
+</div>
+<button class="btn btn-default btn-info pull-right"
+        type="button"
+        data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
+        data-ng-click="addToCart()"
+        data-ng-bind-html="features.button.htmlLabel"></button>

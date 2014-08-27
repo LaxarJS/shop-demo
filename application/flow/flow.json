@@ -1,0 +1,15 @@
+{
+   "places": {
+      "entry": {
+         "redirectTo": "shopDemo"
+      },
+
+      "shopDemo": {
+         "page":  "shop_demo"
+      },
+
+      "finishOrder": {
+         "page":  "finish_order"
+      }
+   }
+}

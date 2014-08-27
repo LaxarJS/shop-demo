@@ -1,0 +1,76 @@
+{
+   "name": "ArticleTeaserWidget",
+   "description": "The ArticleTeaserWidget displays the details of an article.",
+   "version": {
+      "spec": "0.1.0"
+   },
+
+   "integration": {
+      "type": "angular"
+   },
+
+   "compatibility": [ "json-patch" ],
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "required": [ "display" ],
+      "properties": {
+
+         "display": {
+            "type": "object",
+            "description": "The source with data of an article.",
+            "required": [ "resource" ],
+            "properties": {
+               "headline": {
+                  "type": "string",
+                  "description": "The title for the widget.",
+                  "default": "Details"
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "Name of the data resource resembling an article.",
+                  "format": "topic"
+               },
+               "htmlIdLabel": {
+                  "type": [ "string", "object" ],
+                  "description": "Label for the article id.",
+                  "default": "Art. ID"
+               },
+               "htmlDescriptionLabel": {
+                  "type": [ "string", "object" ],
+                  "description": "Label for the article description.",
+                  "default": "Description"
+               },
+               "htmlPriceLabel": {
+                  "type": [ "string", "object" ],
+                  "description": "Label for the article price.",
+                  "default": "Price"
+               },
+               "noArticleLabel": {
+                  "type": "string",
+                  "description": "Hint if no article is selected.",
+                  "default": "No article selected"
+               }
+            }
+         },
+
+         "button": {
+            "type": "object",
+            "description": "A button to add an article to cart.",
+            "required": [ "htmlLabel", "action" ],
+            "properties": {
+               "htmlLabel": {
+                  "type": "string",
+                  "description": "Label for the button to add article to cart."
+               },
+               "action": {
+                  "type": "string",
+                  "description": "Name of the action to request to add the selected article to cart",
+                  "format": "topic"
+               }
+            }
+         }
+      }
+   }
+}

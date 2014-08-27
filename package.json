@@ -1,0 +1,21 @@
+{
+   "name": "ShopDemo",
+   "version": "0.1.0",
+   "description": "A DemoApp to learn how LaxarJS works.",
+   "license": "MIT",
+   "scripts": {
+      "test": "grunt test --force",
+      "prepublish": "bower install",
+      "dist": "grunt dist",
+      "start": "grunt start"
+   },
+   "devDependencies": {
+      "grunt": "~0.4.4",
+      "grunt-cli": "~0.1.13",
+      "bower": "~1.3.2",
+      "grunt-contrib-compass": "~0.7.2",
+      "grunt-contrib-compress": "~0.7.0",
+      "grunt-contrib-watch": "~0.6.1",
+      "grunt-laxar": "~0.1"
+   }
+}

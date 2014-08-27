@@ -1,0 +1,59 @@
+/**
+ * Copyright 2014
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+
+.article-teaser-widget h5 {
+  background-color: #ddd;
+  padding: 11px 6px;
+  margin: 0 -6px 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.article-teaser-widget .dl-horizontal dt {
+  width: 100px;
+}
+
+.article-teaser-widget .dl-horizontal dd {
+  margin-left: 120px;
+}
+
+.article-teaser-widget dt ~ dt,
+.article-teaser-widget dd ~ dd {
+  margin-top: 1em;
+}
+
+.article-teaser-widget .app-no-selection {
+  color: #e8273b;
+}
+
+.article-teaser-widget h3.app-selection {
+  color: #5bc0de;
+}
+
+.article-teaser-widget h3.app-selection i {
+  background-color: #5bc0de;
+}
+
+.article-teaser-widget .app-teaser-wrapper {
+  border: 1px solid #ddd;
+  border-radius: 4px 4px 0 0;
+  padding: 0 6px;
+  margin-bottom: 20px;
+}
+
+.article-teaser-widget .app-teaser-wrapper.app-selection {
+  border-color: #5bc0de;
+}
+
+.article-teaser-widget .app-teaser-wrapper.app-selection h5 {
+  background-color: #5bc0de;
+  color: white;
+}
+
+.article-teaser-widget .btn-default.ax-disabled {
+  background-color: white;
+  border-color: #ccc;
+}

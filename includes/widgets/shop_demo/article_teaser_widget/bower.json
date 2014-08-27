@@ -1,0 +1,15 @@
+{
+   "name": "widgets.shop_demo.article_teaser_widget",
+   "version": "0.1.0",
+   "description": "The ArticleTeaserWidget displays the details of an article.",
+   "license": "MIT",
+   "dependencies": {
+      "laxar": "LaxarJS/laxar#^0.12.x",
+      "laxar_uikit": "LaxarJS/laxar_uikit#^0.12.x",
+      "laxar_patterns": "LaxarJS/laxar_patterns#^0.12.x"
+   },
+   "devDependencies": {
+      "es5-shim": "2.3.x",
+      "jasmine": "1.3.x"
+   }
+}

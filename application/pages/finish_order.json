@@ -1,0 +1,30 @@
+{
+   "layout": "application",
+
+   "areas": {
+      "content1a": [
+         {
+            "widget": "shop_demo/headline_widget",
+            "features": {
+               "intro": {
+                  "htmlText": "<div class='app-thanks'></div>"
+               }
+            }
+         }
+      ],
+      "content1b": [
+         {
+            "widget": "shop_demo/headline_widget",
+            "features": {
+               "headline": {
+                  "level": 1,
+                  "htmlText": "Thank you<br>for your order!"
+               },
+               "intro": {
+                  "htmlText": "We will send your stuff as soon as possible.<br>Forgotten something to buy? <a href='#/' title='Go back'><b>Go Back.</b></a>"
+               }
+            }
+         }
+      ]
+   }
+}

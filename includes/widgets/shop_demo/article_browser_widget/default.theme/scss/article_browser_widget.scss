@@ -1,0 +1,68 @@
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+@charset "UTF-8";
+
+@import "variables_all";
+
+.article-browser-widget {
+   position: relative;
+
+   .app-col-1 { width: 60px; }
+   .app-col-3 { width: 85px; }
+
+   tbody > tr.selected > td {
+      color: white;
+      font-weight: bold;
+      background: $brand-info;
+   }
+
+   .table-hover > tbody > tr:hover > td {
+      background-color: desaturate( lighten( $brand-info, 20% ), 10%);
+      color: saturate( darken( $brand-info, 30% ), 30%);
+      font-weight: bold;
+   }
+
+   .app-no-articles {
+      color: $brand-danger;
+      text-align: center;
+
+      &:hover {
+         td {
+            background-color: transparent !important;
+         }
+      }
+   }
+
+   h3.app-articles {
+      color: #737373;
+
+      i {
+         background-color: #737373;
+      }
+   }
+
+
+   table.app-articles {
+      border-color:  #737373;
+
+      > thead > tr > th {
+         color: white;
+         background-color: #737373;
+      }
+   }
+
+   .selectable {
+      cursor: pointer;
+   }
+
+   .clickable {
+      cursor: auto;
+   }
+
+   .price {
+      text-align: right !important;
+   }
+}

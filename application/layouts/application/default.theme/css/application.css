@@ -1,0 +1,140 @@
+@import url(http://fonts.googleapis.com/css?family=Exo+2:500,200);
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: url(../images/bg_header_shadow.png) no-repeat center 115px #e9ebed;
+}
+
+.application-layout header,
+.application-layout .app-content-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.application-layout header {
+  background: #FFF;
+  border-bottom: 1px solid #D3D3D3;
+  height: 115px;
+  top: 0;
+}
+
+.application-layout .app-content-wrapper {
+  top: 155px;
+}
+
+.application-layout .app-header,
+.application-layout .app-content,
+.application-layout .app-footer {
+  width: 1222px;
+  margin: 0 auto;
+  padding: 0 13px;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  position: relative;
+}
+
+.application-layout .app-header {
+  margin-top: 27px;
+  height: 60px;
+  line-height: 60px;
+}
+
+.application-layout .app-header .form-group {
+  margin-top: 15px;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.application-layout .app-header h1 {
+  margin: 0;
+  position: relative;
+  bottom: 2px;
+  float: right;
+  width: auto;
+  font-size: 55px;
+  font-family: "Exo 2", Arial, sans-serif;
+  font-weight: 500;
+  color: #737373;
+  line-height: 1;
+}
+
+.application-layout .app-header h1 span {
+  font-weight: 200;
+}
+
+.application-layout .app-content {
+  background-color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border: 1px solid #D3D3D3;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0 50px 0 0;
+}
+
+.application-layout h1 {
+  color: #8c8c8c;
+  font-family: 'Exo 2', Arial, sans-serif;
+  margin-top: 126px;
+}
+
+.application-layout h3 {
+  color: #ccc;
+  line-height: 50px;
+  height: 50px;
+  font-family: 'Exo 2', Arial, sans-serif;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.application-layout h3 i {
+  font-size: 30px;
+  background-color: #ccc;
+  color: white;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 50px;
+  text-align: center;
+  margin-right: 0.2em;
+}
+
+.application-layout .app-thanks {
+  margin-top: 40px;
+  margin-right: 20px;
+  margin-bottom: 40px;
+  height: 300px;
+  background: url("../images/pot_flower.png") no-repeat right;
+}
+
+.application-layout .app-footer {
+  margin-top: 20px;
+  text-shadow: 1px  1px 0px #fff;
+}
+
+.application-layout .app-footer,
+.application-layout .app-footer a {
+  color: #737373;
+}
+
+.application-layout .app-footer b {
+  color: #8a8a8a;
+}
+
+.application-layout .app-footer a {
+  border-bottom: 1px dotted #aaa;
+}
+
+.application-layout .app-footer a:hover b {
+  color: #2a6496;
+}
+
+.application-layout .app-version {
+  padding-left: 26px;
+  padding-right: 26px;
+}

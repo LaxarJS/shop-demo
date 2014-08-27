@@ -1,0 +1,69 @@
+/**
+ * Copyright 2014
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+
+.shopping-cart-widget .app-col-1 {
+  width: 60px;
+}
+
+.shopping-cart-widget .app-col-3 {
+  width: 85px;
+}
+
+.shopping-cart-widget .app-col-4 {
+  width: 55px;
+}
+
+.shopping-cart-widget .app-col-5 {
+  width: 20px;
+}
+
+.shopping-cart-widget table {
+  table-layout: fixed;
+}
+
+.shopping-cart-widget .app-no-articles {
+  color: #e8273b;
+  text-align: center;
+}
+
+.shopping-cart-widget h3.app-articles {
+  color: #5cb85c;
+}
+
+.shopping-cart-widget h3.app-articles i {
+  background-color: #5cb85c;
+}
+
+.shopping-cart-widget table.app-articles {
+  border-color: #5cb85c;
+}
+
+.shopping-cart-widget table.app-articles > thead > tr > th {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.shopping-cart-widget table.app-articles > tfoot > tr > td {
+  border-top-color: #c7e6c7;
+  background-color: #c7e6c7;
+  color: #3d8b3d;
+}
+
+.shopping-cart-widget .app-increase-quantity {
+  text-align: right !important;
+}
+
+.shopping-cart-widget .app-increase-buttons {
+  padding: 0;
+  padding-top: 3px;
+  position: relative;
+}
+
+.shopping-cart-widget .app-increase-buttons button {
+  float: left;
+  padding: 0;
+  line-height: 14px;
+}
