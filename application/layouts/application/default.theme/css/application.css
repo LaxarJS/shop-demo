@@ -23,7 +23,8 @@ body {
 }
 
 .application-layout header:before {
-  display: fixed;
+  content: "";
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
