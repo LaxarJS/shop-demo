@@ -1,0 +1,20 @@
+{
+  "name": "jquery_ui",
+  "version": "1.10.3",
+  "authors": [],
+  "license": "MIT",
+  "ignore": [
+    ".*",
+    "source"
+  ],
+  "homepage": "https://github.com/LaxarJS/jquery_ui",
+  "_release": "1.10.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.10.3",
+    "commit": "05162fe63cbb4760a73cee46117ae9243c7592ca"
+  },
+  "_source": "git://github.com/LaxarJS/jquery_ui.git",
+  "_target": "1.10.x",
+  "_originalSource": "LaxarJS/jquery_ui"
+}

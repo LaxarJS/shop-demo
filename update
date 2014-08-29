@@ -2,7 +2,7 @@
 
 git merge --no-ff --no-edit master
 npm install
-./node_modules/.bin/grunt dist
+npm run-script dist
 
 git add bower_components var
 

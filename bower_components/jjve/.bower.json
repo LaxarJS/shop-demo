@@ -1,0 +1,14 @@
+{
+  "name": "jjve",
+  "homepage": "https://github.com/alex3683/jjve",
+  "version": "0.2.1-plus-5-commits",
+  "_release": "0.2.1-plus-5-commits",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.2.1-plus-5-commits",
+    "commit": "a6f83f454fbc89654db040f00435e442f6bf4893"
+  },
+  "_source": "git://github.com/alex3683/jjve.git",
+  "_target": "0.2.1-plus-5-commits",
+  "_originalSource": "alex3683/jjve"
+}
