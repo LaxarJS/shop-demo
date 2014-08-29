@@ -161,6 +161,6 @@ module.exports = function( grunt ) {
    grunt.registerTask( 'optimize', [ 'widget_json_merger', 'css_merger', 'requirejs' ] );
    grunt.registerTask( 'test', [ 'server', 'widgets' ] );
    grunt.registerTask( 'default', [ 'build', 'test' ] );
-   grunt.registerTask( 'dist', [ 'build', 'optimize', 'compress' ] );
+   grunt.registerTask( 'dist', [ 'build', 'optimize' ] );
    grunt.registerTask( 'start', [ 'build', 'server', 'watch' ] );
 };
