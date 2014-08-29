@@ -108,7 +108,7 @@ var require = {
       'laxar-path-flow': '../application/flow/flow.json',
 
       // PouchDB:
-      'pouchdb': 'pouchdb/dist/pouchdb-nightly',
+      'pouchdb': '../includes/lib/pouchdb/pouchdb-modified',
 
       portal_angular_dependencies: '../var/static/portal_angular_dependencies'
    }
