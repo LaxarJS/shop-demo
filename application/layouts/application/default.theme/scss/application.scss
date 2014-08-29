@@ -28,10 +28,18 @@ body {
    }
 
    header {
-      background: #FFF;
-      border-bottom: 1px solid #D3D3D3;
       height: $app-header-height;
       top: 0;
+
+      &:before {
+         display: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         height: $app-header-height;
+         background: #fff;
+         border-bottom: 1px solid #D3D3D3;
+      }
    }
 
    .app-content-wrapper {

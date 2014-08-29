@@ -18,10 +18,18 @@ body {
 }
 
 .application-layout header {
-  background: #FFF;
-  border-bottom: 1px solid #D3D3D3;
   height: 115px;
   top: 0;
+}
+
+.application-layout header:before {
+  display: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 115px;
+  background: #fff;
+  border-bottom: 1px solid #D3D3D3;
 }
 
 .application-layout .app-content-wrapper {
