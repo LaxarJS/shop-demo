@@ -33,7 +33,7 @@ body {
 
       &:before {
          content: "";
-         position: fixed;
+         position: absolute;
          top: 0;
          left: 0;
          right: 0;
@@ -54,9 +54,12 @@ body {
    }
 
    .app-header {
-      margin-top: $app-laxarjs-logo-offset;
       height: $app-laxarjs-logo-height;
       line-height: $app-laxarjs-logo-height;
+      background: white;
+      border-bottom: 1px solid #D3D3D3;
+      padding-top: $app-laxarjs-logo-offset;
+      padding-bottom: $app-laxarjs-logo-offset;
 
       .form-group {
          margin-top: 15px;

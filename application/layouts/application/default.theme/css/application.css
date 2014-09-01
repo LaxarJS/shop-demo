@@ -24,7 +24,7 @@ body {
 
 .application-layout header:before {
   content: "";
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -49,9 +49,12 @@ body {
 }
 
 .application-layout .app-header {
-  margin-top: 27px;
   height: 60px;
   line-height: 60px;
+  background: white;
+  border-bottom: 1px solid #D3D3D3;
+  padding-top: 27px;
+  padding-bottom: 27px;
 }
 
 .application-layout .app-header .form-group {
