@@ -33,17 +33,17 @@
                   "format": "topic"
                },
                "htmlIdLabel": {
-                  "type": [ "string", "object" ],
+                  "type": "string",
                   "description": "Label for the article id.",
                   "default": "Art. ID"
                },
                "htmlDescriptionLabel": {
-                  "type": [ "string", "object" ],
+                  "type": "string",
                   "description": "Label for the article description.",
                   "default": "Description"
                },
                "htmlPriceLabel": {
-                  "type": [ "string", "object" ],
+                  "type": "string",
                   "description": "Label for the article price.",
                   "default": "Price"
                },
