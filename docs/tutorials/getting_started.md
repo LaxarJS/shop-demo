@@ -1,5 +1,5 @@
 # Getting Started
-This tutorial is about how to use LaxarJS to create a large web app. Step by step the tutorial introduces into the techniques to create widgets and activities and how to use them in an application.
+This tutorial is about how to use LaxarJS to create a large web app. The tutorial provides for a step by step introduction into the techniques to create widgets and activities and how to use them in an application.
 
 ## Get the Prerequisites
 
@@ -17,7 +17,7 @@ mkdir shop_demo
 cd shop_demo
 grunt-init laxar-application
 ```
-The script is asking some details about the application and has suggestions to them. If there isn't a service running on localhost on port 8000 we can just accept the suggested questions. Otherwise we have to change the port and notice it for further steps.
+The script is asking some details about the application and gives suggestions for possible answers to these questions. If there isn't a service running on localhost on port 8000 we can just accept the suggested answers. Otherwise we have to change the port and write it down for further steps.
 
 ```
 Please answer the following:
