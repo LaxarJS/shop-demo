@@ -1,5 +1,5 @@
 # Conform Base Files to the ShopDemo Application
-At the moment we have a simple application with default files, layout and theme. In this step we change them to have a consistently application and a nicer appearance of the pages. To explain the creation of a layout and theme it goes beyond the scope of the tutorial. We will get the layout and theme from the finished ShopDemo.
+At this moment, after concluding the initial two steps, we have a simple application with default files, layout and theme. In this step we change them to achieve a consistent application and a nicer appearance of the pages. It would go beyond the scope of this tutorial to explain the creation of a layout and theme. We will therefore just obtain the layout and theme from the existing ShopDemo.
 
 ## Pages
 We rename application/pages/page1.json to application/pages/shop_demo.json and application/pages/page2.json to application/pages/finish_order.json. 
@@ -60,7 +60,7 @@ Change the pages to include the new layout:
 
 Stop the server (Ctrl-C) and restart it with ```npm start```.
 
-The [current app](http://localhost:8000/debug.html) should be similar to this:
+The [current app](http://localhost:8000/debug.html) should look similar to this:
 
 ![screenshot of current state](img/screenshot_step3.png)
 
