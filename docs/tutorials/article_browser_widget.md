@@ -1,7 +1,7 @@
 # ArticleBrowserWidget and ArticleSearchBoxWidget
-At the moment the ShopDemo only displays a headline. It has no user interaction. To change this we extend the ArticleBrowserWidget to display a list of articles and allow to select one. The selected article will be shown by the ArticleTeaserWidget which we will implement in next chapter. The ArticleBrowserWidget gets the list with the articles from the ArticleSearchBoxWidget.
+By this time the ShopDemo only displays a headline. It provides no functionalities for user interaction. To change this we extend the ArticleBrowserWidget to display a list of articles and allow to selecting one. The selected article will be shown by the ArticleTeaserWidget which we will implement in next chapter. The ArticleBrowserWidget gets the list with the articles from the ArticleSearchBoxWidget.
 
-## Integration in the Application
+## Integration into the Application
 ![Step 1](img/step1.png)
 
 ## Appearance
@@ -24,7 +24,7 @@ We open the spec test runner of the ArticleBrowserWidget:
 
 We should see the Jasmine interface with one passing test "A ArticleBrowserWidget still needs some tests".
 
-In preparation for the tests copy the first 50 Lines from the final ShopDemo to the spec js file:
+In preparation for the tests copy the first 50 lines from the final ShopDemo to the spec js file:
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js:](../../includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js)
 
 Change the object ```configuration``` (line 21):
@@ -38,7 +38,7 @@ var configuration = {
 
 The first requirement to the widget is that it is possible to configure a data resource. We assume that this resource will be published by another widget or activity on the EventBus. The resource will have information about a list of articles. 
 
-Implement a test for the communication of the widget. The widget should act as slave for the configured **display** resource. Therefore it has to subscribes to ```didReplace``` and ```didUpdate``` events of the resource.  
+Implement a test for the communication of the widget. The widget should act as slave for the configured **display** resource. Therefore it has to subscribe to ```didReplace``` and ```didUpdate``` events of the resource.  
 
 Create a jasmine describe block with a ```beforeEach``` and an ```it``` block. We add two expectations to the it function.
 
@@ -74,7 +74,7 @@ Put the data for testing in a separate file. To test the ArticleBrowserWidget we
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/spec_data.json](../../includes/widgets/shop_demo/article_browser_widget/spec/spec_data.json)
 
 
-To test whether the widget reflects updates of the resource we add another describe block inside the other one:
+To test whether the widget reflects updates of the resource we add another describe block inside the previous one:
 
 ```javascript
  describe( 'and an update of the articles resource', function() {
@@ -105,7 +105,7 @@ The ```beforeEach``` function publishes an update for the article list and the f
 Add the missing right parenthesis and open the spec test runner of the ArticleBrowserWidget:
 [http://localhost:8000/includes/widgets/shop_demo/article_browser_widget/spec/spec_runner.html](http://localhost:8000/includes/widgets/shop_demo/article_browser_widget/spec/spec_runner.html)
 
-Both tests are failing by now.
+Both tests should be failing by now.
 
 #### Implement Feature Display
 We have to define the feature in the widget.json, implement the controller and the HTML template.
@@ -117,7 +117,7 @@ We expand the definition of the feature **display** with a property ```resource`
 We add the string ```"display"``` to the required array of the features object. Thereby we ensure that when the widget is used on a page the display feature is configured or the validator will report the missing property inside the configuration.
   
   
-The implementation of the controller for the feature display is simple. We can use the function ```patterns.resource.handlerFor( $scope ).registerResourceFromFeature( 'display' )``` from LaxarJS patterns library. It handles update events and replace events for the configured resource ```features.display.resource```. It stores the data of the resource either in the object ```$scope.model``` or if it exist in the object ```$scope.resources```. In the ArticleBrowserWidget the data is in the object ```$scope.resources.display```.
+The implementation of the controller for the feature display is simple. We can use the function ```patterns.resource.handlerFor( $scope ).registerResourceFromFeature( 'display' )``` from LaxarJS patterns library. It handles update events and replace events for the configured resource ```features.display.resource```. It stores the data of the resource either in the object ```$scope.model``` or if it exists in the object ```$scope.resources```. In the ArticleBrowserWidget the data is in the object ```$scope.resources.display```.
 
 We add ```laxar_patterns``` to the define block and add a handler for the resource to the controller function:
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/article_browser_widget.js:](../../includes/widgets/shop_demo/article_browser_widget/article_browser_widget.js)
@@ -147,7 +147,7 @@ define( [
 
 The spec tests should be passing now.
 
-We can configure the resource **display** for the widget when adding it to the application and it subscribes to the relevant events. But so far the widget does only displays a headline and not any articles. We have to extend the HTML template and the widget.json.
+We can configure the resource **display** for the widget when adding it to the application so that it subscribes to the relevant events. But so far the widget does only display a headline and no articles. We have to extend the HTML template and the widget.json.
 
 We add three properties for the table header to the object ```display``` in the widget.json.
 
@@ -265,12 +265,12 @@ The ArticleBrowserWidget lists 11 articles now and there is a search box at the 
 
 
 ### Let User Select an Article
-The second feature **select** is for the possibility to select an article from the list which will be publish on the EventBus. In our application the ArticleTeaserWidget and the ShoppingCartWidget will listen to this resource.
+The second feature **select** is for the possibility to select an article from the list which will be published on the EventBus. In our application the ArticleTeaserWidget and the ShoppingCartWidget will listen to this resource.
 
-We need to test if the widget publishes the selected resource when a user selects an article. We implement a UI Test and simulate an user click on a table row with an article. 
+We need to test if the widget publishes the selected resource when a user selects an article. We implement a UI Test and simulate a user click on a table row with an article. 
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js:](../../includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js#L104)
 
-We expect that the widget recognizes the click and publishes the correspondent article as selected article.
+We expect that the widget recognizes the click and publishes the corresponding article as selected article.
 To fix the failing test we have to implement the feature in our controller, template and the widget.json.  
 
 Add the property ```select``` to the object ```features```. The feature **select** has a property ```resource``` which is required and has the type string. The format ```topic``` defines the allowed characters.
@@ -352,7 +352,7 @@ We add some test to proof the behavior of the widget.
 
 With the test starting from line 134 we proof whether the widget resets the selected article if the article list changes and the selected article isn't in this new or updated list. There are four different cases with data for replacing the resource.  
 
-In sum we have five failing tests now. To get them passing we add the function ```checkArticles```. It uses the laxar.object.path function to check if there is an array ```$scope.resources.display.entries``` and returns it or if it not exists it returns the third parameter in our case an empty array.
+In sum we have five failing tests now. To get them passing we add the function ```checkArticles```. It uses the laxar.object.path function to check if there is an array ```$scope.resources.display.entries``` and returns it or if it doesn't exist it returns the third parameter which in our case is an empty array.
 
 ```javascript
 var entries = ax.object.path( $scope.resources, 'display.entries', [] );
