@@ -3,7 +3,7 @@ This step is about the LaxarJS widgets and how we can use them in our applicatio
 
 ## What is a Widget?
 A LaxarJS application consists of pages which embed several small artifacts like widgets and activities.
-A widget is a small artifact which is responsible for a part of the view and user interaction of an application. The communication with the server is often done by the activities. The different between the widgets and the activities is that an activity doesn't have DOM elements. An activity could run on the server whereas a widget needs the client. Every widget and activity is an encapsulated artifact. They communicate with each other via the EventBus.  
+A widget is a small artifact which is responsible for a part of the view and user interaction of an application. The communication with the server is often done by the activities. The difference between the widgets and the activities is that an activity doesn't include DOM elements. An activity could run on the server whereas a widget needs the client. Every widget and activity is an encapsulated artifact. They communicate with each other via the EventBus.  
 
 ## Develop a Simple LaxarJS Widget
 
@@ -14,7 +14,7 @@ mkdir -p includes/widgets/shop_demo/article_browser_widget
 cd includes/widgets/shop_demo/article_browser_widget
 grunt-init laxar-widget
 ```
-The script will ask some details about the widget and makes suggestions. We change the description and some of the other default answers like the licenses. This information is automatically stored in the files widget.json and bower.json.
+The script will ask some details about the widget and make suggestions. We change the description and some of the other default answers such as the licenses. This information is automatically stored in the files widget.json and bower.json.
 
 ```
 Please answer the following:
@@ -31,7 +31,7 @@ Please answer the following:
 [?] Do you need to make any changes to the above before continuing? (y/N) 
 ```
 
-The ArticleBrowserWidget exists of a bunch of files now. The important files for the beginning development are named after the widget name:
+The ArticleBrowserWidget exists for a bunch of files now. The important files for the basic development are named after the widget name:
 
 * default.theme/article_browser_widget.html
 * default.theme/scss/article_browser_widget.scss
@@ -51,7 +51,7 @@ The other files rarely or never edited:
 * spec/spec_runner.js
 
 ### Features
-For every widget we define his api in the widget.json. Therefor it has an object **features** with attributes to configure its appearance and its functionality when we add it to an application page. At first the ArticleBrowserWidget will only have the feature **display** with one property **headline**.
+For every widget we define his api in the widget.json. Therefore it has an object named **features** with attributes to configure its appearance and its functionality when we add it to an application page. At first, the ArticleBrowserWidget will only have the feature **display** with one property **headline**.
 
 **shop_demo/includes/widgets/shop_demo/article_browser_widget/widget.json:**
 ```json
@@ -90,7 +90,7 @@ For every widget we define his api in the widget.json. Therefor it has an object
 }
 ```
 
-In the widget.json we define the schema for the configuration of the widget when we embed it to a page. Each object which defines a parameter should have a description, can have a default value, can be required or optional and must have a type. The widget configuration in a page is validate by the LaxarJS JSON validator. A missing required property in the configuration of a page or a wrong value will end in an error message.  If the validation is successful an object ```features``` in the ```$scope``` of the widget is created. The object ```features``` contains all configured and defined objects regulated by their attributes. 
+In the widget.json we define the schema for the configuration of the widget when we embed it to a page. Each object which defines a parameter should have a description, can have a default value, can be required or optional and must have a type. The widget configuration in a page is validated by the LaxarJS JSON validator. A missing required property in the configuration of a page or a wrong value will result in an error message.  If the validation is successful, an object ```features``` in the ```$scope``` of the widget is created. The object ```features``` contains all configured and defined objects regulated by their attributes. 
 
 
 ### HTML Template
@@ -104,7 +104,7 @@ Next we create the HTML template. We can use the ```$scope.features.headline``` 
 ```
 
 
-With this two steps we completed the first simple version of the ArticleBrowserWidget and we can embed it to a page of the application.
+With these two steps we completed the first simple version of the ArticleBrowserWidget and we can embed it to a page of the application.
 
 **shop_demo/application/pages/page1.json:**
 ```json
