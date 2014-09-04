@@ -112,7 +112,7 @@ We have to define the feature in the widget.json, implement the controller and t
 
 We expand the definition of the feature **display** with a property ```resource``` as source for the article list and with properties for the labels for the table header in the view.
 
-[shop_demo/includes/widgets/shop_demo/article_browser_widget/article_browser_widget.json:](../../includes/widgets/shop_demo/article_browser_widget/article_browser_widget.json#L20)
+[shop_demo/includes/widgets/shop_demo/article_browser_widget/widget.json:](../../includes/widgets/shop_demo/article_browser_widget/widget.json#L20)
 
 We add the string ```"display"``` to the required array of the features object. Thereby we ensure that when the widget is used on a page the display feature is configured or the validator will report the missing property inside the configuration.
   
@@ -151,7 +151,7 @@ We can configure the resource **display** for the widget when adding it to the a
 
 We add three properties for the table header to the object ```display``` in the widget.json.
 
-[shop_demo/includes/widgets/shop_demo/article_browser_widget/article_browser_widget.json (Line 35-49)](../../includes/widgets/shop_demo/article_browser_widget/article_browser_widget.json#L35)
+[shop_demo/includes/widgets/shop_demo/article_browser_widget/widget.json (Line 35-49)](../../includes/widgets/shop_demo/article_browser_widget/widget.json#L35)
 
 For our application we have the pattern that the resource with the article data has to store them inside the property ```entries```. So we can proof inside the template whether there is a published resource and if it has articles or if the list has no items. We let the widget change his appearance in case there are articles or not.
 
