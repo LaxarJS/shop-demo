@@ -6,6 +6,8 @@ It consists of a small set of LaxarJS widgets implemented in AngularJS. Storage 
 
 * [Show the live demo](http://laxarjs.github.io/shop_demo/)
 
+* [Read the tutorial](docs/tutorials/getting_started.md)
+
 * [LaxarJS Homepage](http://laxarjs.org)
 
 * [LaxarJS on GitHub](https://github.com/LaxarJS/laxar)
