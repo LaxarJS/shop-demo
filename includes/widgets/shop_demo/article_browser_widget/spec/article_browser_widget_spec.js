@@ -53,7 +53,6 @@ define( [
 
          beforeEach( function() {
             setup( configuration );
-            testBed.eventBusMock.publish( 'beginLifecycleRequest' );
             testBed.eventBusMock.publish( 'didReplace.articles', {
                resource: 'articles',
                data: resourceData
@@ -105,13 +104,11 @@ define( [
 
          beforeEach( function() {
             setup( configuration );
-            testBed.eventBusMock.publish( 'beginLifecycleRequest' );
             testBed.eventBusMock.publish( 'didReplace.articles', {
                resource: 'articles',
                data: resourceData
             } );
             jasmine.Clock.tick( 0 );
-            testBed.scope.$digest();
 
             $( 'tr:last td:first' ).trigger( 'click' );
          } );

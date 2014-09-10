@@ -1,5 +1,9 @@
 # ArticleTeaserWidget
-The ArticleTeaserWidget has two tasks: Display the details of the selected article and let the user add the article to cart. Last chapter  we implemented the ArticleBrowserWidget which publishes the selected article as a resource on the EventBus. The ArticleTeaserWidget will listen to the events about this resource. It displays the details of the article and an *add ot cart* button. If the user presses the button the widget publishes a signal for the ShoppingCartWidget to add the selected article to cart.  
+The ArticleTeaserWidget has two tasks:
+Display the details of a selected article and let the user add this article to the shopping cart.
+In the last chapter we implemented the ArticleBrowserWidget which publishes a selected article as a resource on the EventBus, which is exactly the information the ArticleTeaserWidget will use to carry out its tasks.
+It then displays the details of the article published as selected and provides an *add to cart* button for it.
+Whenever the user presses the button the widget publishes a `takeActionRequest` event for the ShoppingCartWidget to add the selected article to the cart or increase the amount if it was already added.
 
 ## Integration in the Application
 ![Step 2](img/step2.png)  
@@ -8,48 +12,53 @@ The ArticleTeaserWidget has two tasks: Display the details of the selected artic
 ![ArticleTeaserWidget](img/article_teaser_widget.png)  
 
 ## Create the Base Files
-Like we did for the ArticleBrowserWidget we execute the the script ```laxar-widget``` to accelerate the process of developing.
-If still running we stop the server (Ctrl-C).
+Like we did for the ArticleBrowserWidget we execute `grunt-init` with the `laxar-widget` template to create a stub for the widget and accelerate the development process.
+If still running we stop the server (`Ctrl-C`).
 
-```
+```shell
 mkdir -p includes/widgets/shop_demo/article_teaser_widget
 cd includes/widgets/shop_demo/article_teaser_widget
 grunt-init laxar-widget
 ```
 
-We start the server with ```npm start``` again.
-```
+We start the server with `npm start` again.
+```shell
 cd -
 npm start
 ```
 
 ## Display Article
-The first requirement is that it is possible to configure a resource resembling an article. We assume that this resource will be published by another widget or activity on the EventBus. The resource will have information about an article. In our ShopDemo app it will be the article selected by the user.
+The first requirement is that it is possible to configure a resource resembling an article.
+We assume that this resource will be published by another widget or activity on the EventBus and that it will have information about an article.
+In our ShopDemo app it will be the article selected by the user.
 
-This feature with its tests and implementation is simular to the **display** feature of the ArticleBrowserWidget.
-
-Two test to proof the handling with the resource (subscribes for the events):
+The implementation of this feature doesn't differ much from the **display** feature of the ArticleBrowserWidget.
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/spec/article_teaser_widget_spec.js:](../../includes/widgets/shop_demo/article_teaser_widget/spec/article_teaser_widget_spec.js)
 
 We need some dummy data for the test and create a file like we did for the ArticleBrowserWidget:
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/spec/spec_data.json](../../includes/widgets/shop_demo/article_teaser_widget/spec/spec_data.json)
 
-We add the feature *display* to the widget.json:
+Next we add the feature `display` to the widget.json:
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/widget.json:](../../includes/widgets/shop_demo/article_teaser_widget/widget.json)
 
-For the first feature we add the headline and the division with the definition list:
+For this feature we already adjust the template by adding the headline and a definition list for the article details:
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/default.theme/article_teaser_widget.html](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/article_teaser_widget.html)
 
-We add a laxar-patterns resource handler to the controller:
+Again we use the resource handler defined in the LaxarJS Patterns library to listen for the relevant events of the resource:
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/article_teaser_widget.js](../../includes/widgets/shop_demo/article_teaser_widget/article_teaser_widget.js#L24)  
 
-For the style of the widget copy the [shop_demo/includes/widgets/shop_demo/article_teaser_widget/default.theme/css/article_teaser_widget.css](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/css/article_teaser_widget.css) and if you are interested in the sass file take a look [here](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/scss/article_teaser_widget.scss).
+If you don't want to style the widget yourself, you can simply copy the existing stylesheets from here: [shop_demo/includes/widgets/shop_demo/article_teaser_widget/default.theme/css/article_teaser_widget.css](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/css/article_teaser_widget.css).
+The sass files the css was generated from can be found [here](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/scss/article_teaser_widget.scss).
 
-## Add article to cart
-The second requirement is that the user can add the diplayed article to cart. For this feature we add a button which triggers a takeActionRequest event on the EventBus. The ArticleTeaserWidget doesn't add the article to the cart directly. It just triggers a configured action. In our application we name the action ```addArticle``` and the ShoppingCartWidget adds the article to cart when the takeActionRequest event is published. It is possible to use the ArticleTeaserWidget for an other application such as an article administration tool where the details of one article are shown and the button doesn't trigger to add it to cart but to delete it from the shop instead. Of course in this application there wouldn't be a ShoppingCartWidget but a kind of DeleteArticleActivity.
+## Add an Article to the Cart
+The second requirement is that the user can add the displayed article to the shopping cart.
+For this feature we add a button which triggers a `takeActionRequest` event on the EventBus to broadcast our intention.
+As the implementation of the cart is not part of this widget, the actual addition of the article to the items in the cart is also out of scope.
+The name of the action is configured in the `button` feature, where also the labeling of the button takes place.
+[shop_demo/includes/widgets/shop_demo/article_teaser_widget/widget.json](../../includes/widgets/shop_demo/article_teaser_widget/widget.json#L58)
 
 ### Test
-We need to test if the widget triggers the ```takeActionRequest.<action>``` when the user presses the button.
+We need to test if the widget triggers the `takeActionRequest.<action>` when the user presses the button.
 
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/spec/article_teaser_widget_spec.js:](../../includes/widgets/shop_demo/article_teaser_widget/spec/article_teaser_widget_spec.js#L106)
 ```javascript
@@ -75,7 +84,7 @@ describe( 'with feature button and user adds an article to cart', function() {
 } );
 ```
 
-Add the property ```button``` to the configuration in line 21.
+Add the property `button` to the configuration in line 21.
 ```javascript
 var configuration = {
    display: {
@@ -89,7 +98,9 @@ var configuration = {
 ```
 
 ### Implement the Feature
-To implement the feature **button** we have to do three things. First we add the function ```$scope.addToCart``` to the controller. Secondly we extend the HTML template with a button and bind the function ```$scope.addToCart```to its click event. Thirdly we have to edit the widget.json and add the ```button``` to the features object.
+To implement the feature **button** we add the function `$scope.addToCart` in the controller, that is responsible for triggering the configured `takeActionRequest` event.
+We then add a simple button to the HTML template, that triggers this function on click by using the according `ngClick` directive from AngularJS.
+
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/article_teaser_widget.js](../../includes/widgets/shop_demo/article_teaser_widget/article_teaser_widget.js#L26)  
 
 ```javascript
@@ -101,17 +112,12 @@ $scope.addToCart = function() {
 };
 ```
 
-We add the button element to our template:
 [shop_demo/includes/widgets/shop_demo/article_teaser_widget/default.theme/article_teaser_widget.html](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/article_teaser_widget.html#L25)
 
-We add the feature **button** to the widget.json:
-[shop_demo/includes/widgets/shop_demo/article_teaser_widget/widget.json](../../includes/widgets/shop_demo/article_teaser_widget/widget.json#L58)
-
-
 ## Add the Widget to Application
-We add the widget to the ```content1b``` section of our first page. We configure only the required features. For the labels we use the default values. For example the ```features.display.htmlPriceLabel``` has the value ```"Price"```. 
+We add the widget to the `content1b` area of our first page and configure only the required features that have no sufficient default value defined in the `widget.json`.
 
-**shop_demo/application/pages/shop_demo.json:**
+`shop_demo/application/pages/shop_demo.json:`
 ```json
 "content1b": [
    {
@@ -126,14 +132,16 @@ We add the widget to the ```content1b``` section of our first page. We configure
          }
       }
    }
-],
+]
 ```
 
-Stop the server and start it with ```npm start``` again.
+Stop the server and start it again with `npm start`.
 
 ## Next Step
-Our app has an *add to cart* button in the article details division now. When pressing it nothing visible happens. The [ShoppingCartWidget](shopping_cart_widget.md)  is missing.  
+Our app has an *add to cart* button in the article details section now.
+When pressing it nothing visible happens as the [ShoppingCartWidget](shopping_cart_widget.md) is still missing.
+Let's implement that one next.
 
 
-[<< ArticleBrowserWidget](article_browser_widget.md)   | ArticleTeaserWidget | [ShoppingCartWidget >>](shopping_cart_widget.md) 
+[<< ArticleBrowserWidget](article_browser_widget.md) | ArticleTeaserWidget | [ShoppingCartWidget >>](shopping_cart_widget.md)
 

@@ -1,14 +1,18 @@
 # Final Steps
-We add the OrderActivity and the HeadlineWidget to the application and edit the second page.
+The only tasks left to do are adding the OrderActivity and the HeadlineWidget to the application and adjust the second page to our needs.
 
 ## OrderActivity
-The OrderActivity listens to the order action request of the ShoppingCartWidget. When receiving it, the activity publishes the mandatory ```willTakeAction``` event and sends the order to the PouchDB back end. If the operation is successful it publishes a ```didTakeAction``` with the outcome ```SUCCESS``` and in other case with outcome ```ERROR```.
+The OrderActivity listens to the `takeActionRequest` event of the ShoppingCartWidget as intent to submit the order to some imaginary order system.
+In our example we simply put the order into our PouchDB backend.
+If this is successful the activity publishes a `didTakeAction` using the outcome `SUCCESS` and otherwise using outcome `ERROR`.
 
 
 ![Step 4](img/step4.png)
 
 
-If the order is successfully placed our application should navigate to the second page finish_order.json. To navigate to another page a widget or an activity has to publish the ```navigateRequest``` event. In the OrderActivity we let it publish the event with the target place we configured in the page and the flow.
+If the order is successfully placed, our application should navigate to the second page named `finish_order.json`.
+To achieve this the activity has to publish a `navigateRequest` event using a configured target that is navigated to.
+This target has to exist as a target for our active place in the flow.
 
 [shop_demo/includes/widgets/shop_demo/order_activity/order_activity.js:](../../includes/widgets/shop_demo/order_activity/order_activity.js#L42)
 ```javascript
@@ -18,12 +22,10 @@ $scope.eventBus.publish( 'navigateRequest.' + features.order.target, {
 } );
 ```
 
-The application/flow.json:
-```javascript
+Excerpt from `application/flow.json`:
+```json
 {
    "places": {
-```
-```
      "finishOrder": {
          "page":  "finish_order"
       }
@@ -31,7 +33,7 @@ The application/flow.json:
 }
 ```
 
-And the page where we configure the target.
+And the page where we configure the target:
 [shop_demo/application/pages/shop_demo.json:](../../application/pages/shop_demo.json#L5)
 ```json
 "activities": [
@@ -56,23 +58,25 @@ And the page where we configure the target.
 ```
 
 ## Second Page
-The second page is a simple one with a HeadLineWidget. Get the widget and create the page.
+The second page only uses and configures the already existing HeadlineWidget.
+Just fetch it from our github repository.
 
 [shop_demo/application/pages/finish_order.json](../../application/pages/finish_order.json)
 
 [shop_demo/includes/widgets/shop_demo/headline_widget](../../includes/widgets/shop_demo/headline_widget)
 
-Now we start the server with ```npm start``` again and visit it at [http://localhost:8000/debug.html](http://localhost:8000/debug.html). When placing a order we navigate to a second page.
+Now we start the server with `npm start` again and visit it at [http://localhost:8000/debug.html](http://localhost:8000/debug.html).
+When placing an order we now navigate to the second page we just created.
 
 ## Finish
-The application is completed now and we compile a optimized version:
-```
+The application is completed and we can compile an optimized version ready for deployment:
+```shell
 grunt dist
 ```
 
-Start the server with ```npm start``` and visit the [http://localhost:8000/index.html](http://localhost:8000/index.html).
+Start the server with `npm start` and visit the [http://localhost:8000/index.html](http://localhost:8000/index.html).
 
 ## Next Step
-Develop your own application!
+Go ahead and Develop your own application!
 
 [<< ShoppingCartWidget](shopping_cart_widget.md)  | Final steps  

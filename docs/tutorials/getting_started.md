@@ -1,9 +1,10 @@
 # Getting Started
-This tutorial is about how to use LaxarJS to create a large web app. The tutorial provides for a step by step introduction into the techniques to create widgets and activities and how to use them in an application.
+This tutorial is about how to use LaxarJS to create a large web app.
+The tutorial provides a step by step introduction into the techniques to create widgets and activities and how to use them in an application.
 
 ## Get the Prerequisites
 
-```
+```shell
 npm install -g grunt-cli grunt-init
 git clone https://github.com/LaxarJS/grunt-init-laxar-application.git ~/.grunt-init/laxar-application
 git clone https://github.com/LaxarJS/grunt-init-laxar-widget.git ~/.grunt-init/laxar-widget
@@ -12,12 +13,14 @@ git clone https://github.com/LaxarJS/grunt-init-laxar-widget.git ~/.grunt-init/l
 
 ## Create a LaxarJS Application from Our Template
 
-```
+```shell
 mkdir shop_demo
 cd shop_demo
 grunt-init laxar-application
 ```
-The script is asking some details about the application and gives suggestions for possible answers to these questions. If there isn't a service running on localhost on port 8000 we can just accept the suggested answers. Otherwise we have to change the port and write it down for further steps.
+The script will ask you some details about the application and gives suggestions for possible answers to these questions.
+If there isn't a service running on localhost on port 8000 we can just accept the suggested answers.
+Otherwise we have to change the port and write it down for further steps.
 
 ```
 Please answer the following:
@@ -33,21 +36,22 @@ Please answer the following:
 [?] Do you need to make any changes to the above before continuing? (y/N) 
 ```
 
-The script creates the application ShopDemo which has some dependencies. We fetch them with:
-```
+The script creates the application ShopDemo which has some dependencies.
+We fetch them with:
+```shell
 npm install
 ```
 
 Now we can start the application with:
-```
+```shell
 npm start
 ```
 
-We visit the empty application at [http://localhost:8000/debug.html](http://localhost:8000/debug.html)
+The empty application can now be seen at [http://localhost:8000/debug.html](http://localhost:8000/debug.html).
 
-We see an empty site with a page title "LaxarJS ShopDemo".  
+We see an empty site with the page title "LaxarJS ShopDemo".
 
-To stop the server we press Ctrl-C.
+To stop the server we press `Ctrl-C`.
 
 ## Next Step
 The next step is to create a simple widget and add it to our app to display ["Hello World!"](hello_world.md).  

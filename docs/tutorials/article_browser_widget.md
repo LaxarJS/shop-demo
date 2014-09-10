@@ -1,5 +1,7 @@
 # ArticleBrowserWidget and ArticleSearchBoxWidget
-By this time the ShopDemo only displays a headline. It provides no functionalities for user interaction. To change this we extend the ArticleBrowserWidget to display a list of articles and allow to selecting one. The selected article will be shown by the ArticleTeaserWidget which we will implement in next chapter. The ArticleBrowserWidget gets the list with the articles from the ArticleSearchBoxWidget.
+By this time the ShopDemo only displays a headline and allows no user interaction.
+To change this we extend the ArticleBrowserWidget to display a list of articles and allow the selection of one article.
+In our example application the selected article will be displayed in detail by the ArticleTeaserWidget and the list of articles is received from the ArticleSearchBoxWidget, which will both be introduced in later.
 
 ## Integration into the Application
 ![Step 1](img/step1.png)
@@ -8,27 +10,39 @@ By this time the ShopDemo only displays a headline. It provides no functionaliti
 ![ArticleBrowserWidget](img/article_browser_widget.png)
 
 ## Features of the ArticleBrowserWidget
-The widget has two features: **display** (a list of articles) and **select** (an article).  
+This widget has two features: **display** (a list of articles) and **select** (an article).
 
 ### Display a List of Articles
-The first feature **display** describes that the widget lists some articles. It will get the list from a resource via EventBus from another widget or an activity. First we write spec tests for this feature.
+The first feature **display** describes how the widget receives and lists the articles.
+It will eventually get the list in a `didReplace` event from another widget or activity with the name configured under the key `resource`.
+The complete contents of the file can be seen [here](../../includes/widgets/shop_demo/article_browser_widget/widget.json).
+For the following first part of tests and widget implementation only the lines 20 to 51 are relevant.
+The `resource` property is defined as a string using the `topic` format, which limits the set of allowed characters used to name it.
+For the scope of this demo application it is sufficient to know, that simple camel case strings with lowercase first character are totally valid.
+As we know that the widget would be useless without a list to render, we define the `resource` property as `required` in the specification of its parent object.
+
+All properties prefixed with `html` are labels that are allowed to use html tags for display purposes that we'll later bind to in the widget html template.
+Note that the `html` prefix is not mandatory but only a convention to easily determine whether a string may contain html markup or not.
+
+Now lets start by writing spec tests for the `display` feature.
 
 #### Write Spec Tests
-If not still running, we start the server with "npm start" in the root directory of the app.
-```
+If not still running, we start the server with `npm start` in the root directory of the app.
+```shell
 npm start
 ```
 
-We open the spec test runner of the ArticleBrowserWidget:
+We can then open the jasmine spec test runner of the ArticleBrowserWidget using the following url:
 [http://localhost:8000/includes/widgets/shop_demo/article_browser_widget/spec/spec_runner.html](http://localhost:8000/includes/widgets/shop_demo/article_browser_widget/spec/spec_runner.html)
 
-We should see the Jasmine interface with one passing test "A ArticleBrowserWidget still needs some tests".
+For now there will only be one passing test, namely "A ArticleBrowserWidget still needs some tests".
+Its obvious that this only represents a dummy tests and that it's our task to implement the real tests.
 
 In preparation for the tests copy the first 50 lines from the final ShopDemo to the spec js file:
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js:](../../includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js)
 
-Change the object ```configuration``` (line 21):
-``` javascript
+Change the object `configuration` (line 21) to only provide a value for the `resource` property of the `display` feature (we'll add the rest again later):
+```javascript
 var configuration = {
    display: {
       resource: 'articles'
@@ -36,11 +50,13 @@ var configuration = {
 };
 ```
 
-The first requirement to the widget is that it is possible to configure a data resource. We assume that this resource will be published by another widget or activity on the EventBus. The resource will have information about a list of articles. 
+The first requirement for the widget is that it is possible to configure a data resource.
+We assume that this resource will be published as a collection of articles by another widget or activity on the EventBus.
+Hence we implement a test for the expected communication of the widget.
+As the widget is only a consumer of the collection resource (we call this type of collaborator a **slave**), it has to subscribe to `didReplace` and `didUpdate` events of the resource.
 
-Implement a test for the communication of the widget. The widget should act as slave for the configured **display** resource. Therefore it has to subscribe to ```didReplace``` and ```didUpdate``` events of the resource.  
-
-Create a jasmine describe block with a ```beforeEach``` and an ```it``` block. We add two expectations to the it function.
+Create a jasmine describe block with a `beforeEach` and an `it` block.
+We add two expectations to the it function.
 
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js:](../../includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js#L66)
 ```javascript
@@ -48,28 +64,22 @@ expect( testBed.scope.eventBus.subscribe ).toHaveBeenCalledWith( 'didReplace.art
 expect( testBed.scope.eventBus.subscribe ).toHaveBeenCalledWith( 'didUpdate.articles', anyFunction );
 ```
 
-To test if the widget reflects the data of the events we add the expectation ``` expect( testBed.scope.resources.display ).toEqual( resourceData );```.  
-
-To proof the expectations we have to publish a resource with data in the ```beforeEach``` function:
+To test if the widget reflects the data of the events in its internal model we add the expectation `expect( testBed.scope.resources.display ).toEqual( resourceData );`.
+We exercise the test by publishing an exemplary resource in the `beforeEach` function and trigger asynchronous queue processing of the EventBus by ticking the jasmine clock mock:
 
 ```javascript
 testBed.eventBusMock.publish( 'didReplace.articles', {
    resource: 'articles',
    data: resourceData
 } );
+jasmine.Clock.tick( 0 );
 ```
-
-Widgets and activities have to wait for the event ```beginLifecycleRequest``` before publish events. This special event is send by the laxar portal at the moment when the controller from every widget and activity is initialized. In the tests we have to simulate this feature of the portal.
-
-We add ```testBed.eventBusMock.publish( 'beginLifecycleRequest' ); ``` before we publish a ```didReplace```.
-
-To ensure that the widget has received the event, we have to insert the line ```jasmine.clock.tick( 0 );``` after the resource is published.
-
-The ```beforeEach``` function invokes the setup function. With the previous steps it should be like this:
+Additionally the `beforeEach` block invokes a setup function encapsulating the setup of the LaxarJS widget testbed and configuration of the features we defined earlier.
+With the previous steps it should be like this:
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js:](../../includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js#L54)
 
-
-Put the data for testing in a separate file. To test the ArticleBrowserWidget we need a list of several articles.
+In order to keep the test file small and limited to the test cases, we put the exemplary data used in the tests into a separate file.
+For further testing the ArticleBrowserWidget we put a list of several articles into that file.
 
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/spec_data.json](../../includes/widgets/shop_demo/article_browser_widget/spec/spec_data.json)
 
@@ -77,7 +87,7 @@ Put the data for testing in a separate file. To test the ArticleBrowserWidget we
 To test whether the widget reflects updates of the resource we add another describe block inside the previous one:
 
 ```javascript
- describe( 'and an update of the articles resource', function() {
+         describe( 'and an update of the articles resource', function() {
 
             beforeEach( function() {
                testBed.eventBusMock.publish( 'didUpdate.articles', {
@@ -100,26 +110,19 @@ To test whether the widget reflects updates of the resource we add another descr
          } );
 ```
 
-The ```beforeEach``` function publishes an update for the article list and the function in the it block proofs whether the widget reflects this update to the resource object.
+The `beforeEach` function publishes an update for the article list and the function in the `it` block proofs whether the widget reflects this update in the widget's model.
+Note that within our application context we assume that the actual array with articles is located under the key `entries` within the resource.
+This is because we assume that in a real world scenario the resource is fetched from a RESTful service and thus needs to have more properties (like selflink) than the actual collection items.
 
-Add the missing right parenthesis and open the spec test runner of the ArticleBrowserWidget:
-[http://localhost:8000/includes/widgets/shop_demo/article_browser_widget/spec/spec_runner.html](http://localhost:8000/includes/widgets/shop_demo/article_browser_widget/spec/spec_runner.html)
-
-Both tests should be failing by now.
+Both tests should be failing as we didn't touch the implementation of the widget controller yet.
 
 #### Implement Feature Display
-We have to define the feature in the widget.json, implement the controller and the HTML template.
+The implementation of the controller for the feature display is simple.
+We can use the function `patterns.resource.handlerFor( $scope ).registerResourceFromFeature( 'display' )` from the LaxarJS Patterns library.
+It automatically handles replace and update events for the configured resource `features.display.resource` and updates the data of the resource either in the object `$scope.model` or if it exists in the object `$scope.resources`.
+As we defined `$scope.resources` property in the ArticleBrowserWidget, the data can be found in the object `$scope.resources.display`.
 
-We expand the definition of the feature **display** with a property ```resource``` as source for the article list and with properties for the labels for the table header in the view.
-
-[shop_demo/includes/widgets/shop_demo/article_browser_widget/widget.json:](../../includes/widgets/shop_demo/article_browser_widget/widget.json#L20)
-
-We add the string ```"display"``` to the required array of the features object. Thereby we ensure that when the widget is used on a page the display feature is configured or the validator will report the missing property inside the configuration.
-  
-  
-The implementation of the controller for the feature display is simple. We can use the function ```patterns.resource.handlerFor( $scope ).registerResourceFromFeature( 'display' )``` from LaxarJS patterns library. It handles update events and replace events for the configured resource ```features.display.resource```. It stores the data of the resource either in the object ```$scope.model``` or if it exists in the object ```$scope.resources```. In the ArticleBrowserWidget the data is in the object ```$scope.resources.display```.
-
-We add ```laxar_patterns``` to the define block and add a handler for the resource to the controller function:
+We add `laxar_patterns` to the define block and add a handler for the resource to the controller function:
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/article_browser_widget.js:](../../includes/widgets/shop_demo/article_browser_widget/article_browser_widget.js)
 ```javascript
 define( [
@@ -145,34 +148,29 @@ define( [
 } );
 ```
 
-The spec tests should be passing now.
+The spec tests should be passing, as everything we tested up to now is handled by LaxarJS Patterns.
 
-We can configure the resource **display** for the widget when adding it to the application so that it subscribes to the relevant events. But so far the widget does only display a headline and no articles. We have to extend the HTML template and the widget.json.
-
-We add three properties for the table header to the object ```display``` in the widget.json.
-
-[shop_demo/includes/widgets/shop_demo/article_browser_widget/widget.json (Line 35-49)](../../includes/widgets/shop_demo/article_browser_widget/widget.json#L35)
-
-For our application we have the pattern that the resource with the article data has to store them inside the property ```entries```. So we can proof inside the template whether there is a published resource and if it has articles or if the list has no items. We let the widget change his appearance in case there are articles or not.
+We can configure the resource **display** for the widget when adding it to the application so that it subscribes to the relevant events.
+But so far the widget only displays a headline and no articles, which means we have to extend the HTML template to actually reference our model.
 
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/default.theme/article_browser_widget.html:](../../includes/widgets/shop_demo/article_browser_widget/default.theme/article_browser_widget.html)
 
 ```html
-<h3 data-ng-class="{ 'app-articles': !resources.display.entries.length == 0 }">
+<h3 data-ng-class="{ 'app-articles': resources.display.entries.length }">
    <i class='fa fa-gift'></i> {{ features.display.headline }}
 </h3>
 <table class="table table-hover table-striped"
-       data-ng-class="{ 'app-articles': !resources.display.entries.length == 0 }">
+       data-ng-class="{ 'app-articles': resources.display.entries.length }">
    <colgroup>
       <col class="app-col-1">
       <col class="app-col-2">
       <col class="app-col-3">
    </colgroup>
    <thead>
-      <tr data-ng-if="resources.display.entries.length == 0">
+      <tr data-ng-if="!resources.display.entries.length">
          <th class="app-no-articles" colspan="3">No articles</th>
       </tr>
-      <tr data-ng-if="!resources.display.entries.length == 0">
+      <tr data-ng-if="resources.display.entries.length">
          <th data-ng-bind-html="features.display.htmlIdLabel"></th>
          <th data-ng-bind-html="features.display.htmlNameLabel"></th>
          <th class="price" data-ng-bind-html="features.display.htmlPriceLabel"></th>
@@ -180,25 +178,28 @@ For our application we have the pattern that the resource with the article data 
    </thead>
    <tbody>
       <tr class="selectable"
-          data-ng-repeat="article in resources.display.entries track by article.id">
-         <td>{{ article.details.id }}</td>
-         <td>{{ article.details.name }}</td>
+          data-ng-repeat="article in resources.display.entries track by article.id"
+          data-ng-class="{selected: article.id == selectedArticle.id }" >
+         <td data-ng-click="selectArticle( article )">{{ article.details.id }}</td>
+         <td data-ng-click="selectArticle( article )">{{ article.details.name }}</td>
          <td class="price"
-             >{{ article.details.price | currency : "€ " }}</td>
+             data-ng-click="selectArticle( article )">{{ article.details.price | currency : "€ " }}</td>
       </tr>
       <tr class="app-no-articles"
-          data-ng-if="resources.display.entries.length == 0">
+          data-ng-if="!resources.display.entries.length">
          <td colspan="5">&nbsp;</td>
       </tr>
    </tbody>
 </table>
 ```
+Here we not only added the listing of the articles itself but also change the output based on the emptiness of the resource's entries array.
+
 For the style of the widget copy the [shop_demo/includes/widgets/shop_demo/article_browser_widget/default.theme/css/article_browser_widget.css](../../includes/widgets/shop_demo/article_browser_widget/default.theme/css/article_browser_widget.css) and if you are interested in the sass file take a look [here](../../includes/widgets/shop_demo/article_browser_widget/default.theme/scss/article_browser_widget.scss). 
 
 #### Change the Page
-We update the application/pages/**shop_demo.json** and add the property ```display.resource``` to the feature configuration.
+We update `application/pages/shop_demo.json` and add the property `display.resource` to the feature configuration.
 ```json
-{
+         {
             "widget": "shop_demo/article_browser_widget",
             "features": {
                "display": {
@@ -208,28 +209,21 @@ We update the application/pages/**shop_demo.json** and add the property ```displ
          }
 ```
 
-
-
-Our application gives us the hint that there are no articles.
+Our application gives us the hint that there are no articles yet.
 [http://localhost:8000/debug.html](http://localhost:8000/debug.html)
 
 ### Add ArticleSearchBoxWidget to the App
-To get some articles we add the ArticleSearchBoxWidget to our app. It fetches a list of articles from a database and lets the user filter them with an input field. For our demo app we use PouchDB.
-
-#### Appearance
-![ArticleSearchBoxWidget](img/article_search_box_widget.png)
-
-```
-./node_modules/bower/bin/bower install pouchdb
-```
-
-We have to extend the dependencies in the bower config file and edit the require config file.
+To get some articles we add the ArticleSearchBoxWidget to our application.
+It fetches a list of articles from a database and lets the user filter them with an input field.
+For our demo application we use [PouchDB](http://pouchdb.com/) as a backend store and thus need to add it as dependency to bower now.
 
 [shop_demo/bower.json](../../bower.json#L13)
 ```javascript
 "pouchdb": "2.2.x"
-
 ```
+A simple call to `./node_modules/bower/bin/bower install` should fetch the new dependency for us.
+
+Adding it to the `paths` mapping the `require_config.js` simplifies usage within our AMD define method a lot:
 
 [shop_demo/require_config.js](../../require_config.js#L110)
 ```javascript
@@ -237,11 +231,13 @@ We have to extend the dependencies in the bower config file and edit the require
 'pouchdb': 'pouchdb/dist/pouchdb-nightly',
 ```
 
-We copy the ArticleSearchBoxWidget from final version:
-[ArticleSearchBoxWidget](../../includes/widgets/shop_demo/article_search_box_widget)
+#### Appearance
+![ArticleSearchBoxWidget](img/article_search_box_widget.png)
 
-And include it in our page:
-**application/pages/shop_demo.json**
+For simplicity we don't cover the implementation of the ArticleSearchBoxWidget during this tutorial but just copy it from the github repository:
+[../../includes/widgets/shop_demo/article_search_box_widget](../../includes/widgets/shop_demo/article_search_box_widget)
+
+And include it in our page `application/pages/shop_demo.json`:
 ```javascript
 "searchBox": [
    {
@@ -258,22 +254,27 @@ And include it in our page:
 ]
 ```
 
-We stop the server (Ctrl-C) and start it with ```npm start``` again.
+We stop the server (`Ctrl-C`) and start it with `npm start` again.
 
-The ArticleBrowserWidget lists 11 articles now and there is a search box at the top of the site.
+The ArticleBrowserWidget should list 11 articles now and display a search box at the top of the site.
 [http://localhost:8000/debug.html](http://localhost:8000/debug.html)
 
 
-### Let User Select an Article
-The second feature **select** is for the possibility to select an article from the list which will be published on the EventBus. In our application the ArticleTeaserWidget and the ShoppingCartWidget will listen to this resource.
+### Let the User Select an Article
+Now we'll cover the second feature called **select** of the ArticleBrowserWidget.
+This allows the configuration of the resource name of a selected article under which it is published on the EventBus.
+In our application the ArticleTeaserWidget and the ShoppingCartWidget will listen for events of this resource.
 
-We need to test if the widget publishes the selected resource when a user selects an article. We implement a UI Test and simulate a user click on a table row with an article. 
+We need to test if the widget publishes the selected resource when a user selects an article.
+We therefore implement a UI Test and simulate a user click on a table row with an article.
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js:](../../includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js#L104)
 
 We expect that the widget recognizes the click and publishes the corresponding article as selected article.
 To fix the failing test we have to implement the feature in our controller, template and the widget.json.  
 
-Add the property ```select``` to the object ```features```. The feature **select** has a property ```resource``` which is required and has the type string. The format ```topic``` defines the allowed characters.
+Add the property `select` to the object `features`.
+The feature **select** has a property `resource` which is required and has the type string.
+Using the format `topic` again allows us to use the same set of allowed characters as for the `display.resource` property.
 
 **shop_demo/includes/widgets/shop_demo/article_browser_widget/widget.json:**
 ```json
@@ -291,13 +292,12 @@ Add the property ```select``` to the object ```features```. The feature **select
 }
 ```
 
-In our HTML template we will use the directive ngClick. We add it to the table cells with article id, name and price.
+In our HTML template we will use the directive `ngClick`. We add it to the table cells with article id, name and price.
 
 ```html 
 <td data-ng-click="selectArticle( article )">{{ article.details.id }}</td>
 <td data-ng-click="selectArticle( article )">{{ article.details.name }}</td>
-<td class="price" 
-    data-ng-click="selectArticle( article )">{{ article.details.price | currency : "€ " }}</td>
+<td data-ng-click="selectArticle( article )" class="price">{{ article.details.price | currency : "€ " }}</td>
 ```
 
 To give the user a visual feedback of the selected article we bind ngClass to the table rows.
@@ -307,10 +307,10 @@ To give the user a visual feedback of the selected article we bind ngClass to th
           data-ng-class="{selected: article.id == selectedArticle.id }" >
 ```
 
-The final template looks like
+The final template can be seen here:
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/default.theme/article_browser_widget.html](../../includes/widgets/shop_demo/article_browser_widget/default.theme/article_browser_widget.html)
 
-Now we implement the function ```$scope.selectArticle``` which will be invoked through the ngClick.
+Now we implement the function `$scope.selectArticle` which is invoked by ngClick.
 
 **shop_demo/includes/widgets/shop_demo/article_browser_widget/article_browser_widget.js:**
 ```javascript
@@ -326,7 +326,7 @@ $scope.selectArticle = function( article ) {
          );
       };
 ```
-The test should pass and we change the configuration of the ArticleBrowserWidget in the page to add the feature select.
+The test should pass and we add the feature select to the configuration of the ArticleBrowserWidget in the page.
 
 **application/pages/shop_demo.json**
 ```json
@@ -345,17 +345,26 @@ The test should pass and we change the configuration of the ArticleBrowserWidget
 ```
 
 #### Reset Selected Article
-At the moment our widget lets the user select an article from the list. If the list is updated or replaced the widget doesn't check if the selected article is missing in the list now. If the selected article is missing in the changed list the widget has to reset the selection.
+For now our widget lets the user select an article from the list.
+But in case the list is updated or replaced the widget doesn't check if the selected article is possibly missing in the list.
+The widget needs to react to such a situation and reset the selection
+If the selected article is missing in the changed list the widget has to reset the selection internally and send the appropriate event for the `select` resource.
 
-We add some test to proof the behavior of the widget.
+Hence we add some tests to enforce that expectation.
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js:](../../includes/widgets/shop_demo/article_browser_widget/spec/article_browser_widget_spec.js#L134)  
 
-With the test starting from line 134 we proof whether the widget resets the selected article if the article list changes and the selected article isn't in this new or updated list. There are four different cases with data for replacing the resource.  
-
-In sum we have five failing tests now. To get them passing we add the function ```checkArticles```. It uses the laxar.object.path function to check if there is an array ```$scope.resources.display.entries``` and returns it or if it doesn't exist it returns the third parameter which in our case is an empty array.
+In addition to the simulation of a simple `didUpdate` event removing the selected article from the list, we also added some tests for different kinds of `didReplace` events that invalidate the current selection.
+By implementing the function `checkArticles` we'll try to make these tests pass.
+This functions uses the `laxar.object.path` function which returns the value of `$scope.resources.display.entries` if it exists or the alternative given as third parameter in case it doesn't exist.
+So in our case we'll either receive an array of entries, something that is no array ar all or an empty array.
+The second case it caught by checking `entries.length`.
 
 ```javascript
 var entries = ax.object.path( $scope.resources, 'display.entries', [] );
+if( !entries.length ) {
+   $scope.selectArticle( null );
+   return;
+}
 ```
 [shop_demo/includes/widgets/shop_demo/article_browser_widget/article_browser_widget.js](../../includes/widgets/shop_demo/article_browser_widget/article_browser_widget.js#L45)  
 
