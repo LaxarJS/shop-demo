@@ -2,6 +2,17 @@
    "layout": "application",
 
    "areas": {
+      "header": [
+         {
+            "widget": "shop_demo/headline_widget",
+            "features": {
+               "headline": {
+                  "htmlText": "ShopDemo"
+               }
+            }
+         }
+      ],
+
       "content1a": [
          {
             "widget": "shop_demo/headline_widget",
@@ -17,7 +28,6 @@
             "widget": "shop_demo/headline_widget",
             "features": {
                "headline": {
-                  "level": 1,
                   "htmlText": "Thank you<br>for your order!"
                },
                "intro": {

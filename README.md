@@ -43,4 +43,5 @@ Instead of using `grunt start`, you can use any web server on your machine by ha
 
 Try modifying the widgets under `includes/widgets/shop_demo` to get a feel for how a LaxarJS application works.
 
-An upcoming tutorial will illustrate the implementation step-by-step.
+Read the [tutorial](docs/tutorials/getting_started.md) to get further information about the LaxarJS techniques.
+
