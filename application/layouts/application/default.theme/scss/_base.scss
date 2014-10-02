@@ -1,0 +1,87 @@
+h1 {
+   color: #8c8c8c;
+   font-family: 'Exo 2', Arial, sans-serif;
+   margin-top: 126px;
+}
+
+h3 {
+   color: #ccc;
+   line-height: 50px;
+   height: 50px;
+   font-family: 'Exo 2', Arial, sans-serif;
+   margin-top: 0;
+   margin-bottom: 1em;
+
+   .fa {
+      font-size: 30px;
+      background-color: #ccc;
+      color: white;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      border-radius: 50px;
+      text-align: center;
+      margin-right: 0.2em;
+   }
+}
+
+a:hover,
+a:focus {
+   text-decoration: none;
+}
+
+[disabled],
+.ax-disabled {
+   color: #ccc !important;
+}
+
+.table {
+   border: 1px solid #ddd;
+   border-radius: 4px 4px 0 0;
+   border-collapse: separate;
+
+   th {
+      background-color: #ddd;
+      border: none !important;
+   }
+}
+
+.app-no-selection,
+.app-no-articles {
+   color: #ec5e6d;
+   text-shadow: 1px 1px 0px lighten( #ec5e6d, 30% );
+}
+
+.app-thanks {
+   margin-top: 40px;
+   margin-right: 20px;
+   margin-bottom: 40px;
+   height: image-height( "../images/pot_flower.png" );
+   background: url( "../images/pot_flower.png" ) no-repeat right;
+}
+
+.app-footer {
+   margin-top: $ax-unit-vertical-double;
+   text-shadow: 1px  1px 0px #fff;
+
+   &, a {
+      color: #737373;
+   }
+
+   b {
+      color: #8a8a8a;
+   }
+
+   a {
+      border-bottom: 1px dotted #aaa;
+   }
+
+   a:hover b {
+      color: $link-hover-color;
+   }
+}
+
+.app-version {
+   padding-left: $ax-unit-horizontal-double;
+   padding-right: $ax-unit-horizontal-double;
+}

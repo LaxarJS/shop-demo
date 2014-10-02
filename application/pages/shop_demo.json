@@ -41,7 +41,7 @@
             "widget": "shop_demo/headline_widget",
             "features": {
                "headline": {
-                  "htmlText": "ShopDemo"
+                  "htmlText": "Shop<span>Demo</span>"
                }
             }
          }

@@ -1,0 +1,79 @@
+$app-laxarjs-logo: "../images/laxarjs_logo.png";
+$app-laxarjs-logo-height: image-height( $app-laxarjs-logo );
+$app-header-height: 115px;
+$app-laxarjs-logo-offset: floor(( $app-header-height - $app-laxarjs-logo-height ) / 2 );
+
+html,
+body {
+   padding: 0;
+   margin: 0;
+}
+
+body {
+   background: url(../images/bg_header_shadow.png) no-repeat center $app-header-height #E9EBED;
+
+   &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: $app-header-height;
+      background: #fff;
+      border-bottom: 1px solid #D3D3D3;
+   }
+}
+
+.container {
+   position: relative;
+}
+
+.app-header,
+.app-content-wrapper {
+   position: absolute;
+   left: 0;
+   right: 0;
+}
+
+.app-header {
+
+   top: 0;
+   height: $app-laxarjs-logo-height;
+   padding-top: $app-laxarjs-logo-offset;
+   padding-bottom: $app-laxarjs-logo-offset;
+
+   .form-group {
+      margin-top: 15px;
+      margin-bottom: 0;
+      line-height: 1;
+   }
+
+   h1 {
+      margin: 0;
+      position: relative;
+      bottom: 2px;
+      float: right;
+      width: auto;
+      font-size: 55px;
+      font-family: "Exo 2", Arial, sans-serif;
+      font-weight: 500;
+      color: #737373;
+      line-height: 1;
+
+      span {
+         font-weight: 200;
+      }
+   }
+}
+
+.app-content-wrapper {
+   top: $app-header-height + $ax-unit-vertical * 4;
+}
+
+.app-content {
+   background-color: white;
+   padding: 20px;
+   border: 1px solid #d3d3d3;
+   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+   border-radius: 0 50px 0 0;
+}
