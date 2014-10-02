@@ -17,16 +17,16 @@
       <tr data-ng-show="!model.hint">
          <th data-ng-bind-html="features.display.htmlIdLabel" ></th>
          <th data-ng-bind-html="features.display.htmlNameLabel" ></th>
-         <th class="ax-amount" data-ng-bind-html="features.display.htmlPriceLabel" ></th>
-         <th class="ax-amount" colspan="2" data-ng-bind-html="features.display.htmlQuantityLabel" ></th>
+         <th class="text-right" data-ng-bind-html="features.display.htmlPriceLabel" ></th>
+         <th class="text-right" colspan="2" data-ng-bind-html="features.display.htmlQuantityLabel" ></th>
       </tr>
    </thead>
    <tbody>
       <tr data-ng-repeat="item in resources.cart.entries track by item.article.details.id">
          <td>{{ item.article.details.id }}</td>
          <td>{{ item.article.details.name }}</td>
-         <td class="ax-amount">{{ item.article.details.price | currency : "€ " }}</td>
-         <td class="ax-amount app-increase-quantity">{{ item.quantity }}</td>
+         <td class="text-right">{{ item.article.details.price | currency : "€ " }}</td>
+         <td class="text-right app-increase-quantity">{{ item.quantity }}</td>
          <td class="app-increase-buttons">
             <button class="btn btn-link" type="button" data-ng-click="increaseQuantity( $index )"
                 data-ng-bind-html="features.display.htmlAddItemLabel"></button>
@@ -42,7 +42,7 @@
       <tr>
          <td></td>
          <td data-ng-bind-html="features.display.htmlSumLabel" ></td>
-         <td class="ax-amount" >{{ resources.cart.sum | currency : "€ " }}</td>
+         <td class="text-right" >{{ resources.cart.sum | currency : "€ " }}</td>
          <td colspan="2" ></td>
       </tr>
    </tfoot>
