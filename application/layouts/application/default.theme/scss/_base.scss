@@ -133,11 +133,11 @@ a,
    }
 }
 
-// @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
    .app-logo {
       background: url( "../images/laxarjs_logo@2x.png" ) no-repeat right/100%;
    }
    .app-flower {
       background: url( "../images/pot_flower@2x.png" ) no-repeat right/100%;
    }
-// }
+}
