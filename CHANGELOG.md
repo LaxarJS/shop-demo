@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+## v1.2.1
+
    - [#2](https://github.com/LaxarJS/shop_demo/issues/2): Styling: Fixed add button is not usable for small viewports. Some further improvements.
 
 
