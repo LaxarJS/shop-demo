@@ -16,10 +16,20 @@ define( [
    'use strict';
 
    describe( 'A flow module', function() {
+
+      var q_;
       var runBlock;
       var windowMock_;
+      var pageControllerMock_;
 
       beforeEach( function() {
+         pathsMock.FLOW_JSON = '/application/flow/flow.json';
+         pathsMock.PAGES = '/application/pages/';
+         pathsMock.WIDGETS = '/includes/widgets/';
+
+         jasmine.Clock.useMock();
+         q_ = portalMocks.mockQ();
+
          // This prevents the module from calling its run method initially.  We need a setup $httpBackend
          // before the call to run can succeed and therefore call it manually later, when everything is setup.
          runBlock = flowModule._runBlocks[0];
@@ -27,10 +37,23 @@ define( [
 
          angularMocks.module( 'laxar.portal_services' );
          angularMocks.module( 'laxar.portal.flow' );
-
-         pathsMock.FLOW_JSON = '/application/flow/flow.json';
-         pathsMock.PAGES = '/application/pages/';
-         pathsMock.WIDGETS = '/includes/widgets/';
+         angularMocks.module( function( $provide ) {
+            pageControllerMock_ = {
+               setupPage: jasmine.createSpy( 'pageController.setupPage' ).andCallFake( function() {
+                  return q_.when();
+               } ),
+               tearDownPage: jasmine.createSpy( 'pageController.tearDownPage' ).andCallFake( function() {
+                  return q_.when();
+               } )
+            };
+            $provide.service( 'axPageService', function() {
+               return {
+                  controller: function() {
+                     return pageControllerMock_;
+                  }
+               };
+            } );
+         } );
 
          angularMocks.module( function( $provide ) {
             windowMock_ = {
@@ -151,8 +174,14 @@ define( [
             var controller;
             var place;
 
-            beforeEach( angularMocks.inject( function( $route, $controller ) {
-               jasmine.Clock.useMock();
+            var $controller;
+            var $rootScope;
+            var $route;
+
+            beforeEach( angularMocks.inject( function( _$controller_, _$rootScope_, _$route_ ) {
+               $controller = _$controller_;
+               $rootScope = _$rootScope_;
+               $route = _$route_;
 
                $httpBackend.whenGET( testData.urls.flow ).respond( asFileResource( testData.flow ) );
 
@@ -176,28 +205,18 @@ define( [
                      getTheme: function() { return 'myTheme'; }
                   }
                } );
+               jasmine.Clock.tick( 0 );
             } ) );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            it( 'that subscribes to navigateRequest events', function() {
-               expect( eventBus.subscribe )
-                  .toHaveBeenCalledWith( 'navigateRequest', jasmine.any( Function ), {
-                     subscriber: 'FlowController'
-                  } );
+            it( 'that adds the current place to the root scope (jira ATP-6795)', function() {
+               expect( $rootScope.place ).toEqual( place );
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            it( 'that adds the current place to the root scope (jira ATP-6795)', angularMocks.inject( function( $rootScope ) {
-               expect( $rootScope.place ).toEqual( place );
-            } ) );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
             it( 'that initially sends a willNavigate event with target _self', function() {
-               jasmine.Clock.tick( 0 );
-
                expect( eventBus.publish ).toHaveBeenCalledWith( 'willNavigate._self', {
                   target: '_self'
                }, { sender: 'FlowController' } );
@@ -205,101 +224,13 @@ define( [
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            it( 'sends an endLifecycleRequest event with lifecycleId default', function() {
-               jasmine.Clock.tick( 0 );
-
-               expect( eventBus.publishAndGatherReplies ).toHaveBeenCalledWith( 'endLifecycleRequest.default', {
-                  lifecycleId: 'default'
-               }, { sender: 'FlowController' } );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'waits for all widgets to finish end their lifecycle', function() {
-               eventBus.publishAndGatherReplies.reset();
-               eventBus.subscribe( 'endLifecycleRequest.default', function() {
-                  eventBus.publish( 'willEndLifecycle.default', {}, {
-                     sender: 'Willi Widget'
-                  } );
-               } );
-
-               jasmine.Clock.tick( 0 );
-
-               expect( eventBus.publishAndGatherReplies )
-                  .not.toHaveBeenCalledWith( 'loadPageRequest', jasmine.any( Object ) );
-
-               eventBus.publish( 'didEndLifecycle.default', {}, {
-                  sender: 'Willi Widget'
-               } );
-
-               jasmine.Clock.tick( 0 );
-
-               expect( eventBus.publishAndGatherReplies )
-                  .toHaveBeenCalledWith( 'loadPageRequest', jasmine.any( Object ), { sender: 'FlowController' } );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
             it( 'that requests loading of the current page', function() {
-               jasmine.Clock.tick( 0 );
-               expect( eventBus.publishAndGatherReplies ).toHaveBeenCalledWith( 'loadPageRequest', {
-                  page: place.page
-               }, { sender: 'FlowController' } );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'that eventually asks all widgets to begin their lifecycle', function() {
-               jasmine.Clock.tick( 0 );
-
-               expect( eventBus.publishAndGatherReplies )
-                  .toHaveBeenCalledWith( 'beginLifecycleRequest.default', {
-                     lifecycleId: 'default'
-                  }, { sender: 'FlowController' } );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'waits for all widgets to finish beginning their lifecycle', function() {
-               eventBus.publish.reset();
-               eventBus.subscribe( 'beginLifecycleRequest.default', function() {
-                  eventBus.publish( 'willBeginLifecycle.default', {}, {
-                     sender: 'Willi Widget'
-                  } );
-               } );
-
-               jasmine.Clock.tick( 0 );
-
-               expect( eventBus.publish ).not.toHaveBeenCalledWith( 'didNavigate._self', jasmine.any( Object ) );
-
-               eventBus.publish( 'didBeginLifecycle.default', {}, {
-                  sender: 'Willi Widget'
-               } );
-
-               jasmine.Clock.tick( 0 );
-
-               expect( eventBus.publish ).toHaveBeenCalledWith(
-                  'didNavigate._self',
-                  jasmine.any( Object ),
-                  { sender: 'FlowController' }
-               );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'that sends a didChangeTheme event with the currently active theme', function() {
-               jasmine.Clock.tick( 0 );
-
-               expect( eventBus.publish ).toHaveBeenCalledWith( 'didChangeTheme.myTheme', {
-                  theme: 'myTheme'
-               }, { sender: 'FlowController' } );
+               expect( pageControllerMock_.setupPage ).toHaveBeenCalledWith( place.page );
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             it( 'that eventually sends a didNavigate with the correct parameters', function() {
-               jasmine.Clock.tick( 0 );
-
                expect( eventBus.publish ).toHaveBeenCalledWith( 'didNavigate._self', {
                   target: '_self',
                   place: 'stepTwo/:taskId/:anotherThing',
@@ -312,12 +243,39 @@ define( [
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            it( 'that sends the target place with the event (#13)', function() {
-               jasmine.Clock.tick( 0 );
+            it( 'that subscribes to navigateRequest events after navigation is complete', function() {
+               expect( eventBus.publish ).toHaveBeenCalledWith( 'didNavigate._self', jasmine.any( Object ), jasmine.any( Object ) );
+               expect( eventBus.subscribe )
+                  .toHaveBeenCalledWith( 'navigateRequest', jasmine.any( Function ), { subscriber : 'FlowController' } );
+            } );
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            it( 'that sends the target place with the event (#13)', function() {
                var calls = eventBus.publish.calls
                   .filter( function( _ ) { return _.args[0].indexOf( 'didNavigate' ) === 0; } );
                expect( calls[0].args[1].place ).toEqual( 'stepTwo/:taskId/:anotherThing' );
+            } );
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            it( 'unsubscribes from navigateRequest events on manual location change (#66)', function() {
+               var navigateRequestSubscriber = eventBus.subscribe.calls.filter( function( call ) {
+                  return call.args[0] === 'navigateRequest';
+               } )[0].args[1];
+
+               $controller( 'portal.FlowController', {
+                  EventBus: eventBus,
+                  place: $route.routes[ '/stepOne' ].resolve.place(),
+                  // for everything apart from / we can rely on angular js to do the encoding
+                  $routeParams: { taskId: '_' },
+                  ThemeManager: {
+                     getTheme: function() { return 'myTheme'; }
+                  }
+               } );
+               jasmine.Clock.tick( 0 );
+
+               expect( eventBus.unsubscribe ).toHaveBeenCalledWith( navigateRequestSubscriber );
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -332,6 +290,7 @@ define( [
                   $window = _$window_;
 
                   spyOn( $location, 'path' ).andCallThrough();
+                  jasmine.Clock.tick( 0 );
                } ) );
 
                ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -392,14 +351,17 @@ define( [
 
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
-               it( 'unsubscribes from further didNavigate events', function() {
+               it( 'unsubscribes from further navigateRequests events', function() {
+                  var navigateRequestSubscriber = eventBus.subscribe.calls.filter( function( call ) {
+                     return call.args[0] === 'navigateRequest';
+                  } )[0].args[1];
+
                   eventBus.publish( 'navigateRequest.previous', {
                      target: 'previous'
                   } );
                   jasmine.Clock.tick( 0 );
 
-                  // rather sloppy way to make the test for unsubscribe, but for now I see no better way
-                  expect( eventBus.unsubscribe ).toHaveBeenCalled();
+                  expect( eventBus.unsubscribe ).toHaveBeenCalledWith( navigateRequestSubscriber );
                } );
 
                ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -419,7 +381,7 @@ define( [
 
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
-               it( 'decodes url parameters correctly (jira ATP-6775)', angularMocks.inject( function( $route, $controller ) {
+               it( 'decodes url parameters correctly (jira ATP-6775)', function() {
                   eventBus.publish.reset();
                   $controller( 'portal.FlowController', {
                      EventBus: eventBus,
@@ -438,7 +400,44 @@ define( [
                         place: 'stepOne/:taskId',
                         data: { taskId: 'xx/%&+ßä xx' }
                      }, { sender: 'FlowController' } );
-               } ) );
+               } );
+
+               ///////////////////////////////////////////////////////////////////////////////////////////////
+
+               it( 'encodes null parameters as underscore (#65)', function() {
+                  eventBus.publish( 'navigateRequest.previous', {
+                     target: 'previous',
+                     data: {
+                        taskId: null
+                     }
+                  } );
+                  jasmine.Clock.tick( 0 );
+
+                  expect( $location.path ).toHaveBeenCalledWith( '/stepOne/_' );
+               } );
+
+               ///////////////////////////////////////////////////////////////////////////////////////////////
+
+               it( 'decodes underscores as null (#65)', function() {
+                  eventBus.publish.reset();
+                  $controller( 'portal.FlowController', {
+                     EventBus: eventBus,
+                     place: $route.routes[ '/stepOne' ].resolve.place(),
+                     // for everything apart from / we can rely on angular js to do the encoding
+                     $routeParams: { taskId: '_' },
+                     ThemeManager: {
+                        getTheme: function() { return 'myTheme'; }
+                     }
+                  } );
+                  jasmine.Clock.tick( 0 );
+
+                  expect( eventBus.publish )
+                     .toHaveBeenCalledWith( 'didNavigate.previous', {
+                        target: 'previous',
+                        place: 'stepOne/:taskId',
+                        data: { taskId: null }
+                     }, { sender: 'FlowController' } );
+               } );
 
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -453,7 +452,7 @@ define( [
 
                   ////////////////////////////////////////////////////////////////////////////////////////////
 
-                  it( 'afterwards still accepts future navigation requests (#14)', function() {
+                  it( 'afterwards accepts new navigation requests (#14)', function() {
                      $location.path.reset();
                      eventBus.publish( 'navigateRequest.previous', {
                         target: 'previous',
@@ -472,7 +471,7 @@ define( [
 
                describe( 'when not the place but only parameter values change', function() {
 
-                  beforeEach( angularMocks.inject( function( $route, $controller, $rootScope ) {
+                  beforeEach( function() {
                      eventBus.publish( 'navigateRequest.previous', {
                         target: 'previous',
                         data: {
@@ -481,8 +480,7 @@ define( [
                      } );
                      jasmine.Clock.tick( 0 );
 
-                     eventBus.publishAndGatherReplies.reset();
-                     eventBus.publish.reset();
+                     pageControllerMock_.tearDownPage.reset();
 
                      $controller( 'portal.FlowController', {
                         EventBus: eventBus,
@@ -499,27 +497,12 @@ define( [
 
                      jasmine.Clock.tick( 0 );
                      $rootScope.$digest();
-                  } ) );
+                  } );
 
                   ////////////////////////////////////////////////////////////////////////////////////////////
 
                   it( 'does not trigger loading of the page', function() {
-                     expect( eventBus.publishAndGatherReplies )
-                        .not.toHaveBeenCalledWith( 'loadPageRequest', jasmine.any( Object ) );
-                  } );
-
-                  ////////////////////////////////////////////////////////////////////////////////////////////
-
-                  it( 'does not trigger the end of a lifecycle', function() {
-                     expect( eventBus.publishAndGatherReplies )
-                        .not.toHaveBeenCalledWith( 'endLifecycleRequest.default', jasmine.any( Object ) );
-                  } );
-
-                  ////////////////////////////////////////////////////////////////////////////////////////////
-
-                  it( 'does not trigger beginning of a lifecycle', function() {
-                     expect( eventBus.publishAndGatherReplies )
-                        .not.toHaveBeenCalledWith( 'beginLifecycleRequest.default', jasmine.any( Object ) );
+                     expect( pageControllerMock_.tearDownPage ).not.toHaveBeenCalled();
                   } );
 
                   ////////////////////////////////////////////////////////////////////////////////////////////

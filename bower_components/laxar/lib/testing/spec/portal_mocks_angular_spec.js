@@ -6,8 +6,9 @@
 define( [
    'angular',
    'jquery',
-   '../portal_mocks_angular'
-], function( angular, $, portalMocksAngular ) {
+   '../portal_mocks_angular',
+   '../../utilities/fn'
+], function( angular, $, portalMocksAngular, fn ) {
    'use strict';
 
    describe( 'For a ControllerTestBed which is set up', function() {
@@ -50,7 +51,15 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       it( 'instantiates the controller with the testbed scope', function() {
-         expect( controllerSpy ).toHaveBeenCalledWith( testBed.scope, jasmine.any( Object ) );
+         expect( controllerSpy ).toHaveBeenCalled();
+         expect( controllerSpy.calls[ 0 ].args[ 0 ] ).toEqual( testBed.scope );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'instantiates the controller with a q implementation', function() {
+         expect( controllerSpy ).toHaveBeenCalled();
+         expect( controllerSpy.calls[ 0 ].args[ 1 ].when ).toEqual( jasmine.any( Function ) );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,10 +152,19 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      it( 'copies over a mocked widget to the widget scope', function() {
-         testBed.widgetMock = { id: 'helloId', specification: { name: 'helloName'} };
+      it( 'copies over a the id of a mock widget to the widget scope', function() {
+         testBed.widgetMock = {
+            id: 'helloId',
+            specification: {
+               integration: {
+                  technology: 'angular',
+                  type: 'widget'
+               },
+               name: 'helloName'
+            }
+         };
          testBed.setup();
-         expect( testBed.scope.widget ).toEqual( { id: 'helloId', specification: { name: 'helloName'} } );
+         expect( testBed.scope.widget ).toEqual( { id: 'helloId', area: 'testArea' } );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -283,6 +301,7 @@ define( [
 
          beforeEach( function() {
             widgetJsonContent = {
+               name: 'test-widget',
                integration: {
                   type: 'angular'
                },
@@ -303,17 +322,11 @@ define( [
                }
             };
 
-            spyOn( $, 'ajax' ).andCallFake( function( obj ) {
+            spyOn( testBed.$, 'ajax' ).andCallFake( function( obj ) {
                obj.success( clone( widgetJsonContent ) );
             } );
 
             testBed.useWidgetJson();
-         } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         it( 'populates the widget spec with the data found', function() {
-            expect( testBed.widgetMock.specification ).toEqual( widgetJsonContent );
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -375,27 +388,72 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   describe( 'mockWidget', function() {
+   describe( 'mockDebounce', function() {
 
-      var widgetMock;
+      var f;
+      var fDebounced;
+      var fImmediate;
+      var fImmediateDebounced;
 
       beforeEach( function() {
-         widgetMock = portalMocksAngular.mockWidget();
+         jasmine.Clock.useMock();
+         portalMocksAngular.mockDebounce();
+
+         f = jasmine.createSpy( 'debounced call' );
+         fDebounced = fn.debounce( f, 100 );
+         fDebounced( 'aaa' );
+         fDebounced( 'bbb' );
+
+         fImmediate = jasmine.createSpy( 'immediately debounced call' );
+         fImmediateDebounced = fn.debounce( fImmediate, 100, true );
+         fImmediateDebounced( 'xxx' );
+         fImmediateDebounced( 'yyy' );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      it( 'returns a simple widget stub', function() {
-         expect( widgetMock ).toEqual( {
-            id: 'testWidgetId',
-            specification: {
-               name: 'test/test_widget',
-               description: 'test widget',
-               integration: {
-                  type: 'angular'
-               }
-            }
-         } );
+      it( 'installs an underscore-compatible debounce function that uses the mock clock', function() {
+         expect( fn.debounce ).toEqual( jasmine.any( Function ) );
+
+         expect( f ).not.toHaveBeenCalled();
+         expect( fImmediate ).toHaveBeenCalled();
+         expect( fImmediate.calls.length ).toEqual( 1 );
+
+         jasmine.Clock.tick( 99 );
+         expect( f ).not.toHaveBeenCalled();
+         jasmine.Clock.tick( 1 );
+         expect( f ).toHaveBeenCalledWith( 'aaa' );
+         expect( f.calls.length ).toEqual( 1 );
+
+         fImmediateDebounced( 'zzz' );
+         expect( fImmediate.calls.length ).toEqual( 2 );
+         expect( fImmediate ).toHaveBeenCalledWith( 'xxx' );
+         expect( fImmediate ).toHaveBeenCalledWith( 'zzz' );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'allows to force debounced calls without tick, so without knowing the debounce delay', function() {
+         expect( fn.debounce.force ).toEqual( jasmine.any( Function ) );
+
+         expect( f ).not.toHaveBeenCalled();
+         fn.debounce.force();
+         expect( f ).toHaveBeenCalled();
+         expect( f ).toHaveBeenCalledWith( 'aaa' );
+         expect( f.calls.length ).toEqual( 1 );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'allows to inspect the list of waiting calls', function() {
+         expect( fn.debounce.waiting ).toEqual( jasmine.any( Array ) );
+
+         expect( f ).not.toHaveBeenCalled();
+         expect( fn.debounce.waiting.length ).toEqual( 1 );
+         expect( fn.debounce.waiting[ 0 ].args[ 0 ] ).toEqual( 'aaa' );
+
+         jasmine.Clock.tick( 100 );
+         expect( fn.debounce.waiting.length ).toEqual( 0 );
       } );
 
    } );

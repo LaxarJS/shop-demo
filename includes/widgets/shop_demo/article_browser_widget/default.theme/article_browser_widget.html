@@ -1,18 +1,18 @@
-<h3 data-ng-class="{ 'app-articles': !resources.display.entries.length == 0 }">
+<h3 data-ng-class="{ 'app-articles': resources.display.entries.length }">
    <i class='fa fa-gift'></i> {{ features.display.headline }}
 </h3>
 <table class="table table-hover table-striped"
-       data-ng-class="{ 'app-articles': !resources.display.entries.length == 0 }">
+       data-ng-class="{ 'app-articles': resources.display.entries.length }">
    <colgroup>
       <col class="app-col-1">
       <col class="app-col-2">
       <col class="app-col-3">
    </colgroup>
    <thead>
-      <tr data-ng-if="resources.display.entries.length == 0">
+      <tr data-ng-if="!resources.display.entries.length">
          <th class="app-no-articles" colspan="3">No articles</th>
       </tr>
-      <tr data-ng-if="!resources.display.entries.length == 0">
+      <tr data-ng-if="resources.display.entries.length">
          <th data-ng-bind-html="features.display.htmlIdLabel"></th>
          <th data-ng-bind-html="features.display.htmlNameLabel"></th>
          <th class="price" data-ng-bind-html="features.display.htmlPriceLabel"></th>
@@ -28,7 +28,7 @@
              data-ng-click="selectArticle( article )">{{ article.details.price | currency : "€ " }}</td>
       </tr>
       <tr class="app-no-articles"
-          data-ng-if="resources.display.entries.length == 0">
+          data-ng-if="!resources.display.entries.length">
          <td colspan="5">&nbsp;</td>
       </tr>
    </tbody>

@@ -2,9 +2,30 @@
 
 ## Last Changes
 
-## v0.12.1
+## v0.16.0
 
+- [#22](https://github.com/LaxarJS/laxar_patterns/issues/22): actions: implemented action handler and publisher convenience.
+  NEW FEATURE: see ticket for details
+
+
+## v0.15.0
+
+- [#21](https://github.com/LaxarJS/laxar_patterns/issues/21): resources: added deliverToSender option to event publishers.
+- [#20](https://github.com/LaxarJS/laxar_patterns/issues/20): fixed wrongly global assert in jshintrc.
+
+
+## v0.14.0
+
+- [#19](https://github.com/LaxarJS/laxar_patterns/issues/19): tests: make sure PhantomJS is installed properly, before running spec tests.
+- [#18](https://github.com/LaxarJS/laxar_patterns/issues/18): added support for visibility events
+  NEW FEATURE: see ticket for details
+
+
+## v0.13.0
+
+- [#17](https://github.com/LaxarJS/laxar_patterns/issues/17): replace and update publishers now return a promise.
 - [#16](https://github.com/LaxarJS/laxar_patterns/issues/16): don't try to load `widget.json` in laxar_patterns specs.
+- [#15](https://github.com/LaxarJS/laxar_patterns/issues/15): json: added helpers to work with json pointer (rfc-6901) and json patch (rfc-6902)
 - [#14](https://github.com/LaxarJS/laxar_patterns/issues/14): temporarily switched to the LaxarJS fork of json patch.
 
 

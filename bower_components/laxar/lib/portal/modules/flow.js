@@ -31,7 +31,6 @@ define( [
    var $http_;
    var $q_;
    var fileResourceProvider_;
-   var configLocales_;
    var exitPoints_;
    var entryPoint_;
 
@@ -42,8 +41,7 @@ define( [
          $http_ = $http;
          fileResourceProvider_ = fileResourceProvider;
          $q_ = $q;
-         // DEPRECATION: the key 'locales' has been deprecated in favor of 'i18n.locales'
-         configLocales_ = Configuration.get( 'i18n.locales', Configuration.get( 'locales', {} ) );
+
          // DEPRECATION: the key 'entryPoint' has been deprecated in favor of 'portal.flow.entryPoint'
          entryPoint_ = Configuration.get( 'portal.flow.entryPoint' ) || Configuration.get( 'entryPoint' );
          // DEPRECATION: the key 'exitPoints' has been deprecated in favor of 'portal.flow.exitPoints'
@@ -59,59 +57,35 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   var BREAK_PROMISE_CHAIN_ARGUMENT = 'BREAK_PROMISE_CHAIN';
    var TARGET_SELF = '_self';
    var places_;
    var previousPlaceParameters_;
+   var previousNavigateRequestSubscription_;
    var currentTarget_ = TARGET_SELF;
+   var navigationInProgress_ = false;
+
+   var eventOptions = { sender: 'FlowController' };
+   var subscriberOptions = { subscriber: 'FlowController' };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    module.controller( 'portal.FlowController', [
-      '$window', '$location', '$routeParams', '$rootScope', 'place', 'EventBus', 'ThemeManager',
+      '$window', '$location', '$routeParams', '$rootScope', 'place', 'EventBus', 'axPageService',
 
-      function FlowController( $window, $location, $routeParams, $rootScope, place, eventBus, themeManager ) {
-         // The flow controller is instantiated on routechange by angularjs. It then starts to listen for
-         // subsequent navigateRequests. It then directly claims to start navigation ("willNavigate") and
-         // requests loading of the new page (currently the PageController listens to this request). As soon
-         // as the new page is loaded, the "didNavigate" event finishes the navigation logic.
+      function FlowController( $window, $location, $routeParams, $rootScope, place, eventBus, pageService ) {
+         if( previousNavigateRequestSubscription_ ) {
+            eventBus.unsubscribe( previousNavigateRequestSubscription_ );
+            previousNavigateRequestSubscription_ = null;
+         }
+
+         // The flow controller is instantiated on route change by AngularJS. It then announces the start of
+         // navigation ("willNavigate") and initiates loading of the new page. As soon as the new page is
+         // loaded, the "didNavigate" event finishes the navigation logic. The flow controller then starts to
+         // listen for subsequent navigateRequests.
 
          var previousPlace = $rootScope.place;
-         $rootScope.place = place;
          var page = place.page;
-
-         eventBus.subscribe( 'navigateRequest', function navigateRequestHandler( event, actions ) {
-            currentTarget_ = event.target;
-            var placeName = findPlaceForNavigationTarget( event.target, place );
-            var parameters = object.extend( {}, previousPlaceParameters_ || {}, event.data || {} );
-            var newPlace = places_[ placeName ];
-            navigationTimer.start( place, newPlace );
-            if( newPlace.triggerBrowserReload || event.triggerBrowserReload ) {
-               eventBus.publish( 'willNavigate.' + currentTarget_, navigateEvent, eventOptions )
-                  .then( function() {
-                     return eventBus.publishAndGatherReplies( 'endLifecycleRequest.default', lifecycleEvent );
-                  } )
-                  .then( function() {
-                     var path = constructLocation( placeName, parameters );
-                     var url = '' + $window.location.href;
-                     var newUrl = url.split( '#' )[ 0 ] + '#' + path;
-                     // Prevent angular from entering a loop of location changes during digest
-                     // by pretending that we have already navigated. This is actually true, because
-                     // we do navigate ourselves using location.reload.
-                     $location.absUrl = function() {
-                        return $window.location.href;
-                     };
-
-                     $window.location.href = newUrl;
-                     $window.location.reload();
-                  } );
-               return;
-            }
-
-            var newPath = constructLocation( placeName, parameters );
-            if( newPath !== $location.path() ) {
-               $location.path( newPath );
-               actions.unsubscribe();
-            }
-         }, { subscriber: 'FlowController' } );
+         $rootScope.place = place;
 
          if( typeof place.exitFunction === 'string' ) {
             var exit = place.exitFunction;
@@ -120,71 +94,103 @@ define( [
                exitPoints_[ exit ]( placeParameters );
                return;
             }
-
             throw new Error( 'Exitpoint "' + exit + '" does not exist.' );
          }
 
-         var eventOptions = { sender: 'FlowController' };
+         navigationInProgress_ = true;
          var navigateEvent = { target: currentTarget_ };
          var didNavigateEvent =  object.options( { data: {}, place: place.id }, navigateEvent );
-         var lifecycleEvent = { lifecycleId: 'default' };
-
-         eventBus.subscribe( 'changeLocaleRequest', function( event ) {
-            var payload = {
-               locale: event.locale,
-               languageTag: event.languageTag
-            };
-            eventBus.publish( 'didChangeLocale.' + event.locale, payload, eventOptions );
-         }, { subscriber: 'FlowController' } );
 
          eventBus.publish( 'willNavigate.' + currentTarget_, navigateEvent, eventOptions )
-            .then( function() {
-               if( place !== previousPlace ) {
-                  return eventBus.publishAndGatherReplies(
-                     'endLifecycleRequest.default',
-                     lifecycleEvent,
-                     eventOptions
-                  );
-               }
-            } )
             .then( function() {
                var parameters = constructNavigationParameters( $routeParams, place );
                didNavigateEvent.data = parameters;
                previousPlaceParameters_ = parameters;
 
                if( place === previousPlace ) {
-                  eventBus.publish( 'didNavigate.' + currentTarget_, didNavigateEvent, eventOptions );
-                  return $q_.reject( BREAK_PROMISE_CHAIN_ARGUMENT );
+                  return finishNavigation( currentTarget_, didNavigateEvent );
                }
+
+               return pageService.controller().tearDownPage()
+                  .then( function() {
+                     navigationTimer.resumeOrCreate( place );
+                     return pageService.controller().setupPage( page );
+                  } )
+                  .then( function() {
+                     return finishNavigation( currentTarget_, didNavigateEvent );
+                  } )
+                  .then( function() {
+                     navigationTimer.stop( 'didNavigate' );
+                  } );
             } )
-            .then( function() {
-               navigationTimer.resumeOrCreate( place );
-               return eventBus.publishAndGatherReplies( 'loadPageRequest', { page: page }, eventOptions );
-            } )
-            .then( function() {
-               ng.forEach( configLocales_, function( tag, locale ) {
-                  var event = { locale: locale, languageTag: tag };
-                  eventBus.publish( 'didChangeLocale.' + locale, event, eventOptions );
-               } );
-               var theme = themeManager.getTheme();
-               return eventBus.publish( 'didChangeTheme.' + theme, { theme: theme }, eventOptions );
-            } )
-            .then( function() {
-               navigationTimer.stop();
-               return eventBus.publishAndGatherReplies(
-                  'beginLifecycleRequest.default',
-                  lifecycleEvent,
-                  eventOptions );
-            } )
-            .then( function() {
-               eventBus.publish( 'didNavigate.' + currentTarget_, didNavigateEvent, eventOptions );
-            }, function( error ) {
-               if( error !== BREAK_PROMISE_CHAIN_ARGUMENT ) {
-                  log.error( error );
-               }
+            .then( null, function( error ) {
+               log.error( error );
             } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function handleNavigateRequest( event, meta ) {
+            if( navigationInProgress_ ) {
+               // make sure that at most one navigate request be handled at the same time
+               return;
+            }
+            navigationInProgress_ = true;
+
+            currentTarget_ = event.target;
+            var placeName = findPlaceForNavigationTarget( event.target, place );
+            var parameters = object.extend( {}, previousPlaceParameters_ || {}, event.data || {} );
+            var newPlace = places_[ placeName ];
+
+            navigationTimer.start( place, newPlace );
+            if( newPlace.triggerBrowserReload || event.triggerBrowserReload ) {
+               triggerReload( placeName, parameters );
+               return;
+            }
+
+            var newPath = constructLocation( placeName, parameters );
+            if( newPath !== $location.path() ) {
+               // this will instantiate another flow controller
+               $location.path( newPath );
+
+               meta.unsubscribe();
+            }
+            else {
+               // nothing to do:
+               navigationInProgress_ = false;
+            }
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function triggerReload( placeName, parameters ) {
+            eventBus.publish( 'willNavigate.' + currentTarget_, navigateEvent, eventOptions )
+               .then( function() {
+                  return pageService.controller().tearDownPage();
+               } )
+               .then( function() {
+                  var path = constructLocation( placeName, parameters );
+                  var url = '' + $window.location.href;
+                  var newUrl = url.split( '#' )[ 0 ] + '#' + path;
+                  // Prevent angular from entering a loop of location changes during digest
+                  // by pretending that we have already navigated. This is actually true, because
+                  // we do navigate ourselves using location.reload.
+                  $location.absUrl = function() {
+                     return $window.location.href;
+                  };
+
+                  $window.location.href = newUrl;
+                  $window.location.reload();
+               } );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function finishNavigation( currentTarget_, didNavigateEvent ) {
+            eventBus.subscribe( 'navigateRequest', handleNavigateRequest, subscriberOptions );
+            previousNavigateRequestSubscription_ = handleNavigateRequest;
+            navigationInProgress_ = false;
+            return eventBus.publish( 'didNavigate.' + currentTarget_, didNavigateEvent, eventOptions );
+         }
 
       }
    ] );
@@ -231,11 +237,11 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function stop() {
+      function stop( label ) {
          var timerData = sessionStore.getItem( SESSION_KEY_TIMER );
          if( timerData ) {
             var t = timer.resume( timerData );
-            t.stopAndLog( 'beginLifecycleRequest' );
+            t.stopAndLog( label );
             sessionStore.removeItem( SESSION_KEY_TIMER );
          }
       }
@@ -248,12 +254,7 @@ define( [
       var placeParameters = {};
       var params = place.fixedParameters || $routeParams;
       object.forEach( place.expectedParameters, function( parameterName ) {
-         if( typeof params[ parameterName ] === 'undefined' ) {
-            placeParameters[ parameterName ] = null;
-         }
-         else {
-            placeParameters[ parameterName ] = decodePlaceParameter( params[ parameterName ] );
-         }
+         placeParameters[ parameterName ] = decodePlaceParameter( params[ parameterName ] );
       } );
 
       return placeParameters;
@@ -266,10 +267,7 @@ define( [
       var location = '/' + placeName;
 
       object.forEach( place.expectedParameters, function( parameterName ) {
-         location += '/';
-         if( parameterName in parameters && parameters[ parameterName ] !== null ) {
-            location += encodePlaceParameter( parameters[ parameterName ] );
-         }
+         location += '/' + encodePlaceParameter( parameters[ parameterName ] );
       } );
 
       return location;
@@ -277,19 +275,13 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function findPlaceForNavigationTarget( targetOrRoute, activePlace ) {
-      if( 'targets' in activePlace ) {
-         var targets = activePlace.targets;
-         if( targetOrRoute in targets ) {
-            return findPlaceForNavigationTarget( targets[ targetOrRoute ], activePlace );
-         }
+   function findPlaceForNavigationTarget( targetOrPlaceName, activePlace ) {
+      var placeName = object.path( activePlace, 'targets.' + targetOrPlaceName, targetOrPlaceName );
+      if( placeName in places_ ) {
+         return placeName;
       }
 
-      if( targetOrRoute in places_ ) {
-         return targetOrRoute;
-      }
-
-      log.error( 'unknown target or place "[0]".', targetOrRoute );
+      log.error( 'Unknown target or place "[0]".', targetOrPlaceName );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -346,10 +338,10 @@ define( [
       if( placeName ) {
          var targetPlace = places_[ placeName ];
          var uri = placeName;
+         var parameters = entryPoint.parameters || {};
 
          object.forEach( targetPlace.expectedParameters, function( parameterName ) {
-            var param = entryPoint.parameters[ parameterName ] || '';
-            uri += '/' + encodePlaceParameter( param );
+            uri += '/' + encodePlaceParameter( parameters[ parameterName ] );
          } );
 
          return uri;
@@ -421,12 +413,18 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function encodePlaceParameter( value ) {
+      if( value == null ) {
+         return '_';
+      }
       return typeof value === 'string' ? value.replace( /\//g, '%2F' ) : value;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function decodePlaceParameter( value ) {
+      if( value == null || value === '' || value === '_' ) {
+         return null;
+      }
       return typeof value === 'string' ? value.replace( /%2F/g, '/' ) : value;
    }
 

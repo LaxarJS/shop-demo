@@ -9,8 +9,10 @@ define( [
    './modules/portal_services',
    './modules/flow',
    './modules/page',
-   '../directives/directives'
-], function( ng, ngSanitizeModule, portalServicesModule, flowModule, pageModule, directives ) {
+   './portal_assembler/widget_adapters/angular_adapter',
+   '../directives/directives',
+   '../profiling/profiling'
+], function( ng, ngSanitizeModule, portalServicesModule, flowModule, pageModule, ngAdapter, directives, profilingModule ) {
    'use strict';
 
    return ng.module( 'laxar.portal.dependencies', [
@@ -19,8 +21,10 @@ define( [
       portalServicesModule.name,
       flowModule.name,
       pageModule.name,
+      ngAdapter.module.name,
       directives.widgetArea.name,
-      directives.pageFade.name
+      directives.pageFade.name,
+      profilingModule.name
    ] );
 
 } );

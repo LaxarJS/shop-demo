@@ -1,6 +1,6 @@
 {
   "name": "laxar",
-  "version": "0.12.1",
+  "version": "0.14.0",
   "description": "Building large applications is hard, so don't do that!",
   "authors": [],
   "license": "MIT",
@@ -31,13 +31,13 @@
     "jasmine": "pivotal/jasmine#1.3.x"
   },
   "homepage": "https://github.com/LaxarJS/laxar",
-  "_release": "0.12.1",
+  "_release": "0.14.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.12.1",
-    "commit": "2251bb4150146e3268e1c3961125c11cbd6fc092"
+    "tag": "v0.14.0",
+    "commit": "2af8e005514de14f44770f7b8227e5791a422e14"
   },
   "_source": "git://github.com/LaxarJS/laxar.git",
-  "_target": "^0.12.x",
+  "_target": "^0.14.x",
   "_originalSource": "LaxarJS/laxar"
 }

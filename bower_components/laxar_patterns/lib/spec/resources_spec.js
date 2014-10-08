@@ -336,6 +336,35 @@ define( [
             } );
       } );
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'returns a promise when called (#17)', function() {
+         var promise = publisher( {
+            type: 'Gouda jung',
+            country: 'netherlands'
+         } );
+
+         expect( typeof promise.then ).toEqual( 'function' );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'forwards the deliverToSender option to the event bus (#21)', function() {
+         publisher = resources.replacePublisherForFeature( scope, 'superFeature.superAttribute', {
+            deliverToSender: true
+         } );
+
+         publisher( {} );
+
+         expect( scope.eventBus.publish )
+            .toHaveBeenCalledWith( 'didReplace.cheese', {
+               resource: 'cheese',
+               data: {}
+            }, {
+               deliverToSender: true
+            } );
+      } );
+
    } );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -414,6 +443,16 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      it( 'returns a promise when called (#17)', function() {
+         var promise = publisher( null, {
+            type: 'Gouda alt'
+         } );
+
+         expect( typeof promise.then ).toEqual( 'function' );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       it( 'allows to restrict the function to only accept patches', function() {
          publisher = resources.updatePublisherForFeature( scope, 'superFeature.superAttribute', {
             jsonPatchOnly: true
@@ -437,6 +476,7 @@ define( [
          var from;
          var to;
          var patches;
+         var promise;
 
          beforeEach( function() {
             from = {
@@ -454,7 +494,7 @@ define( [
             ];
 
             spyOn( jsonPatch, 'compare' ).andCallThrough();
-            publisher.compareAndPublish( from, to );
+            promise = publisher.compareAndPublish( from, to );
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -475,8 +515,32 @@ define( [
                } );
          } );
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         it( 'that returns a promise when called (#17)', function() {
+            expect( typeof promise.then ).toEqual( 'function' );
+         } );
+
       } );
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'forwards the deliverToSender option to the event bus (#21)', function() {
+         publisher = resources.updatePublisherForFeature( scope, 'superFeature.superAttribute', {
+            deliverToSender: true,
+            jsonPatchOnly: true
+         } );
+
+         publisher( [ { op: 'replace', path: '/hose/0', value: '3cm' } ] );
+
+         expect( scope.eventBus.publish )
+            .toHaveBeenCalledWith( 'didUpdate.cheese', {
+               resource: 'cheese',
+               patches: [ { op: 'replace', path: '/hose/0', value: '3cm' } ]
+            }, {
+               deliverToSender: true
+            } );
+      } );
 
    } );
 

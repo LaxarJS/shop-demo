@@ -12,9 +12,11 @@
          'errors_spec',
          'flags_spec',
          'i18n_spec',
+         'json_spec',
          'patches_spec',
          'resources_spec',
-         'validation_spec'
+         'validation_spec',
+         'visibility_spec'
       ],
       requireConfig: {},
       widgetJson: false

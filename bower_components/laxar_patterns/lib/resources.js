@@ -91,29 +91,39 @@ define( [
    /**
     * Creates and returns a function to publish didReplace events for the resource found as feature
     * configuration. Resolution of the `featurePath` argument works just as explained in the documentation for
-    * `ResourceHandler.prototype.registerResourceFromFeature`.
+    * `ResourceHandler.prototype.registerResourceFromFeature`. The publisher returns the promise returned by
+    * the underlying event bus call.
     *
     * @param {Object} scope
     *    the scope the publisher works on
     * @param {String} featurePath
     *    the property of `scope.model` the publisher reads the resource name from
+    * @param {Object} [optionalOptions]
+    *    options for the publisher
+    * @param {Boolean} optionalOptions.deliverToSender
+    *    the value is forward to `eventBus.publish`: if `true` the event will also be delivered to the
+    *    publisher. Default is `false`
     *
     * @return {Function}
     *    the publisher function. Takes the data to publish as single argument.
     */
-   function replacePublisherForFeature( scope, featurePath ) {
+   function replacePublisherForFeature( scope, featurePath, optionalOptions ) {
       assert( scope ).hasType( Object ).isNotNull();
       assert( scope.eventBus ).hasType( Object ).isNotNull();
 
       var resourceName = ax.object.path( scope.features, featurePath + '.resource' );
       assert( resourceName ).hasType( String ).isNotNull();
 
+      var options = ax.object.options( optionalOptions, {
+         deliverToSender: false
+      } );
+
       return function didReplacePublisher( replacement ) {
-         scope.eventBus.publish( 'didReplace.' + resourceName, {
+         return scope.eventBus.publish( 'didReplace.' + resourceName, {
             resource: resourceName,
             data: replacement
          }, {
-            deliverToSender: false
+            deliverToSender: !!options.deliverToSender
          } );
       };
    }
@@ -123,7 +133,8 @@ define( [
    /**
     * Creates and returns a function to publish didUpdate events for the resource found as feature
     * configuration. Resolution of the `featurePath` argument works just as explained in the documentation for
-    * `ResourceHandler.prototype.registerResourceFromFeature`.
+    * `ResourceHandler.prototype.registerResourceFromFeature`. The publisher returns the promise returned by
+    * the underlying event bus call.
     *
     * The return value of this function differs according to the capabilities and needs of the api consumer.
     * If the option `jsonPatchOnly` is omitted, the returned function exposes the "compatibility" signature
@@ -145,7 +156,8 @@ define( [
     *
     * Additionally the returned function has a method `compareAndPublish` that accepts the obsolete version of
     * a resource as first argument and the current version of the resource as second argument. It then creates
-    * the JSON patch array itself and sends the according didUpdate event.
+    * the JSON patch array itself and sends the according didUpdate event. It also returns the promise
+    * returned by the underlying event bus call.
     *
     * Example:
     * ```
@@ -162,6 +174,9 @@ define( [
     * @param {Boolean} optionalOptions.jsonPatchOnly
     *    if `true` the signature of the publisher changes to only support a json patch array as single
     *    argument. Default is `false`
+    * @param {Boolean} optionalOptions.deliverToSender
+    *    the value is forward to `eventBus.publish`: if `true` the event will also be delivered to the
+    *    publisher. Default is `false`
     *
     * @return {Function}
     *    the publisher function as described above
@@ -174,6 +189,7 @@ define( [
       assert( resourceName ).hasType( String ).isNotNull();
 
       var options = ax.object.options( optionalOptions, {
+         deliverToSender: false,
          jsonPatchOnly: false
       } );
 
@@ -191,8 +207,8 @@ define( [
             event.patches = patches;
          }
 
-         scope.eventBus.publish( 'didUpdate.' + resourceName, event, {
-            deliverToSender: false
+         return scope.eventBus.publish( 'didUpdate.' + resourceName, event, {
+            deliverToSender: !!options.deliverToSender
          } );
       };
 
@@ -203,7 +219,7 @@ define( [
 
       publisher.compareAndPublish = function( from, to ) {
          var patches = jsonPatch.compare( from, to );
-         patchOnlyPublisher( patches );
+         return patchOnlyPublisher( patches );
       };
 
       return publisher;
@@ -560,7 +576,7 @@ define( [
     *    the first object to test
     * @param {Object} resourceB
     *    the second object to test
-    * @param {String[]} attributes
+    * @param {String[]} compareAttributes
     *    the list of attributes determining resource identity
     *
     * @return {Boolean}

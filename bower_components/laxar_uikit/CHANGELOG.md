@@ -2,6 +2,32 @@
 
 ## Last Changes
 
+## v0.15.0
+
+- [#67](https://github.com/LaxarJS/laxar_uikit/issues/67): Styling: refactored default.theme
+- [#69](https://github.com/LaxarJS/laxar_uikit/issues/69): layer: allowed prevention of scrolling the body when showing.
+  NEW FEATURE: see ticket for details
+- [#68](https://github.com/LaxarJS/laxar_uikit/issues/68): fixed wrongly global assert in jshintrc.
+- [#66](https://github.com/LaxarJS/laxar_uikit/issues/66): fixed ont-size can change depending on disabled- or error-state 
+- [#65](https://github.com/LaxarJS/laxar_uikit/issues/65): axAccordion: fixed unchecked call to $apply
+
+
+## v0.14.0
+
+- [#60](https://github.com/LaxarJS/laxar_uikit/issues/60): portal, dom: deprecated dom.ensureRenderingAndApplyFunction and removed usage
+- [#64](https://github.com/LaxarJS/laxar_uikit/issues/64): tests: make sure PhantomJS is installed properly, before running spec tests.
+- [#63](https://github.com/LaxarJS/laxar_uikit/issues/63): Styling DatePicker: Highlighted current day
+- [#62](https://github.com/LaxarJS/laxar_uikit/issues/62): Styling: extend mixin to equal col height for different widths
+- [#61](https://github.com/LaxarJS/laxar_uikit/issues/61): axButtonList: fixed double click handling with debounce function
+
+
+## v0.13.0
+
+- [#59](https://github.com/LaxarJS/laxar_uikit/issues/59): Fixed width of a single col in a row
+- [#58](https://github.com/LaxarJS/laxar_uikit/issues/58): Styling table: Fixed row selecton is not visible
+- [#57](https://github.com/LaxarJS/laxar_uikit/issues/57): Styling table: Added new table style (skeletal)
+
+
 ## v0.12.0
 
 - [#55](https://github.com/LaxarJS/laxar_uikit/issues/55): don't try to load `widget.json` in laxar_uikit specs.
@@ -11,7 +37,7 @@
 - [#52](https://github.com/LaxarJS/laxar_uikit/issues/52): Styling buttons: refactored animation for busy state
 - [#51](https://github.com/LaxarJS/laxar_uikit/issues/51): Remove some obsolete NPM `devDependencies`.
 - [#50](https://github.com/LaxarJS/laxar_uikit/issues/50): Removed expensive layout polling from axConfirmButton
-- [#49](https://github.com/LaxarJS/laxar_uikit/issues/49): Styling status classes: Refactored 
+- [#49](https://github.com/LaxarJS/laxar_uikit/issues/49): Styling status classes: Refactored
 - [#48](https://github.com/LaxarJS/laxar_uikit/issues/48): Styling icons: customized icon size independent from font size
 - [#47](https://github.com/LaxarJS/laxar_uikit/issues/47): added missing require path mapping for jjv and jjve.
 
@@ -23,8 +49,8 @@
 - [#42](https://github.com/LaxarJS/laxar_uikit/issues/42): Styling global IE10: Fixed layout problems with input clear button
 - [#43](https://github.com/LaxarJS/laxar_uikit/issues/43): jshintrc: disabled enforcement of dot notation for object property access.
 - [#41](https://github.com/LaxarJS/laxar_uikit/issues/41): Styling table: Added border style support for sub rows
-- [#40](https://github.com/LaxarJS/laxar_uikit/issues/40): Styling table: Fixed vertical alignment of buttons in a table cell 
-- [#39](https://github.com/LaxarJS/laxar_uikit/issues/39): Styling table: Fixed some variables can not be overwritten 
+- [#40](https://github.com/LaxarJS/laxar_uikit/issues/40): Styling table: Fixed vertical alignment of buttons in a table cell
+- [#39](https://github.com/LaxarJS/laxar_uikit/issues/39): Styling table: Fixed some variables can not be overwritten
 - [#38](https://github.com/LaxarJS/laxar_uikit/issues/38): axInput: fixed spec test in MSIE8
 - [#37](https://github.com/LaxarJS/laxar_uikit/issues/37): Added support for bootstrap table classes
 - [#36](https://github.com/LaxarJS/laxar_uikit/issues/36): axInput: documented configuration options under docs/manuals/configuration.md

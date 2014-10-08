@@ -36,6 +36,17 @@
          }
       ],
 
+      "header": [
+         {
+            "widget": "shop_demo/headline_widget",
+            "features": {
+               "headline": {
+                  "htmlText": "Shop<span>Demo</span>"
+               }
+            }
+         }
+      ],
+
       "content1a": [
          {
             "widget": "shop_demo/article_browser_widget",

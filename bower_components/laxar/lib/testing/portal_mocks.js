@@ -5,10 +5,11 @@
  */
 define( [
    'q_mock',
+   '../utilities/assert',
    '../event_bus/event_bus',
    './matchers',
    './http_mock'
-], function( qMock, EventBus, matchers, httpMock ) {
+], function( qMock, assert, EventBus, matchers, httpMock ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,11 +48,79 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function createFileResourceProviderMock( filesByUri ) {
+      assert( filesByUri ).hasType( Object ).isNotNull();
+
+      var q = createQMock();
+      var mock = {
+         isAvailable: function( uri ) {
+            return q.when( uri in filesByUri );
+         },
+         provide: function( uri ) {
+            if( !(uri in filesByUri) ) {
+               return q.reject();
+            }
+            var entry = filesByUri[ uri ];
+            return q.when( typeof( entry ) === 'string' ? entry : JSON.parse( JSON.stringify( entry ) ) );
+         }
+      };
+
+      spyOn( mock, 'isAvailable' ).andCallThrough();
+      spyOn( mock, 'provide' ).andCallThrough();
+
+      return mock;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createHeartbeatMock() {
+      var nextTick = createTickMock();
+
+      var beforeNext = [];
+      var next = [];
+      var afterNext = [];
+
+      function run() {
+         [ beforeNext, next, afterNext ].forEach( function( queue ) {
+            while( queue.length ) { queue.shift()(); }
+         } );
+      }
+
+      var mock = {
+         onBeforeNext: function( f ) {
+            beforeNext.push( f );
+         },
+         onNext: function( f ) {
+            next.push( f );
+            nextTick( run );
+         },
+         onAfterNext: function( f ) {
+            afterNext.push( f );
+         },
+         // Mock only: reset internal state
+         _reset: function() {
+            beforeNext = [];
+            next = [];
+            afterNext = [];
+         }
+      };
+
+      spyOn( mock, 'onNext' ).andCallThrough();
+      spyOn( mock, 'onAfterNext' ).andCallThrough();
+      spyOn( mock, 'onBeforeNext' ).andCallThrough();
+
+      return mock;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    return {
       mockQ: createQMock,
       mockTick: createTickMock,
       mockHttp: httpMock.create,
       mockEventBus: createEventBusMock,
+      mockFileResourceProvider: createFileResourceProviderMock,
+      mockHeartbeat: createHeartbeatMock,
 
       any: function() { return matchers.ANY; },
       anyRemaining: function() { return matchers.ANY_REMAINING; },

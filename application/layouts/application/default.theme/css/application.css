@@ -10,19 +10,7 @@ body {
   background: url(../images/bg_header_shadow.png) no-repeat center 115px #e9ebed;
 }
 
-.application-layout header,
-.application-layout .app-content-wrapper {
-  position: absolute;
-  left: 0;
-  right: 0;
-}
-
-.application-layout header {
-  height: 115px;
-  top: 0;
-}
-
-.application-layout header:before {
+body:before {
   content: "";
   position: absolute;
   top: 0;
@@ -33,37 +21,31 @@ body {
   border-bottom: 1px solid #D3D3D3;
 }
 
-.application-layout .app-content-wrapper {
-  top: 155px;
-}
-
-.application-layout .app-header,
-.application-layout .app-content,
-.application-layout .app-footer {
-  width: 1222px;
-  margin: 0 auto;
-  padding: 0 13px;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+.container {
   position: relative;
 }
 
-.application-layout .app-header {
+.app-header,
+.app-content-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.app-header {
+  top: 0;
   height: 60px;
-  line-height: 60px;
-  background: white;
-  border-bottom: 1px solid #D3D3D3;
   padding-top: 27px;
   padding-bottom: 27px;
 }
 
-.application-layout .app-header .form-group {
+.app-header .form-group {
   margin-top: 15px;
   margin-bottom: 0;
   line-height: 1;
 }
 
-.application-layout .app-header h1 {
+.app-header h1 {
   margin: 0;
   position: relative;
   bottom: 2px;
@@ -76,26 +58,28 @@ body {
   line-height: 1;
 }
 
-.application-layout .app-header h1 span {
+.app-header h1 span {
   font-weight: 200;
 }
 
-.application-layout .app-content {
+.app-content-wrapper {
+  top: 155px;
+}
+
+.app-content {
   background-color: white;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border: 1px solid #D3D3D3;
+  padding: 20px;
+  border: 1px solid #d3d3d3;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 0 50px 0 0;
 }
 
-.application-layout h1 {
+h1 {
   color: #8c8c8c;
   font-family: 'Exo 2', Arial, sans-serif;
-  margin-top: 126px;
 }
 
-.application-layout h3 {
+h3 {
   color: #ccc;
   line-height: 50px;
   height: 50px;
@@ -104,7 +88,7 @@ body {
   margin-bottom: 1em;
 }
 
-.application-layout h3 i {
+h3 .fa {
   font-size: 30px;
   background-color: #ccc;
   color: white;
@@ -116,7 +100,41 @@ body {
   margin-right: 0.2em;
 }
 
-.application-layout .app-thanks {
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+[disabled],
+.ax-disabled {
+  color: #ccc !important;
+}
+
+.table {
+  border: 1px solid #ddd;
+  border-radius: 4px 4px 0 0;
+  border-collapse: separate;
+}
+
+.table th {
+  background-color: #ddd;
+  border: none !important;
+}
+
+.app-logo {
+  display: block;
+  height: 60px;
+  width: 257px;
+  background: url("../images/laxarjs_logo.png") no-repeat right;
+}
+
+.app-no-selection,
+.app-no-articles {
+  color: #ec5e6d;
+  text-shadow: 1px 1px 0px #fce7e9;
+}
+
+.app-flower {
   margin-top: 40px;
   margin-right: 20px;
   margin-bottom: 40px;
@@ -124,29 +142,77 @@ body {
   background: url("../images/pot_flower.png") no-repeat right;
 }
 
-.application-layout .app-footer {
+.app-footer {
   margin-top: 20px;
   text-shadow: 1px  1px 0px #fff;
 }
 
-.application-layout .app-footer,
-.application-layout .app-footer a {
+.app-footer,
+.app-footer a {
   color: #737373;
 }
 
-.application-layout .app-footer b {
+.app-footer b {
   color: #8a8a8a;
 }
 
-.application-layout .app-footer a {
+.app-footer a {
   border-bottom: 1px dotted #aaa;
 }
 
-.application-layout .app-footer a:hover b {
+.app-footer a:hover b {
   color: #2a6496;
 }
 
-.application-layout .app-version {
+a,
+.app-version,
+.app-github {
+  white-space: nowrap;
+}
+
+.app-github {
   padding-left: 26px;
   padding-right: 26px;
+}
+
+@media (max-width: 991px) {
+  .app-header,
+  .app-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .app-content {
+    padding: 20px 40px 60px;
+  }
+
+  .app-flower {
+    display: none;
+  }
+
+  .app-github {
+    padding-left: 0;
+  }
+
+  .app-github:before {
+    content: "";
+    display: block;
+    margin-top: 1em;
+  }
+}
+
+@media (min-width: 992px) {
+  h1 {
+    margin-top: 145px;
+  }
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+  .app-header {
+    background: url("../images/laxarjs_logo@2x.png") no-repeat right;
+  }
+
+  .app-flower {
+    background: url("../images/pot_flower@2x.png") no-repeat right;
+  }
 }
