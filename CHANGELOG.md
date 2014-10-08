@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+   - [#3] (https://github.com/LaxarJS/shop_demo/issues/3): Styling: Added support for retina images
+
+
 ## v1.2.1
 
    - [#2](https://github.com/LaxarJS/shop_demo/issues/2): Styling: Fixed add button is not usable for small viewports. Some further improvements.
