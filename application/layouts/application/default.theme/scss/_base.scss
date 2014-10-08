@@ -49,7 +49,7 @@ a:focus {
    display: block;
    height: image-height( "../images/laxarjs_logo.png" );
    width: image-width( "../images/laxarjs_logo.png" );
-   background: url( "../images/laxarjs_logo.png" ) no-repeat right;
+   background: url( "../images/laxarjs_logo.png" ) no-repeat right/100%;
 }
 
 .app-no-selection,
@@ -59,11 +59,13 @@ a:focus {
 }
 
 .app-flower {
+   float: right;
    margin-top: 40px;
    margin-right: 20px;
    margin-bottom: 40px;
    height: image-height( "../images/pot_flower.png" );
-   background: url( "../images/pot_flower.png" ) no-repeat right;
+   width: image-width( "../images/pot_flower.png" );
+   background: url( "../images/pot_flower.png" ) no-repeat right/100%;
 }
 
 .app-footer {
@@ -131,11 +133,11 @@ a,
    }
 }
 
-@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+// @media only screen and (-webkit-min-device-pixel-ratio: 2) {
    .app-logo {
-      background: url( "../images/laxarjs_logo@2x.png" ) no-repeat right;
+      background: url( "../images/laxarjs_logo@2x.png" ) no-repeat right/100%;
    }
    .app-flower {
-      background: url( "../images/pot_flower@2x.png" ) no-repeat right;
+      background: url( "../images/pot_flower@2x.png" ) no-repeat right/100%;
    }
-}
+// }
