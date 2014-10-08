@@ -7,7 +7,7 @@
             "widget": "shop_demo/headline_widget",
             "features": {
                "headline": {
-                  "htmlText": "ShopDemo"
+                  "htmlText": "Shop<span>Demo</span>"
                }
             }
          }
@@ -18,7 +18,7 @@
             "widget": "shop_demo/headline_widget",
             "features": {
                "intro": {
-                  "htmlText": "<div class='app-thanks'></div>"
+                  "htmlText": "<div class='app-flower'></div>"
                }
             }
          }
