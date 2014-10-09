@@ -145,7 +145,7 @@ For more information about the concept of the flow, places and pages there is a 
 
       "header": [
          {
-            "widget": "shop_demo/headline_widget_widget",
+            "widget": "shop_demo/headline_widget",
             "features": {
                "headline": {
                   "htmlText": "Hello World!"
