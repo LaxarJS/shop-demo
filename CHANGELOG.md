@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+## v1.2.3
+
    - [#4] (https://github.com/LaxarJS/shop_demo/issues/4): Bug: Removed duplicate data-ax-widget-area
 
 
