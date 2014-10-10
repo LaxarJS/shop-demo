@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+   - [#4] (https://github.com/LaxarJS/shop_demo/issues/4): Bug: Removed duplicate data-ax-widget-area
+
+
 ## v1.2.2
 
    - [#3] (https://github.com/LaxarJS/shop_demo/issues/3): Styling: Added support for retina images
