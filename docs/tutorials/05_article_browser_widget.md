@@ -111,8 +111,7 @@ We update the page [ShopDemo](../../application/pages/shop_demo.json#L39) and ad
         "resource": "articles"
     },
      "select": {
-        "resource": "selectedArticle",
-        "action": "addArticle"
+        "resource": "selectedArticle"
      }
   }
 }
