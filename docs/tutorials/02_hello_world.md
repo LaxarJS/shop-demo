@@ -7,7 +7,7 @@ A LaxarJS application consists of pages which embed several small artifacts such
 Each widget is responsible for a part of the screen and allows the user to perform specific tasks within the application, while communication with a backend server is often carried out by activities.
 The technical difference between widgets and activities is that an activity doesn't render HTML or manipulate the DOM at all and could thus (at least theoretically) run on the server, whereas a widget requires the environment provided by a browser.
 As every widget and activity is an encapsulated artifact without any JavaScript API, communication among widgets takes place via the EventBus only as we will see later in this tutorial.
-For further information about widgets, activities and event communication there is a [additional document](../missing_doc.md).
+For further information about widgets, activities and event communication there is a [additional document](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/concepts.md).
 
 ## Developing a Simple LaxarJS Widget
 The LaxarJS team develops test driven.
@@ -132,7 +132,7 @@ A page consists of a set of widgets and activities and a layout which defines th
 It represents a "screen" within the application flow.
 Out of the configured artifacts LaxarJS generates an HTML representation which can be accessed through a URL.
 Navigation between pages will be discussed in the next step of the tutorial.
-For more information about the concept of the flow, places and pages there is a other [document](../missing_doc.md).
+For more information about the concept of the flow, places and pages there is a other [document](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/concepts.md).
 
 **shop_demo/application/pages/page1.json:**
 ```json
