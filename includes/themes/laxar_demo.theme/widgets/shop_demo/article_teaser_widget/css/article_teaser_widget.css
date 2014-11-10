@@ -4,7 +4,7 @@
  * www.laxarjs.org
  */
 
-.article-teaser-widget h5 {
+.article-teaser-widget h4 {
   background-color: #ddd;
   padding: 11px 6px;
   margin: 0 -6px 10px;
@@ -44,7 +44,7 @@
   border-color: #5bc0de;
 }
 
-.article-teaser-widget .app-teaser-wrapper.app-selection h5 {
+.article-teaser-widget .app-teaser-wrapper.app-selection h4 {
   background-color: #5bc0de;
   color: white;
 }
