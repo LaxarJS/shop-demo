@@ -1,0 +1,16 @@
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+.article-browser-widget h3 i {
+  color: #ff9900;
+}
+.article-browser-widget th {
+  background-color: #ff9900;
+  color: #222222;
+}
+.article-browser-widget tr.selected td {
+  font-weight: bold;
+  background: #3498db;
+}

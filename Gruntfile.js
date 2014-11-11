@@ -53,43 +53,68 @@ module.exports = function( grunt ) {
             src: [ 'application/flow/*.json' ]
          }
       },
-      css_merger: { default: {} },
+      css_merger: {
+         default: {
+            src: [ 'application/flow/*.json' ]
+         }
+      },
       widget_json_merger: { default: {} },
       directory_tree: {
          layouts: {
             dest: 'var/listing/application_layouts.json',
             src: [
-               'application/layouts/**/*.css',
-               'application/layouts/**/*.html'
-            ]
+               'application/layouts/**/*.+(css|html)'
+            ],
+            options: {
+               embedContents: [
+                  'application/layouts/**/*.+(css|html)'
+               ]
+            }
+         },
+         pages: {
+            dest: 'var/listing/application_pages.json',
+            src: [
+               'application/pages/**/*.json'
+            ],
+            options: {
+               embedContents: [
+                  '**/*.*'
+               ]
+            }
          },
          themes: {
             dest: 'var/listing/includes_themes.json',
             src: [
-               'includes/themes/**/*.css',
-               'includes/themes/**/*.html'
-            ]
+               'includes/themes/**/*.+(css|html)'
+            ],
+            options: {
+               embedContents: [
+                  'includes/themes/**/controls/**/*.+(css|html)'
+               ]
+            }
          },
-         uikit_themes: {
-            dest: 'var/listing/laxar_uikit_themes.json',
+         uikit: {
+            dest: 'var/listing/laxar_uikit.json',
             src: [
-               'bower_components/laxar_uikit/themes/**/*.css',
-               'bower_components/laxar_uikit/themes/**/*.html'
-            ]
-         },
-         uikit_controls: {
-            dest: 'var/listing/laxar_uikit_controls.json',
-            src: [
-               'bower_components/laxar_uikit/controls/**/*.css',
-               'bower_components/laxar_uikit/controls/**/*.html'
-            ]
+               'includes/lib/laxar_uikit/themes/**/*.css',
+               'includes/lib/laxar_uikit/controls/**/*.+(css|html)'
+            ],
+            embedContents: [ 'includes/lib/laxar_uikit/controls/**/*.html' ]
          },
          widgets: {
             dest: 'var/listing/includes_widgets.json',
             src: [
                'includes/widgets/*/*/*.+(css|html|json)',
-               'includes/widgets/*/*/!(bower_components|node_modules)/**/*.+(css|html|json)'
-            ]
+               '!includes/widgets/*/*/+(package|bower).json',
+               'includes/widgets/*/*/!(bower_components|node_modules|spec)/**/*.+(css|html|json)'
+            ],
+            options: {
+               embedContents: [
+                  'includes/widgets/*/*/widget.json',
+                  'includes/widgets/*/*/*.theme/*.html',
+                  'includes/widgets/*/*/*.theme/css/*.css'
+               ]
+            }
          }
       },
       requirejs: {
@@ -97,7 +122,8 @@ module.exports = function( grunt ) {
             options: {
                mainConfigFile: 'require_config.js',
                name: '../init',
-               out: 'var/build/optimized_init.js'
+               out: 'var/build/optimized_init.js',
+               optimize: 'uglify2'
             }
          }
       },

@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+
+@import "variables_all";
+
+/** Customize header and icon color: */
+.article-teaser-widget {
+   h3 i {
+      color: $brand-info;
+   }
+
+   h4 {
+      background-color: $brand-info;
+      padding: 8px;
+   }
+}
