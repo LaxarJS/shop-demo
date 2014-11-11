@@ -6,7 +6,7 @@ It consists of a small set of LaxarJS widgets implemented in AngularJS. Storage 
 
 * [Show the live demo](http://laxarjs.github.io/shop_demo/)
 
-* [Read the tutorial](docs/tutorials/getting_started.md)
+* [Read the tutorial](https://github.com/LaxarJS/shop_demo/blob/master/docs/tutorials/01_getting_started.md#getting-started)
 
 * [LaxarJS Homepage](http://laxarjs.org)
 
@@ -43,5 +43,4 @@ Instead of using `grunt start`, you can use any web server on your machine by ha
 
 Try modifying the widgets under `includes/widgets/shop_demo` to get a feel for how a LaxarJS application works.
 
-Read the [tutorial](docs/tutorials/getting_started.md) to get further information about the LaxarJS techniques.
-
+Read the [tutorial](https://github.com/LaxarJS/shop_demo/blob/master/docs/tutorials/01_getting_started.md#getting-started) to get further information about the LaxarJS techniques.
