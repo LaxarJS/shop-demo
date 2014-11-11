@@ -1,0 +1,9 @@
+/** Customize header and icon color: */
+.article-teaser-widget h3 i {
+   color: #3498DB;
+}
+
+.article-teaser-widget h4 {
+   background-color: #3498DB;
+   padding: 8px;
+}

@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#8] (https://github.com/LaxarJS/shop_demo/issues/8): Theming: added darkly theme
 - [#7] (https://github.com/LaxarJS/shop_demo/issues/7): Styling: extracted laxar demo theme.
 - [#4] (https://github.com/LaxarJS/shop_demo/issues/4): Bug: Removed duplicate data-ax-widget-area
 - [#3] (https://github.com/LaxarJS/shop_demo/issues/3): Styling: Added support for retina images
