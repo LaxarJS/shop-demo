@@ -2,11 +2,12 @@ window.laxar = {
    name: 'LaxarJS ShopDemo',
    description: 'A DemoApp to learn how LaxarJS works.',
 
-   theme: 'default',
+   portal: {
+      theme: 'laxar_demo'
+   },
 
    locales: {
-      'default': 'en_US',
-      'alternative': 'de_DE'
+      'default': 'en_US'
    },
 
    logThreshold: 'DEVELOP',

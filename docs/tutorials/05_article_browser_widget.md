@@ -38,7 +38,7 @@ We can configure the resource *display* for the widget when adding it to the app
 We create a [HTML template](../../includes/widgets/shop_demo/article_browser_widget/default.theme/article_browser_widget.html) which actually references our model.
 Either the list of articles is displayed in the table or a hint that there are no articles based on the received resource.
 
-The style of the widget we implement with [CSS](../../includes/widgets/shop_demo/article_browser_widget/default.theme/css/article_browser_widget.css) or with [Sass](../../includes/widgets/shop_demo/article_browser_widget/default.theme/scss/article_browser_widget.scss).
+Basic widget style is implemented using a [CSS stylesheet](../../includes/widgets/shop_demo/article_browser_widget/default.theme/css/article_browser_widget.css), possibly generated from an [SCSS file](../../includes/widgets/shop_demo/article_browser_widget/default.theme/scss/article_browser_widget.scss).
 
 
 ### Article Selection by the User
@@ -74,7 +74,7 @@ In our [HTML template](../../includes/widgets/shop_demo/article_browser_widget/d
 <td data-ng-click="selectArticle( article )" class="price">{{ article.details.price | currency : "€ " }}</td>
 ```
 
-To give the user a visual feedback of the selected article we bind the CSS calss `selected` with ngClass to the table rows.
+To give the user a visual feedback of the selected article we bind the CSS class `selected` with ngClass to the table rows.
 ```html
 <tr class="selectable"
           data-ng-repeat="article in resources.display.entries track by article.id"
