@@ -1,40 +1,8 @@
-# Global compass configuration for the default.theme
-# -----
-require 'autoprefixer-rails'
-
 # Sets the number of digits of precision
 # For example, if this is 3,
 # 3.1415926 will be printed as 3.142
 # Bootstrap needs a precision of ten!
 Sass::Script::Number.precision=10
-
-
-# Added post-compile hook for autorpefxier
-# ----------------------------------------
-
-# Set support to specific browsers: ['ie 8', 'ie 7']
-# Set support to only browsers that have certain market share: ['> 5%']
-# Set support to the last n versions of browsers: ['latest 2 versions']
-
-# > n% is browser versions, selected by global usage statistics.
-# ff > 20 and ff >= 20 is Firefox versions newer, that 20.
-# none don’t set any browsers to clean CSS from any vendor prefixes.
-
-# android for old Android stock browser.
-# bb for Blackberry browser.
-# chrome for Google Chrome.
-# ff for Mozilla Firefox.
-# ie for Internet Explorer.
-# ios for iOS Safari.
-# opera for Opera.
-# safari for desktop Safari.
-
-browsers = ["ff >= 10", "chrome >= 10", "ie >= 9"]
-
-on_stylesheet_saved do |file|
-   css = File.read(file)
-   File.open(file, 'w') { |io| io << AutoprefixerRails.compile(css, browsers) }
-end
 
 
 
@@ -57,7 +25,6 @@ add_import_path bower_dir + 'laxar_uikit/scss/'
 add_import_path bower_dir + 'bootstrap-sass-official/assets/stylesheets/'
 # - Font Awesome (use bower_components directory so that imports have a prefix)
 add_import_path bower_dir
-
 
 
 

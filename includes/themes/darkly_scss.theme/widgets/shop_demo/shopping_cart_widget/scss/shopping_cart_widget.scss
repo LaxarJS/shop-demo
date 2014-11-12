@@ -1,0 +1,24 @@
+/** Customize header and icon color: */
+.shopping-cart-widget {
+   h3 i {
+      color: #00bc8c;
+   }
+
+   th {
+      background-color: #00bc8c;
+   }
+
+   .app-increase-quantity {
+      text-align: right !important;
+   }
+
+   .app-increase-buttons {
+      padding: 0;
+      padding-top: 6px;
+      width: 40px;
+
+      button {
+         padding: 0;
+      }
+   }
+}

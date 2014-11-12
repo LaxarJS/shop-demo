@@ -39,11 +39,12 @@
 
    <div data-ax-page></div>
 
+   <script>window.laxarMode = 'RELEASE';</script>
    <script src="application/application.js"></script>
-   <script>laxar.portal.theme = 'darkly';</script>
+   <script>laxar.portal.theme = 'darkly_scss';</script>
    <script src="require_config.js"></script>
    <script src="bower_components/requirejs/require.js"></script>
-   <script src="var/build/optimized_init.js"></script>
+   <script src="var/build/optimized_init.js" async></script>
+   <link rel="stylesheet" href="var/static/css/darkly_scss.theme.css" type="text/css">
 </body>
 </html>
-
