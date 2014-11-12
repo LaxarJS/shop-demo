@@ -47,15 +47,9 @@ a:focus {
 
 .app-logo {
    display: block;
-   height: image-height( "../images/laxarjs_logo.png" );
-   width: image-width( "../images/laxarjs_logo.png" );
-   background: url( "../images/laxarjs_logo.png" ) no-repeat right/100%;
-}
-
-.app-no-selection,
-.app-no-articles {
-   color: #ec5e6d;
-   text-shadow: 1px 1px 0px lighten( #ec5e6d, 30% );
+   height: image-height( "../../default.theme/images/laxarjs_logo.png" );
+   width: image-width( "../../default.theme/images/laxarjs_logo.png" );
+   background: url( "../../default.theme/images/laxarjs_logo.png" ) no-repeat right/100%;
 }
 
 .app-flower {
@@ -63,9 +57,15 @@ a:focus {
    margin-top: 40px;
    margin-right: 20px;
    margin-bottom: 40px;
-   height: image-height( "../images/pot_flower.png" );
-   width: image-width( "../images/pot_flower.png" );
-   background: url( "../images/pot_flower.png" ) no-repeat right/100%;
+   height: image-height( "../../default.theme/images/pot_flower.png" );
+   width: image-width( "../../default.theme/images/pot_flower.png" );
+   background: url( "../../default.theme/images/pot_flower.png" ) no-repeat right/100%;
+}
+
+.app-no-selection,
+.app-no-articles {
+   color: #ec5e6d;
+   text-shadow: 1px 1px 0px lighten( #ec5e6d, 30% );
 }
 
 .app-footer {

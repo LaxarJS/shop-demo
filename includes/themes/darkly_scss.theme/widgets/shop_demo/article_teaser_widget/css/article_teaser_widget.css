@@ -1,0 +1,13 @@
+/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+/** Customize header and icon color: */
+.article-teaser-widget h3 i {
+  color: #3498db;
+}
+.article-teaser-widget h4 {
+  background-color: #3498db;
+  padding: 8px;
+}

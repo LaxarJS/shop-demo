@@ -1,0 +1,15 @@
+/** Customize header and icon color: */
+.article-browser-widget h3 i {
+  color: #F90;
+}
+
+.article-browser-widget th {
+  background-color: #F90;
+  color: #222222;
+}
+
+/** Highlight the selected article. */
+.article-browser-widget tr.selected td {
+  font-weight: bold;
+  background: #3498DB;
+}

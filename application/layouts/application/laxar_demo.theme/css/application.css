@@ -1,0 +1,220 @@
+@import url(http://fonts.googleapis.com/css?family=Exo+2:500,200);
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+html body {
+  background: url(../images/bg_header_shadow.png) no-repeat center 115px #e9ebed;
+}
+
+body:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 115px;
+  background: #fff;
+  border-bottom: 1px solid #D3D3D3;
+}
+
+.container {
+  position: relative;
+}
+
+.app-header,
+.app-content-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.app-header {
+  top: 0;
+  height: 60px;
+  padding-top: 27px;
+  padding-bottom: 27px;
+}
+
+.app-header .form-group {
+  margin-top: 15px;
+  margin-bottom: 0;
+  line-height: 1;
+}
+
+.app-header h1 {
+  margin: 0;
+  position: relative;
+  bottom: 2px;
+  float: right;
+  width: auto;
+  font-size: 55px;
+  font-family: "Exo 2", Arial, sans-serif;
+  font-weight: 500;
+  color: #737373;
+  line-height: 1;
+}
+
+.app-header h1 span {
+  font-weight: 200;
+}
+
+.app-content-wrapper {
+  top: 155px;
+}
+
+.app-content {
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #d3d3d3;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0 50px 0 0;
+}
+
+h1 {
+  color: #8c8c8c;
+  font-family: 'Exo 2', Arial, sans-serif;
+}
+
+h3 {
+  color: #ccc;
+  line-height: 50px;
+  height: 50px;
+  font-family: 'Exo 2', Arial, sans-serif;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+h3 .fa {
+  font-size: 30px;
+  background-color: #ccc;
+  color: white;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 50px;
+  text-align: center;
+  margin-right: 0.2em;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+[disabled],
+.ax-disabled {
+  color: #ccc !important;
+}
+
+.table {
+  border: 1px solid #ddd;
+  border-radius: 4px 4px 0 0;
+  border-collapse: separate;
+}
+
+.table th {
+  background-color: #ddd;
+  border: none !important;
+}
+
+.app-logo {
+  display: block;
+  height: 60px;
+  width: 257px;
+  background: url("../../default.theme/images/laxarjs_logo.png") no-repeat right/100%;
+}
+
+.app-no-selection,
+.app-no-articles {
+  color: #ec5e6d;
+  text-shadow: 1px 1px 0px #fce7e9;
+}
+
+.app-flower {
+  float: right;
+  margin-top: 40px;
+  margin-right: 20px;
+  margin-bottom: 40px;
+  height: 300px;
+  width: 127px;
+  background: url("../../default.theme/images/pot_flower.png") no-repeat right/100%;
+}
+
+.app-footer {
+  margin-top: 20px;
+  text-shadow: 1px  1px 0px #fff;
+}
+
+.app-footer,
+.app-footer a {
+  color: #737373;
+}
+
+.app-footer b {
+  color: #8a8a8a;
+}
+
+.app-footer a {
+  border-bottom: 1px dotted #aaa;
+}
+
+.app-footer a:hover b {
+  color: #2a6496;
+}
+
+a,
+.app-version,
+.app-github {
+  white-space: nowrap;
+}
+
+.app-github {
+  padding-left: 26px;
+  padding-right: 26px;
+}
+
+@media (max-width: 991px) {
+  .app-header,
+  .app-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .app-content {
+    padding: 20px 40px 60px;
+  }
+
+  .app-flower {
+    display: none;
+  }
+
+  .app-github {
+    padding-left: 0;
+  }
+
+  .app-github:before {
+    content: "";
+    display: block;
+    margin-top: 1em;
+  }
+}
+
+@media (min-width: 992px) {
+  h1 {
+    margin-top: 145px;
+  }
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+  .app-logo {
+    background: url("../../default.theme/images/laxarjs_logo@2x.png") no-repeat right/100%;
+  }
+
+  .app-flower {
+    background: url("../../default.theme/images/pot_flower@2x.png") no-repeat right/100%;
+  }
+}

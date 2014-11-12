@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="x-ua-compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>LaxarJS ShopDemo</title>
+
+   <!--[if lt IE 9]>
+   <script>
+      var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+         "figure,figcaption,footer,header,hgroup,mark,menu,meter," +
+         "nav,section,time,video").split(',');
+      for (var i = 0; i < e.length; i++) {
+         document.createElement(e[i]);
+      }
+   </script>
+   <![endif]-->
+
+   <style>
+
+      #pageblocker {
+         z-index: 100;
+         position: fixed;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         background-color: white;
+      }
+
+   </style>
+</head>
+
+<body>
+   <div id="pageblocker" data-ax-page-fade></div>
+
+   <div data-ng-view style="display: none"></div>
+
+   <div data-ax-page></div>
+
+   <script>window.laxarMode = 'RELEASE';</script>
+   <script src="application/application.js"></script>
+   <script>laxar.portal.theme = 'darkly_scss';</script>
+   <script src="require_config.js"></script>
+   <script src="bower_components/requirejs/require.js"></script>
+   <script src="var/build/optimized_init.js" async></script>
+   <link rel="stylesheet" href="var/static/css/darkly_scss.theme.css" type="text/css">
+</body>
+</html>

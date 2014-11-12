@@ -70,6 +70,13 @@ The second page [FinishOrder](../../application/pages/finish_order.json) only us
 Now we start the server with `npm start` again and visit the application.
 When placing an order we navigate to the second page now.
 
+## Themeing
+
+The CSS files that we have written for our widgets and layouts only cover the basics that are necessary for displaying our application.
+For a more sophisticated styling, we add a [Bootstrap](http://getbootstrap.com) based _theme_ under `includes/themes/laxar_demo.theme`.
+The LaxarJS documentation contains a [manual on themes](//github.com/LaxarJS/laxar/blob/master/docs/manuals/creating_themes.md#creating-themes) based on this shop demo, which goes into more detail.
+
+
 ## Finish
 The application is completed and we can compile an optimized version ready for deployment:
 ```shell

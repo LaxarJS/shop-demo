@@ -10,7 +10,7 @@ The `finish_order` page will be shown after submitting an order to display an or
 These changes then need to be applied to the *application flow* which is defined at [`application/flow/flow.json`](../../application/flow/flow.json).
 The flow defines the available navigation *places* (available as URLs) and the corresponding pages.
 It also defines the *entry point* of the application which is the place initially displayed to the user.
-The concept of the flow, places and pages is elucidated [here](../missing_doc.md).
+The concept of the flow, places and pages is elucidated [here](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/concepts.md).
 
 ```json
 {
