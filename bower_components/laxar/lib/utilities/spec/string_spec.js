@@ -224,17 +224,20 @@ define( [
 
             it( 'and throws an error if an invalid specifier is used', function() {
                expect( function() { string.format( 'Unknown [0:%]', [ 1 ] ); } )
-                  .toThrow( 'Invalid format specifier "%" at index 11 of string: "Unknown [0:%]".' );
-               expect( function() { string.format( 'Unknown [0:hi]', [ 1 ] ); } )
-                  .toThrow( 'Invalid format specifier "hi" at index 11 of string: "Unknown [0:hi]".' );
+                  .toThrow(
+                     'Unknown format specifier "%" for placeholder at index 8 of string: ' +
+                     '"Unknown [0:%]" (Known specifiers are: %s, %d, %i, %f, %o).'
+               );
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             it( 'and throws an error if an unknown specifier is used', function() {
                expect( function() { string.format( 'Unknown [0:%x]', [ 1 ] ); } )
-                  .toThrow( 'Unknown format specifier "x" at index 11 of string: "Unknown [0:%x]" ' +
-                     '(Known specifiers are: %s, %d, %i, %f, %o).' );
+                  .toThrow(
+                     'Unknown format specifier "%x" for placeholder at index 8 of string: ' +
+                     '"Unknown [0:%x]" (Known specifiers are: %s, %d, %i, %f, %o).'
+               );
             } );
 
          } );
@@ -271,8 +274,53 @@ define( [
 
          it( 'creates a format function that throws an error if an unknown specifier is used', function() {
             expect( function() { format( 'Unknown [0:%x]', [ 1 ] ); } )
-               .toThrow( 'Unknown format specifier "x" at index 11 of string: "Unknown [0:%x]" ' +
-                  '(Known specifiers are: %m, %p).' );
+               .toThrow(
+                  'Unknown format specifier "%x" for placeholder at index 8 of string: ' +
+                  '"Unknown [0:%x]" (Known specifiers are: %m, %p).'
+            );
+         } );
+
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      describe( 'createFormatter( null, Object )', function() {
+
+         var format;
+
+         beforeEach( function() {
+            format = string.createFormatter( {
+               s: function( value ) { return value.toString(); },
+               'default': function( value ) { return JSON.stringify( value ); }
+            }, {
+               anonymize: function() {
+                  return '[anonymized]';
+               },
+               flip: function( s ) {
+                  return ( '' + s ).split( '' ).reverse().join( '' );
+               }
+            } );
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         it( 'creates a format function using the given mapping functions', function() {
+            expect( format( 'You owe me [0:%s:anonymize:flip].', [ 'nothing' ] ) )
+               .toEqual( 'You owe me ]dezimynona[.' );
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         it( 'creates a format function using identity if a given mapping function does not exist', function() {
+            expect( format( 'You owe me [0:%s:flip:whatever:flip].', [ 'nothing' ] ) )
+               .toEqual( 'You owe me nothing.' );
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         it( 'calls the default formatter before calling filters if no explicit type specifier is given', function() {
+            expect( format( 'You owe me [0:flip].', [ { flip: 'me' } ] ) )
+               .toEqual( 'You owe me }"em":"pilf"{.' );
          } );
 
       } );

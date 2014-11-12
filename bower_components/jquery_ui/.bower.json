@@ -1,20 +1,21 @@
 {
-  "name": "jquery_ui",
-  "version": "1.10.3",
-  "authors": [],
-  "license": "MIT",
-  "ignore": [
-    ".*",
-    "source"
+  "name": "jquery-ui",
+  "version": "1.11.2",
+  "main": [
+    "jquery-ui.js"
   ],
-  "homepage": "https://github.com/LaxarJS/jquery_ui",
-  "_release": "1.10.3",
+  "ignore": [],
+  "dependencies": {
+    "jquery": ">=1.6"
+  },
+  "homepage": "https://github.com/components/jqueryui",
+  "_release": "1.11.2",
   "_resolution": {
     "type": "version",
-    "tag": "v1.10.3",
-    "commit": "05162fe63cbb4760a73cee46117ae9243c7592ca"
+    "tag": "1.11.2",
+    "commit": "396781474d936959061271505f506b78398fe6a2"
   },
-  "_source": "git://github.com/LaxarJS/jquery_ui.git",
-  "_target": "1.10.x",
-  "_originalSource": "LaxarJS/jquery_ui"
+  "_source": "git://github.com/components/jqueryui.git",
+  "_target": "1.11.x",
+  "_originalSource": "components/jqueryui"
 }

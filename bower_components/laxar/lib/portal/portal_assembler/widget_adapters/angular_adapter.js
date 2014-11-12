@@ -64,7 +64,7 @@ define( [
          scope_.features = features;
 
          var controllerName = 'widgets.' + widgetConfiguration.widget.replace( /\//g, '.' ) + '.Controller';
-         $controller( controllerName, { '$scope': scope_ } );
+         $controller( controllerName, { '$scope': scope_, 'axEventBus': widgetServices.eventBus } );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,6 @@ define( [
                         .then( function( templateHtml ) {
                            var element = ng.element( anchorElement );
                            element.html( templateHtml );
-                           $compile( element )( scope_ );
                         } );
                   }
                } );
@@ -101,6 +100,7 @@ define( [
             return;
          }
          areaElement.appendChild( anchorElement );
+         $compile( anchorElement )( scope_ );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

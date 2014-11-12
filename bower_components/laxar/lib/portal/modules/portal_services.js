@@ -79,6 +79,18 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * A timestamp function, provided as a service to support the jasmine mock clock during testing.
+    * The mock-free implementation simply uses `new Date().getTime()`.
+    */
+   module.factory( 'axTimestamp', function() {
+      return function() {
+         return new Date().getTime();
+      };
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    module.factory( 'EventBus', [
       '$injector', '$window', 'axHeartbeat',
       function( $injector, $window, heartbeat  ) {
@@ -115,13 +127,11 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    module.factory( 'FileResourceProvider', [ '$q', '$http', 'Configuration',
-      function( $q, $http, Configuration ) {
+      function( $q, $http, configuration ) {
          fileResourceProvider.init( $q, $http );
 
          var provider = fileResourceProvider.create( paths.PRODUCT );
-
-         // DEPRECATION: the key 'fileListings' has been deprecated in favor of 'file_resource_provider.fileListings'
-         var listings = Configuration.get( 'file_resource_provider.fileListings' ) || Configuration.get( 'fileListings' );
+         var listings = configuration.get( 'file_resource_provider.fileListings' );
          if( listings ) {
             ng.forEach( listings, function( value, key ) {
                provider.setFileListingUri( key, value );
@@ -138,8 +148,7 @@ define( [
       'Configuration', 'FileResourceProvider', '$q', 'EventBus',
 
       function( configuration, fileResourceProvider, $q, eventBus ) {
-         // DEPRECATION: the key 'theme' has been deprecated in favor of 'portal.theme'
-         var theme = configuration.get( 'theme' ) || configuration.get( 'portal.theme' );
+         var theme = configuration.get( 'portal.theme' );
          var manager = themeManager.create( fileResourceProvider, $q, theme );
 
          eventBus.subscribe( 'changeThemeRequest', function( event ) {
@@ -178,7 +187,7 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   module.factory( 'CssLoader', [ 'Configuration', 'ThemeManager', function( Configuration, themeManager ) {
+   module.factory( 'CssLoader', [ 'Configuration', 'ThemeManager', function( configuration, themeManager ) {
       var mergedCssFileLoaded = [].some.call( document.getElementsByTagName( 'link' ), function( link ) {
          return link.hasAttribute( 'data-ax-merged-css' );
       } );
@@ -223,9 +232,7 @@ define( [
          }
       };
 
-      // DEPRECATION: the key 'useMergedCss' has been deprecated in favor of 'portal.useMergedCss'
-      var useMergedCss = Configuration.get( 'portal.useMergedCss' ) || Configuration.get( 'useMergedCss' );
-      if( useMergedCss ) {
+      if( configuration.get( 'portal.useMergedCss', false ) ) {
          loader.load( path.join( paths.PRODUCT, 'var/static/css', themeManager.getTheme() + '.theme.css' ) );
          return { load: function() {} };
       }
@@ -482,12 +489,19 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   var sensitiveData = [ 'Published event' ];
    function eventBusErrorHandler( message, optionalErrorInformation ) {
       log.error( 'EventBus: ' + message );
 
       if( optionalErrorInformation ) {
          ng.forEach( optionalErrorInformation, function( info, title ) {
-            log.error( '   - [0]: [1:%o]', title, info );
+            var formatString = '   - [0]: [1:%o]';
+            if( sensitiveData.indexOf( title ) !== -1 ) {
+               formatString = '   - [0]: [1:%o:anonymize]';
+            }
+
+            log.error( formatString, title, info );
+
             if( info instanceof Error && info.stack ) {
                log.error( '   - Stacktrace: ' + info.stack );
             }

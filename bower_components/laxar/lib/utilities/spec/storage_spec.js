@@ -5,7 +5,7 @@
  */
 define( [
    '../storage'
-], function( storage ) {
+], function( storage, undefined ) {
    'use strict';
 
    describe( 'storage', function() {
@@ -65,6 +65,21 @@ define( [
          expect( localStorage.getItem( 'name') ).toBe( 'Daisy Duck' );
       } );
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'setItem with undefined value is equivalent to removeItem', function() {
+         var sessionStorage = storage.getSessionStorage( 'X' );
+
+         sessionStorage.setItem( 'duck', 'Donald Duck' );
+         expect( sessionStorage.getItem( 'duck' ) ).toEqual( 'Donald Duck' );
+
+         sessionStorage.setItem( 'duck', undefined );
+         expect( function() {
+            sessionStorage.getItem( 'duck' );
+         } ).not.toThrow();
+         expect( sessionStorage.getItem( 'duck' ) ).toBeUndefined();
+      } );
+
    } );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,8 +97,8 @@ define( [
 
          origSessionSetItem = window.sessionStorage.setItem;
          origLocalSetItem = window.localStorage.setItem;
-         window.sessionStorage.setItem = function() { throw new Error( 'no browser storage' ); };
-         window.localStorage.setItem = function() { throw new Error( 'no browser storage' ); };
+         window.sessionStorage.setItem = '';
+         window.localStorage.setItem = '';
 
          storage.init();
          localStorage = storage.getLocalStorage( 'X' );
@@ -132,7 +147,7 @@ define( [
             return store[ key ];
          },
          setItem: function( key, val ) {
-            store[ key ] = val;
+            store[ key ] = ''+val;
          },
          removeItem: function( key ) {
             delete store[ key ];

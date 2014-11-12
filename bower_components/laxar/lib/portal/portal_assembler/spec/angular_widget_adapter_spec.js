@@ -23,7 +23,7 @@ define( [
    var assets = {};
    assets[ themeCssAssetPath_ ] = 'h1 { color: blue }';
    assets[ defaultCssAssetPath_ ] = 'h1 { color: #ccc }';
-   assets[ htmlAssetPath_ ] = '<h1>hello there</h1>';
+   assets[ htmlAssetPath_ ] = '<h1>hello there<i ng-if="false"></i></h1>';
 
    var widgetSpec_;
    var widgetConfiguration_;
@@ -107,11 +107,13 @@ define( [
 
       var adapter_;
       var controllerScope_;
+      var injectedEventBus_;
       var mockThemeManager_;
       var mockCssLoader_;
 
-      var Controller_ = function( $scope ) {
+      var Controller_ = function( $scope, axEventBus ) {
          controllerScope_ = $scope;
+         injectedEventBus_ = axEventBus;
       };
 
       // This mock will provide the non-themed HTML and the themed CSS.
@@ -174,9 +176,15 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         it( 'instantiates the widget controller', function() {
+         it( 'instantiates the widget controller with a scope', function() {
             expect( controllerScope_ ).toEqual( fakeControllerScope_ );
             expect( controllerScope_.features ).toEqual( widgetFeatures_ );
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         it( 'injects the event bus instance for the widget as service (#107)', function() {
+            expect( injectedEventBus_ ).toEqual( controllerScope_.eventBus );
          } );
 
       } );
@@ -223,6 +231,12 @@ define( [
             expect( anchor_.innerHTML.toLowerCase() ).toEqual( assets[ htmlAssetPath_ ] );
          } );
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         it( 'does not link its anchor dom node', function() {
+            expect( ng.element( 'i', anchor_ ).length ).toEqual( 1 );
+         } );
+
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -254,11 +268,18 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+         it( 'links the widget template', function() {
+            expect( ng.element( 'i', anchor_ ).length ).toEqual( 0 );
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
          it( 'attaches its representation to the given widget area', function() {
             expect( mockAreaNode_.children.length ).toBe( 1 );
             expect( mockAreaNode_.children[ 0 ] ).toBe( anchor_ );
             // anchor class is (mostly) managed externally
             expect( anchor_.className ).toEqual( 'ng-scope' );
+
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////

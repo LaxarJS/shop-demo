@@ -9,11 +9,10 @@ define( [
    '../../logging/log',
    '../../json/validator',
    '../../utilities/object',
-   '../../utilities/storage',
+   '../../utilities/timer',
    '../paths',
-   '../timer',
    'json!../../../static/schemas/flow.json'
-], function( ng, ngRoute, log, jsonValidator, object, storage, paths, timer, flowSchema ) {
+], function( ng, ngRoute, log, jsonValidator, object, timer, paths, flowSchema ) {
    'use strict';
 
    var module = ng.module( 'laxar.portal.flow', [ 'ngRoute' ] );
@@ -37,15 +36,13 @@ define( [
    module.run( [
       '$route', '$http', '$q', 'Configuration', 'FileResourceProvider',
 
-      function( $route, $http, $q, Configuration, fileResourceProvider ) {
+      function( $route, $http, $q, configuration, fileResourceProvider ) {
          $http_ = $http;
          fileResourceProvider_ = fileResourceProvider;
          $q_ = $q;
 
-         // DEPRECATION: the key 'entryPoint' has been deprecated in favor of 'portal.flow.entryPoint'
-         entryPoint_ = Configuration.get( 'portal.flow.entryPoint' ) || Configuration.get( 'entryPoint' );
-         // DEPRECATION: the key 'exitPoints' has been deprecated in favor of 'portal.flow.exitPoints'
-         exitPoints_ = Configuration.get( 'portal.flow.exitPoints' ) || Configuration.get( 'exitPoints' );
+         entryPoint_ = configuration.get( 'portal.flow.entryPoint' );
+         exitPoints_ = configuration.get( 'portal.flow.exitPoints' );
 
          // idea for lazy loading routes using $routeProvider and $route.reload() found here:
          // https://groups.google.com/d/msg/angular/mrcy_2BZavQ/Mqte8AvEh0QJ
@@ -57,12 +54,14 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   var SESSION_KEY_TIMER = 'navigationTimer';
    var TARGET_SELF = '_self';
    var places_;
    var previousPlaceParameters_;
    var previousNavigateRequestSubscription_;
    var currentTarget_ = TARGET_SELF;
    var navigationInProgress_ = false;
+   var navigationTimer_;
 
    var eventOptions = { sender: 'FlowController' };
    var subscriberOptions = { subscriber: 'FlowController' };
@@ -113,14 +112,17 @@ define( [
 
                return pageService.controller().tearDownPage()
                   .then( function() {
-                     navigationTimer.resumeOrCreate( place );
+                     navigationTimer_ = timer.resumedOrStarted( {
+                        label: [ 'loadTimer (', place.target ? place.target._self : place.id, ')'].join( '' ),
+                        persistenceKey: SESSION_KEY_TIMER
+                     } );
                      return pageService.controller().setupPage( page );
                   } )
                   .then( function() {
                      return finishNavigation( currentTarget_, didNavigateEvent );
                   } )
                   .then( function() {
-                     navigationTimer.stop( 'didNavigate' );
+                     navigationTimer_.stopAndLog( 'didNavigate' );
                   } );
             } )
             .then( null, function( error ) {
@@ -141,7 +143,12 @@ define( [
             var parameters = object.extend( {}, previousPlaceParameters_ || {}, event.data || {} );
             var newPlace = places_[ placeName ];
 
-            navigationTimer.start( place, newPlace );
+            navigationTimer_ = timer.started( {
+               label: [
+                  'navigation (', place ? place.targets._self : '', ' -> ', newPlace.targets._self, ')'
+               ].join( '' ),
+               persistenceKey: SESSION_KEY_TIMER
+            } );
             if( newPlace.triggerBrowserReload || event.triggerBrowserReload ) {
                triggerReload( placeName, parameters );
                return;
@@ -187,6 +194,7 @@ define( [
 
          function finishNavigation( currentTarget_, didNavigateEvent ) {
             eventBus.subscribe( 'navigateRequest', handleNavigateRequest, subscriberOptions );
+            log.context.setTag( 'PLCE', place.id );
             previousNavigateRequestSubscription_ = handleNavigateRequest;
             navigationInProgress_ = false;
             return eventBus.publish( 'didNavigate.' + currentTarget_, didNavigateEvent, eventOptions );
@@ -194,59 +202,6 @@ define( [
 
       }
    ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   var navigationTimer = (function() {
-      var SESSION_KEY = 'FlowManager';
-      var SESSION_KEY_TIMER = 'navigationTimer';
-      var sessionStore = storage.getSessionStorage( SESSION_KEY );
-
-      return {
-         start: start,
-         resumeOrCreate: resumeOrCreate,
-         stop: stop
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function start( from, to ) {
-         var label = [
-            'navigation (', from ? from.targets._self : '', ' -> ', to.targets._self, ')'
-         ].join( '' );
-         var t = timer.startedTimer( label );
-         sessionStore.setItem( SESSION_KEY_TIMER, t.save() );
-         return t;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function resumeOrCreate( place ) {
-         var timerData = sessionStore.getItem( SESSION_KEY_TIMER );
-         var t;
-         if( timerData ) {
-            t = timer.resume( timerData );
-         }
-         else {
-            var label = [ 'loadTimer (', place.target ? place.target._self : place.id, ')' ].join( '' );
-            t = timer.startedTimer( label );
-         }
-         sessionStore.setItem( SESSION_KEY_TIMER, t.save() );
-         return t;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function stop( label ) {
-         var timerData = sessionStore.getItem( SESSION_KEY_TIMER );
-         if( timerData ) {
-            var t = timer.resume( timerData );
-            t.stopAndLog( label );
-            sessionStore.removeItem( SESSION_KEY_TIMER );
-         }
-      }
-
-   } )();
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

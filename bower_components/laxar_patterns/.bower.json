@@ -1,6 +1,6 @@
 {
   "name": "laxar_patterns",
-  "version": "0.16.0",
+  "version": "0.18.0",
   "description": "Utilities to implement standard event patterns in LaxarJS widgets",
   "authors": [],
   "license": "MIT",
@@ -21,13 +21,13 @@
     "jasmine": "pivotal/jasmine#1.3.x"
   },
   "homepage": "https://github.com/LaxarJS/laxar_patterns",
-  "_release": "0.16.0",
+  "_release": "0.18.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.16.0",
-    "commit": "9d39fc331b1764dbe2d392c08f24862638038849"
+    "tag": "v0.18.0",
+    "commit": "16cf672b6a2cd2a920e7f87cb34a5854ce13ebf9"
   },
   "_source": "git://github.com/LaxarJS/laxar_patterns.git",
-  "_target": "^0.16.x",
+  "_target": "^0.18.x",
   "_originalSource": "LaxarJS/laxar_patterns"
 }

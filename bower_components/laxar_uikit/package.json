@@ -1,6 +1,6 @@
 {
    "name": "laxar_uikit",
-   "version": "0.15.0",
+   "version": "0.18.0",
    "description": "User interface controls for LaxarJS",
    "authors": [],
    "license": "MIT",
@@ -9,7 +9,7 @@
       "url": "https://github.com/LaxarJS/laxar_uikit.git"
    },
    "scripts": {
-      "test": "grunt test",
+      "test": "grunt test --continue",
       "prepublish": "fixinstall && bower install && grunt build"
    },
    "devDependencies": {
@@ -21,6 +21,6 @@
       "grunt-bower-requirejs": "~0.8.4",
       "grunt-contrib-requirejs": "~0.4.1",
       "grunt-markdown": "~0.5.0",
-      "grunt-laxar": "~0.4.2"
+      "grunt-laxar": "~0.5.1"
    }
 }

@@ -17,42 +17,56 @@ define( [
 
    describe( 'An EventBus factory', function() {
 
+      var eventBus;
+
       beforeEach( function() {
          jasmine.Clock.useMock();
          angularMocks.module( portalServicesModule.name );
+
+         angularMocks.inject( function( EventBus ) {
+            eventBus = EventBus;
+         } );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      it( 'returns an event bus instance', angularMocks.inject( function( EventBus ) {
-         expect( EventBus.publish ).toBeDefined();
-         expect( EventBus.subscribe ).toBeDefined();
-      } ) );
+      it( 'returns an event bus instance', function() {
+         expect( eventBus.publish ).toBeDefined();
+         expect( eventBus.subscribe ).toBeDefined();
+      } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      it( 'returns an event bus that resolves promises without calling $apply', angularMocks.inject( function( EventBus, $rootScope ) {
-         var eventBus = EventBus;
-         var asyncSpy = jasmine.createSpy( 'asyncSpy' );
-         eventBus.publish( 'didNothing', {} ).then( asyncSpy );
-         spyOn( $rootScope, '$apply' ).andCallFake( function() {
-            expect( asyncSpy ).toHaveBeenCalled();
+      describe( 'attaches an error handler to the event', function() {
+
+         beforeEach( function() {
+            spyOn( log, 'error' );
+
+            eventBus.subscribe( 'message', function() { throw new Error( 'error' ); } );
+            eventBus.publish( 'message', {
+               data: ''
+            } );
+            jasmine.Clock.tick( 0 );
          } );
-         jasmine.Clock.tick( 0 );
-         expect( $rootScope.$apply ).toHaveBeenCalled();
-      } ) );
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      it( 'attaches an error handler to the message bus that uses the global logger ', angularMocks.inject( function( EventBus ) {
-         spyOn( log, 'error' );
+         it( 'that uses the global logger ', function() {
+            expect( log.error ).toHaveBeenCalled();
+         } );
 
-         EventBus.subscribe( 'message', function() { throw new Error( 'error' ); } );
-         EventBus.publish( 'message' );
-         jasmine.Clock.tick( 0 );
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         expect( log.error ).toHaveBeenCalled();
-      } ) );
+         it( 'that marks the event object for anonymization in the log message', function() {
+            var eventMessageCall = log.error.calls.filter( function( call ) {
+               return call.args[1] === 'Published event';
+            } ).pop();
+
+            expect( eventMessageCall.args[0] ).toEqual( '   - [0]: [1:%o:anonymize]' );
+         } );
+
+      } );
+
    } );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,8 +142,10 @@ define( [
 
          beforeEach( function() {
 
-            windowMock_.laxar.fileListings = {
-               'includes/widgets': '/var/listing/includes_widgets.json'
+            windowMock_.laxar.file_resource_provider = {
+               fileListings: {
+                  'includes/widgets': '/var/listing/includes_widgets.json'
+               }
             };
 
             var proto = fileResourceProvider.create( '', '' ).constructor.prototype;
@@ -151,7 +167,29 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   describe( 'A Heartbeat from a axHeartbeat-factory', function() {
+   describe( 'A timestamp function provided by the axTimestamp-factory', function() {
+
+      var timestamp_;
+
+      beforeEach( function() {
+         angularMocks.module( portalServicesModule.name );
+      } );
+
+      beforeEach( angularMocks.inject( function( axTimestamp ) {
+         timestamp_ = axTimestamp;
+      } ) );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'provides a timestamp matching the EcmaScript environment time', function() {
+         expect( timestamp_() ).toEqual( new Date().getTime() );
+      } );
+
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   describe( 'A Heartbeat from an axHeartbeat-factory', function() {
 
       var heartbeat_;
 
@@ -458,7 +496,7 @@ define( [
 
          configuration_ = Configuration;
          spyOn( configuration_, 'get' ).andCallFake( function( key ) {
-            return key === 'theme' ? 'fakeTheme' : '';
+            return key === 'portal.theme' ? 'fakeTheme' : '';
          } );
 
          $timeout_ = $timeout;

@@ -2,6 +2,30 @@
 
 ## Last Changes
 
+
+## v0.18.0
+
+- [#79](https://github.com/LaxarJS/laxar_uikit/issues/79): refactoring: use `laxar.string` instead of `laxar.text` 
+- [#78](https://github.com/LaxarJS/laxar_uikit/issues/78): axInput: be more strict when parsing dates
+
+
+## v0.17.0
+
+- [#77](https://github.com/LaxarJS/laxar_uikit/issues/77): Added affix control
+  NEW FEATURE: see ticket for details
+- [#73](https://github.com/LaxarJS/laxar_uikit/issues/73): Updated jQuery UI to 1.11.1 and removed touch punch.
+  BREAKING CHANGE: see ticket for details
+
+
+## v0.16.0
+
+- [#76](https://github.com/LaxarJS/laxar_uikit/issues/76): Implemented directives for dynamic text truncation.
+  NEW FEATURE: see ticket for details
+- [#74](https://github.com/LaxarJS/laxar_uikit/issues/74): DatePicker: Fixed support for ngReadonly and ngDisabled.
+- [#72](https://github.com/LaxarJS/laxar_uikit/issues/72): Styling: Updated font awesome (v4.2) and bootstrap (v3.2)
+- [#71](https://github.com/LaxarJS/laxar_uikit/issues/71): Styling DatePicker: Fixed color definitions.
+
+
 ## v0.15.0
 
 - [#67](https://github.com/LaxarJS/laxar_uikit/issues/67): Styling: refactored default.theme

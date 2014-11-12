@@ -7,11 +7,15 @@ window.laxar = {
       useMergedCss: window.laxarMode === 'RELEASE'
    },
 
-   locales: {
-      'default': 'en_US'
+   i18n: {
+      locales: {
+         'default': 'en_US'
+      }
    },
 
-   logThreshold: 'DEVELOP',
+   logging: {
+      threshold: 'WARN'
+   },
 
    // relative to laxar-path-root
 
