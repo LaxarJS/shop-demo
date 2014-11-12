@@ -19,8 +19,10 @@
     color: $body-bg;
   }
 
-  tr.selected td {
+  // Must be specific to override odd/even styling.
+  table tbody > tr.selected > td {
     font-weight: bold;
     background: $brand-info;
   }
 }
+

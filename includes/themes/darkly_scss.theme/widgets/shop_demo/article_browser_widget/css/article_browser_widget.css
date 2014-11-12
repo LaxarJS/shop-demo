@@ -10,7 +10,7 @@
   background-color: #ff9900;
   color: #222222;
 }
-.article-browser-widget tr.selected td {
+.article-browser-widget table tbody > tr.selected > td {
   font-weight: bold;
   background: #3498db;
 }

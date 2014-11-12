@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#10] (https://github.com/LaxarJS/shop_demo/issues/10): Theming: added darkly SCSS theme
 - [#9] (https://github.com/LaxarJS/shop_demo/issues/9): Documentation: Fixed links in README.md
 - [#8] (https://github.com/LaxarJS/shop_demo/issues/8): Theming: added darkly theme
 - [#7] (https://github.com/LaxarJS/shop_demo/issues/7): Styling: extracted laxar demo theme.
