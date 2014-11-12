@@ -3,7 +3,7 @@ window.laxar = {
    description: 'A DemoApp to learn how LaxarJS works.',
 
    portal: {
-      theme: 'darkly_scss',
+      theme: 'laxar_demo',
       useMergedCss: window.laxarMode === 'RELEASE'
    },
 
