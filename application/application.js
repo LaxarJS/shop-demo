@@ -5,19 +5,6 @@ window.laxar = ( function() {
    var modeAttribute = 'data-ax-application-mode';
    var mode = document.querySelector( 'script[' + modeAttribute + ']' ).getAttribute( modeAttribute );
 
-<<<<<<< HEAD
-   i18n: {
-      locales: {
-         'default': 'en_US'
-      }
-   },
-
-   logging: {
-      threshold: 'WARN'
-   },
-
-   // relative to laxar-path-root
-=======
    return {
       name: 'LaxarJS ShopDemo',
       description: 'A DemoApp to learn how LaxarJS works.',
@@ -26,7 +13,6 @@ window.laxar = ( function() {
          theme: 'laxar_demo',
          useMergedCss: mode === 'RELEASE'
       },
->>>>>>> v1.4.0
 
       file_resource_provider: {
          fileListings: {
