@@ -7,3 +7,4 @@ atlassian-ide-plugin.xml
 ShopDemo-*.zip
 *~
 npm-debug.log
+test-results.xml
