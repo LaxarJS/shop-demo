@@ -1,31 +1,34 @@
-window.laxar = {
-   name: 'LaxarJS ShopDemo',
-   description: 'A DemoApp to learn how LaxarJS works.',
+// See https://github.com/LaxarJS/laxar/blob/master/docs/manuals/configuration.md
+window.laxar = ( function() {
+   'use strict';
 
-   portal: {
-      theme: 'laxar_demo',
-      useMergedCss: window.laxarMode === 'RELEASE'
-   },
+   var modeAttribute = 'data-ax-application-mode';
+   var mode = document.querySelector( 'script[' + modeAttribute + ']' ).getAttribute( modeAttribute );
 
-   locales: {
-      'default': 'en_US'
-   },
+   return {
+      name: 'LaxarJS ShopDemo',
+      description: 'A DemoApp to learn how LaxarJS works.',
 
-   logThreshold: 'DEVELOP',
-
-   // relative to laxar-path-root
-
-   file_resource_provider: {
-      // relative to laxar-path-root
-      fileListings: {
-         'application/pages': 'var/listing/application_pages.json',
-         'application/layouts': 'var/listing/application_layouts.json',
-         'includes/lib/laxar_uikit': 'var/listing/laxar_uikit.json',
-         'includes/themes': 'var/listing/includes_themes.json',
-         'includes/widgets': 'var/listing/includes_widgets.json'
+      portal: {
+         theme: 'laxar_demo',
+         useMergedCss: mode === 'RELEASE'
       },
 
-      useEmbedded: window.laxarMode === 'RELEASE'
-   }
+      file_resource_provider: {
+         fileListings: {
+            'application': 'var/listing/application_resources.json',
+            'bower_components': 'var/listing/bower_components_resources.json',
+            'includes': 'var/listing/includes_resources.json'
+         },
+         useEmbedded: mode === 'RELEASE'
+      },
 
-};
+      i18n: {
+         locales: {
+            'default': 'en'
+         }
+      }
+
+   };
+
+} )();
