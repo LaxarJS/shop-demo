@@ -1,6 +1,8 @@
 var require = {
    baseUrl: 'bower_components',
-   deps: [],
+   deps: [
+      'es5-shim/es5-shim'
+   ],
    shim: {
       angular: {
          deps: [

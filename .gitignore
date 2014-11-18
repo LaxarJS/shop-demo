@@ -9,3 +9,4 @@ ShopDemo-*.zip
 /bower_components
 *~
 npm-debug.log
+test-results.xml
