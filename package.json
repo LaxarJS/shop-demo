@@ -5,9 +5,10 @@
    "license": "MIT",
    "scripts": {
       "test": "grunt test --force",
-      "prepublish": "bower install",
+      "prepublish": "bower install && grunt optimize",
       "dist": "grunt dist",
-      "start": "grunt start"
+      "start": "grunt start",
+      "optimize": "grunt optimize"
    },
    "devDependencies": {
       "grunt": "~0.4.4",

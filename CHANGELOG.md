@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#11] (https://github.com/LaxarJS/shop_demo/issues/11): Performance: updated infrastructure
 
 ## v1.3.0
 
