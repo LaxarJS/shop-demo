@@ -1,0 +1,68 @@
+$app-laxarjs-logo: "../images/laxarjs-logo.svg";
+$app-pot-flower: "../images/pot-flower.svg";
+
+.app-header {
+   height: 60px;
+   padding-top: 27px;
+   padding-bottom: 27px;
+}
+
+.app-logo {
+   display: block;
+   width: 229px;
+   height: 60px;
+   background: url( $app-laxarjs-logo ) no-repeat;
+   background-size: contain;
+}
+
+.app-flower {
+   margin: 3em 0;
+   background-image: url( $app-pot-flower );
+   background-repeat: no-repeat;
+   background-position: center right;
+   background-size: contain;
+}
+
+.app-flower-helper {
+   display: block;
+   height: 0;
+   padding-top: 100%;
+}
+
+.app-version{
+   white-space: nowrap;
+}
+
+.app-version {
+   padding-left: 26px;
+   padding-right: 26px;
+}
+
+@media (max-width: $screen-sm-max) {
+   .app-header,
+   .app-footer {
+      padding-left: 20px;
+      padding-right: 20px;
+   }
+
+   .app-content {
+      padding: 20px 40px 60px;
+   }
+
+   .app-version {
+      padding-left: 0;
+   }
+
+   .app-version:before {
+      content: "";
+      display: block;
+      margin-top: 1em;
+   }
+}
+
+@media (min-width: $screen-md-min) {
+   .app-thanks {
+      display: inline-block;
+      margin-top: 185px;
+   }
+}

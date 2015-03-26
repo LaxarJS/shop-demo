@@ -64,4 +64,4 @@ After restarting the development server, the application should look similar to 
 The next step is to create the [ArticleSearchBoxWidget](04_article_search_box_widget.md).
 
 
-[<< Hello World](02_hello_world.md) | ShopDemo | [ArticleSearchBoxWidget >>](04_article_search_box_widget.md)
+[« Hello World](02_hello_world.md) | ShopDemo | [ArticleSearchBoxWidget »](04_article_search_box_widget.md)

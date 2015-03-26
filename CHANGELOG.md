@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#13] (https://github.com/LaxarJS/shop_demo/issues/13): theme: improved styling
+
 
 ## v1.4.0
 

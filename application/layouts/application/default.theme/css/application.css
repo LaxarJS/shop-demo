@@ -1,49 +1,64 @@
-.app-footer {
-   margin-top: 20px;
+.app-header {
+  height: 60px;
+  padding-top: 27px;
+  padding-bottom: 27px;
 }
 
 .app-logo {
-   display: block;
-   height: 60px;
-   width: 257px;
-   background: url("../../default.theme/images/laxarjs_logo.png") no-repeat right/100%;
+  display: block;
+  width: 229px;
+  height: 60px;
+  background: url("../images/laxarjs-logo.svg") no-repeat;
+  background-size: contain;
 }
 
 .app-flower {
-   float: right;
-   margin-top: 40px;
-   margin-right: 20px;
-   margin-bottom: 40px;
-   height: 300px;
-   width: 127px;
-   background: url("../../default.theme/images/pot_flower.png") no-repeat right/100%;
+  margin: 3em 0;
+  background-image: url("../images/pot-flower.svg");
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: contain;
 }
 
-.app-header {
-   top: 0;
-   height: 60px;
-   padding-top: 27px;
-   padding-bottom: 80px;
+.app-flower-helper {
+  display: block;
+  height: 0;
+  padding-top: 100%;
 }
 
-
-.app-header .form-group {
-   margin-top: 15px;
-   margin-bottom: 0;
-   line-height: 1;
+.app-version {
+  white-space: nowrap;
 }
 
-.app-header h1 {
-   margin: 0;
-   position: relative;
-   bottom: 2px;
-   float: right;
-   width: auto;
-   font-size: 55px;
-   line-height: 1;
+.app-version {
+  padding-left: 26px;
+  padding-right: 26px;
 }
 
-.app-github {
-   padding-left: 26px;
-   padding-right: 26px;
+@media (max-width: 991px) {
+  .app-header,
+  .app-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .app-content {
+    padding: 20px 40px 60px;
+  }
+
+  .app-version {
+    padding-left: 0;
+  }
+
+  .app-version:before {
+    content: "";
+    display: block;
+    margin-top: 1em;
+  }
+}
+@media (min-width: 992px) {
+  .app-thanks {
+    display: inline-block;
+    margin-top: 185px;
+  }
 }

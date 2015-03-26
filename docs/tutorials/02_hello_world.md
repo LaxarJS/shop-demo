@@ -192,4 +192,4 @@ Now we can start the application again (`npm start` in the project directory) to
 ## The Next Step
 The [next step](03_application_flow.md) is to add a second page to the application, creating the application flow.
 
-[<< Getting Started](01_getting_started.md) | Hello World! | [Application Flow >>](03_application_flow.md)
+[« Getting Started](01_getting_started.md) | Hello World! | [Application Flow »](03_application_flow.md)

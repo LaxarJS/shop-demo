@@ -18,7 +18,7 @@
             "widget": "shop_demo/headline_widget",
             "features": {
                "intro": {
-                  "htmlText": "<div class='app-flower'></div>"
+                  "htmlText": "<div class='app-flower'><span class='app-flower-helper'></span></div>"
                }
             }
          }
@@ -28,10 +28,10 @@
             "widget": "shop_demo/headline_widget",
             "features": {
                "headline": {
-                  "htmlText": "Thank you<br>for your order!"
+                  "htmlText": "<span class='app-thanks'>Thank you<br>for your order!</span>"
                },
                "intro": {
-                  "htmlText": "We will send your stuff as soon as possible.<br>Forgotten something to buy? <a href='#/' title='Go back'><b>Go Back.</b></a>"
+                  "htmlText": "We will send your stuff as soon as possible.<br>Forgotten something to buy? <a href='#/' title='Go back'>Go Back.</a>"
                }
             }
          }

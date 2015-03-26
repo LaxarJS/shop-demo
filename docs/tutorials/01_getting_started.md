@@ -67,4 +67,4 @@ To stop the server we press `Ctrl-C`.
 The next step is to create a simple widget and add it to our application in order to display ["Hello World!"](02_hello_world.md).
 
 
-Getting Started | [Hello World! >>](02_hello_world.md)
+Getting Started | [Hello World! »](02_hello_world.md)

@@ -1,0 +1,65 @@
+/**
+ * Copyright 2014
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+/* line 12, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget h4 {
+  background-color: #ddd;
+  padding: 11px 6px;
+  margin: 0 -6px 10px;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+}
+/* line 22, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget .dl-horizontal dt {
+  width: 100px;
+}
+/* line 26, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget .dl-horizontal dd {
+  margin-left: 120px;
+}
+/* line 31, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget dt ~ dt,
+.article-teaser-widget dd ~ dd {
+  margin-top: 1em;
+}
+/* line 36, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget .app-no-selection {
+  color: #ed5565;
+  text-align: center;
+}
+/* line 41, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget h3.app-selection {
+  color: #5bc0de;
+}
+/* line 46, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget .app-teaser-wrapper {
+  padding: 0 6px;
+  margin-bottom: 20px;
+}
+/* line 50, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget .app-teaser-wrapper.app-selection {
+  border-color: #5bc0de;
+}
+/* line 53, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget .app-teaser-wrapper.app-selection h4 {
+  background-color: #5bc0de;
+  color: white;
+}
+/* line 60, ../../default.theme/scss/article_teaser_widget.scss */
+.article-teaser-widget .btn-default.ax-disabled {
+  background-color: white;
+  border-color: #ccc;
+}
+
+/* line 12, ../scss/article_teaser_widget.scss */
+.article-teaser-widget h3.app-selection i {
+  background-color: #5bc0de;
+}
+/* line 17, ../scss/article_teaser_widget.scss */
+.article-teaser-widget .app-teaser-wrapper {
+  border: 1px solid #ddd;
+  border-radius: 4px 4px 0 0;
+}
