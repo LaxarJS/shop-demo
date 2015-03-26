@@ -1,3 +1,4 @@
+
 /* FONT PATH
  * -------------------------- */
 
@@ -10313,72 +10314,221 @@ input[type="text"].ax-error {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}.app-footer {
-   margin-top: 20px;
+}.app-header {
+  height: 60px;
+  padding-top: 27px;
+  padding-bottom: 27px;
 }
 
 .app-logo {
-   display: block;
-   height: 60px;
-   width: 257px;
-   background: url("../../../application/layouts/application/default.theme/images/laxarjs_logo.png") no-repeat right/100%;
+  display: block;
+  width: 229px;
+  height: 60px;
+  background: url("../../../application/layouts/application/default.theme/images/laxarjs-logo.svg") no-repeat;
+  background-size: contain;
 }
 
 .app-flower {
-   float: right;
-   margin-top: 40px;
-   margin-right: 20px;
-   margin-bottom: 40px;
-   height: 300px;
-   width: 127px;
-   background: url("../../../application/layouts/application/default.theme/images/pot_flower.png") no-repeat right/100%;
+  margin: 3em 0;
+  background-image: url("../../../application/layouts/application/default.theme/images/pot-flower.svg");
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: contain;
 }
 
-.app-header {
-   top: 0;
-   height: 60px;
-   padding-top: 27px;
-   padding-bottom: 80px;
+.app-flower-helper {
+  display: block;
+  height: 0;
+  padding-top: 100%;
 }
 
-
-.app-header .form-group {
-   margin-top: 15px;
-   margin-bottom: 0;
-   line-height: 1;
+.app-version {
+  white-space: nowrap;
 }
 
-.app-header h1 {
-   margin: 0;
-   position: relative;
-   bottom: 2px;
-   float: right;
-   width: auto;
-   font-size: 55px;
-   line-height: 1;
+.app-version {
+  padding-left: 26px;
+  padding-right: 26px;
 }
 
-.app-github {
-   padding-left: 26px;
-   padding-right: 26px;
-}.article-browser-widget tbody > tr.selected > td {
-   font-weight: bold;
-}.shopping-cart-widget .app-increase-quantity {
-   text-align: right !important;
-}
+@media (max-width: 991px) {
+  .app-header,
+  .app-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
-.shopping-cart-widget .app-increase-buttons {
-   padding: 0;
-   padding-top: 3px;
-   position: relative;
-}
+  .app-content {
+    padding: 20px 40px 60px;
+  }
 
-.shopping-cart-widget .app-increase-buttons button {
-   float: left;
-   padding: 0;
-   line-height: 14px;
-}
+  .app-version {
+    padding-left: 0;
+  }
 
+  .app-version:before {
+    content: "";
+    display: block;
+    margin-top: 1em;
+  }
+}
+@media (min-width: 992px) {
+  .app-thanks {
+    display: inline-block;
+    margin-top: 185px;
+  }
+}/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+.article-search-box-widget {
+  margin-top: 15px;
+}/**
+ * Copyright 2014 aixigo AG
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+.article-browser-widget {
+  position: relative;
+}
+.article-browser-widget .app-col-1 {
+  width: 60px;
+}
+.article-browser-widget .app-col-3 {
+  width: 85px;
+}
+.article-browser-widget .app-no-articles {
+  color: #d9534f;
+  text-align: center;
+}
+.article-browser-widget .app-no-articles:hover td {
+  background-color: transparent !important;
+}
+.article-browser-widget h3.app-articles {
+  color: #737373;
+}
+.article-browser-widget table.app-articles {
+  border-color: #737373;
+}
+.article-browser-widget table.app-articles > thead > tr > th {
+  color: white;
+  background-color: #737373;
+  font-weight: 300;
+}
+.article-browser-widget .table-hover > tbody > tr:hover > td {
+  background-color: #b5deea;
+  color: #037a9d;
+}
+.article-browser-widget tbody > tr.selected > td {
+  color: white;
+  font-weight: bold;
+  background: #5bc0de;
+}
+.article-browser-widget .selectable {
+  cursor: pointer;
+}
+.article-browser-widget .clickable {
+  cursor: auto;
+}
+.article-browser-widget .price {
+  text-align: right !important;
+}/**
+ * Copyright 2014
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+.article-teaser-widget h4 {
+  background-color: #ddd;
+  padding: 11px 6px;
+  margin: 0 -6px 10px;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+}
+.article-teaser-widget .dl-horizontal dt {
+  width: 100px;
+}
+.article-teaser-widget .dl-horizontal dd {
+  margin-left: 120px;
+}
+.article-teaser-widget dt ~ dt,
+.article-teaser-widget dd ~ dd {
+  margin-top: 1em;
+}
+.article-teaser-widget .app-no-selection {
+  color: #d9534f;
+  text-align: center;
+}
+.article-teaser-widget h3.app-selection {
+  color: #5bc0de;
+}
+.article-teaser-widget .app-teaser-wrapper {
+  padding: 0 6px;
+  margin-bottom: 20px;
+}
+.article-teaser-widget .app-teaser-wrapper.app-selection {
+  border-color: #5bc0de;
+}
+.article-teaser-widget .app-teaser-wrapper.app-selection h4 {
+  background-color: #5bc0de;
+  color: white;
+}
+.article-teaser-widget .btn-default.ax-disabled {
+  background-color: white;
+  border-color: #ccc;
+}/**
+ * Copyright 2014
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+.shopping-cart-widget .app-col-1 {
+  width: 60px;
+}
+.shopping-cart-widget .app-col-3 {
+  width: 85px;
+}
+.shopping-cart-widget .app-col-4 {
+  width: 55px;
+}
 .shopping-cart-widget .app-col-5 {
-   width: 20px;
+  width: 20px;
+}
+.shopping-cart-widget table {
+  table-layout: fixed;
+}
+.shopping-cart-widget .app-no-articles {
+  color: #d9534f;
+  text-align: center;
+  background-color: #ddd;
+  font-weight: 300;
+}
+.shopping-cart-widget h3.app-articles {
+  color: #5cb85c;
+}
+.shopping-cart-widget table.app-articles {
+  border-color: #5cb85c;
+}
+.shopping-cart-widget table.app-articles > thead > tr > th {
+  background-color: #5cb85c;
+  color: white;
+}
+.shopping-cart-widget table.app-articles > tfoot > tr > td {
+  border-top-color: #c7e6c7;
+  background-color: #c7e6c7;
+  color: #3d8b3d;
+  font-weight: bold;
+}
+.shopping-cart-widget .app-increase-quantity {
+  text-align: right !important;
+}
+.shopping-cart-widget .app-increase-buttons {
+  padding: 0;
+  padding-top: 3px;
+  position: relative;
+}
+.shopping-cart-widget .app-increase-buttons button {
+  float: left;
+  padding: 0;
+  line-height: 14px;
 }
