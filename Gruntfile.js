@@ -26,6 +26,18 @@ module.exports = function( grunt ) {
             jshintrc: __dirname + '/.jshintrc'
          }
       },
+      cssmin: {
+         default: {
+            options: {
+               keepSpecialComments: 0
+            },
+            files: [{
+               expand: true,
+               src: 'var/static/css/*.theme.css',
+               ext: '.min.css'
+            }]
+         }
+      },
       compress: {
          default: {
             options: {
@@ -115,29 +127,39 @@ module.exports = function( grunt ) {
          }
       },
       watch: {
-         options:  {
-            livereload: liveReloadPort
+         options: {
+            livereload: liveReloadPort,
+            reload: true
          },
          Gruntfile: {
-            files: __filename,
-            options: {
-               /* reload Grunt config */
-               reload: true
-            }
+            files: __filename
          },
          application: {
-            files: [ '<%= directory_tree.application.src %>' ],
-            tasks: [ 'directory_tree:application' ],
+            files: [
+               'application/**/!(scss)/*.*'
+            ]
+         },
+         libraries: {
+            files: [
+               'includes/lib/*/**',
+               'includes/controls/*/**',
+               'includes/themes/*.theme/**',
+               '!includes/**/(bower_components|node_modules)/**',
+               '!includes/**/*.scss'
+            ]
+         },
+         dependencies: {
+            files: [
+               '<%= directory_tree.application.src %>',
+               '<%= directory_tree.includes.src %>'
+            ],
+            tasks: [
+               'directory_tree:application',
+               'directory_tree:includes',
+               'portal_angular_dependencies'
+            ],
             options: {
                event: [ 'added', 'deleted' ]
-            }
-         },
-         includes: {
-            files: [ '<%= directory_tree.includes.src %>' ],
-            tasks: [ 'directory_tree:includes' ],
-            options: {
-               event: [ 'added', 'deleted' ],
-               reload: true
             }
          }
       }
@@ -152,19 +174,23 @@ module.exports = function( grunt ) {
       var config = grunt.config( 'widget.' + widget );
       grunt.config( 'widget.' + widget, _.defaults( {}, config ) );
       grunt.config( 'watch.' + widget, {
-         files: [ widget + '/!(bower_components|node_modules)',
-                  widget + '/!(bower_components|node_modules)/**' ]
+         files: [
+            widget + '/!(bower_components|node_modules)',
+            widget + '/!(bower_components|node_modules)/**',
+            '!' + widget + '/**/*.scss'
+         ]
       } );
    } );
 
    grunt.loadNpmTasks( 'grunt-laxar' );
+   grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
    grunt.loadNpmTasks( 'grunt-contrib-compass' );
    grunt.loadNpmTasks( 'grunt-contrib-compress' );
    grunt.loadNpmTasks( 'grunt-contrib-watch' );
 
    grunt.registerTask( 'server', [ 'connect' ] );
    grunt.registerTask( 'build', [ 'directory_tree', 'portal_angular_dependencies' ] );
-   grunt.registerTask( 'optimize', [ 'build', 'css_merger', 'requirejs' ] );
+   grunt.registerTask( 'optimize', [ 'build', 'css_merger', 'cssmin', 'requirejs' ] );
    grunt.registerTask( 'test', [ 'server', 'widgets' ] );
    grunt.registerTask( 'default', [ 'build', 'test' ] );
    grunt.registerTask( 'dist', [ 'optimize', 'compress' ] );
