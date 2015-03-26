@@ -133,4 +133,4 @@ We include the [ArticleSearchBoxWidget](../../includes/widgets/shop_demo/article
 At the moment we can search for articles but they are not displayed.
 To change this the next step is to implement the [ArticleBrowserWidget](05_article_browser_widget.md) which displays the articles.
 
-[<< Application Flow](03_application_flow.md) | ArticleBrowserWidget | [ArticleBrowserWidget >>](05_article_browser_widget.md)
+[« Application Flow](03_application_flow.md) | ArticleBrowserWidget | [ArticleBrowserWidget »](05_article_browser_widget.md)

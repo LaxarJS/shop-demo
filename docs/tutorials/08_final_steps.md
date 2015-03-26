@@ -73,7 +73,7 @@ When placing an order we navigate to the second page now.
 ## Themeing
 
 The CSS files that we have written for our widgets and layouts only cover the basics that are necessary for displaying our application.
-For a more sophisticated styling, we add a [Bootstrap](http://getbootstrap.com) based _theme_ under `includes/themes/laxar_demo.theme`.
+For a more sophisticated styling, we add a [Bootstrap](http://getbootstrap.com) based _theme_ under `includes/themes/cube.theme`.
 The LaxarJS documentation contains a [manual on themes](//github.com/LaxarJS/laxar/blob/master/docs/manuals/creating_themes.md#creating-themes) based on this shop demo, which goes into more detail.
 
 
@@ -88,4 +88,4 @@ Start the server with `npm start` and visit the [static version](http://localhos
 ## The Next Step
 Go ahead and Develop your own application!
 
-[<< ShoppingCartWidget](07_shopping_cart_widget.md)  | Final steps
+[« ShoppingCartWidget](07_shopping_cart_widget.md)  | Final steps

@@ -143,4 +143,4 @@ The ShoppingCartWidget triggers the action `order` but no other widget or activi
 For this purpose we do some [final steps](08_final_steps.md) like implement the OrderActivity and add a second page.
 
 
-[<< ArticleTeaserWidget](06_article_teaser_widget.md)  | ShoppingCartWidget | [Final steps >>](08_final_steps.md)
+[« ArticleTeaserWidget](06_article_teaser_widget.md)  | ShoppingCartWidget | [Final steps »](08_final_steps.md)

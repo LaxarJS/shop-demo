@@ -173,4 +173,4 @@ if( !entries.length ) {
 ## The Next Step
 The next step is to implement the [ArticleTeaserWidget](06_article_teaser_widget.md) which displays the details of one article.
 
-[<< ArticleSearchBoxWidget](04_article_search_box_widget.md) | ArticleBrowserWidget | [ArticleTeaserWidget >>](06_article_teaser_widget.md)
+[« ArticleSearchBoxWidget](04_article_search_box_widget.md) | ArticleBrowserWidget | [ArticleTeaserWidget »](06_article_teaser_widget.md)
