@@ -3,6 +3,11 @@
 ## Last Changes
 
 
+## v1.5.0
+
+- [#13] (https://github.com/LaxarJS/shop_demo/issues/13): theme: improved styling
+
+
 ## v1.4.0
 
 - [#11] (https://github.com/LaxarJS/shop_demo/issues/11): Performance: updated infrastructure

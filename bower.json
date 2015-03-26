@@ -1,14 +1,18 @@
 {
    "name": "ShopDemo",
-   "version": "1.4.0",
+   "version": "1.5.0",
    "description": "A DemoApp to learn how LaxarJS works.",
    "license": "MIT",
+   "repository": {
+      "type": "https",
+      "url": "https://github.com/LaxarJS/shop_demo.git"
+   },
    "dependencies": {
       "requirejs": "2.1.x",
       "requirejs-plugins": "1.0.x",
-      "laxar": "LaxarJS/laxar#^0.17.x",
-      "laxar_uikit": "LaxarJS/laxar_uikit#^0.18.x",
-      "laxar_patterns": "LaxarJS/laxar_patterns#^0.18.x",
+      "laxar": "LaxarJS/laxar#^0.23.x",
+      "laxar_patterns": "LaxarJS/laxar_patterns#^0.19.0",
+      "laxar_uikit": "LaxarJS/laxar_uikit#^0.21.0",
       "bootswatch-scss": "3.2.x",
       "marked": "0.3.x"
    },

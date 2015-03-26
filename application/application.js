@@ -10,7 +10,7 @@ window.laxar = ( function() {
       description: 'A DemoApp to learn how LaxarJS works.',
 
       portal: {
-         theme: 'laxar_demo',
+         theme: 'cube',
          useMergedCss: mode === 'RELEASE'
       },
 

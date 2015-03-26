@@ -25,7 +25,7 @@ The implementation of this feature doesn't differ much from the *display* featur
 We add the feature `display` to the [widget definition](../../includes/widgets/shop_demo/article_teaser_widget/widget.json#L20) and define it as [required](../../includes/widgets/shop_demo/article_teaser_widget/widget.json#L17).
 For this feature we already adjust the [template](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/article_teaser_widget.html) by adding the headline and a definition list for the article details.
 Again we [use the resource handler](../../includes/widgets/shop_demo/article_teaser_widget/article_teaser_widget.js#L24) defined in the LaxarJS Patterns library to listen for the relevant events of the resource.
-For styling we generate the [CSS file](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/css/article_teaser_widget.css) with the [Sass file](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/scss/article_teaser_widget.scss).
+For styling we generate the [CSS file](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/css/article_teaser_widget.css) from the [Sass file](../../includes/widgets/shop_demo/article_teaser_widget/default.theme/scss/article_teaser_widget.scss).
 
 ## Add an Article to the Cart
 The second requirement is that the user can add the displayed article to the shopping cart.
@@ -81,5 +81,5 @@ When pressing it nothing visible happens as the [ShoppingCartWidget](07_shopping
 Let's implement that one next.
 
 
-[<< ArticleBrowserWidget](05_article_browser_widget.md) | ArticleTeaserWidget | [ShoppingCartWidget >>](07_shopping_cart_widget.md)
+[« ArticleBrowserWidget](05_article_browser_widget.md) | ArticleTeaserWidget | [ShoppingCartWidget »](07_shopping_cart_widget.md)
 
