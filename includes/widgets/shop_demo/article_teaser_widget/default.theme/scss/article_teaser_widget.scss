@@ -21,7 +21,8 @@
    .dl-horizontal {
       dt {
          width: 100px;
-
+         float: left;
+         text-align: right;
       }
       dd {
          margin-left: 120px;
