@@ -19,6 +19,13 @@
   background-position: center right;
   background-size: contain;
 }
+@media (max-width: 991px) {
+  .app-flower {
+    margin: 0;
+    background-position: center;
+    height: 200px;
+  }
+}
 
 .app-flower-helper {
   display: block;
@@ -35,17 +42,13 @@
   padding-right: 26px;
 }
 
+.app-header,
+.app-footer {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 @media (max-width: 991px) {
-  .app-header,
-  .app-footer {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .app-content {
-    padding: 20px 40px 60px;
-  }
-
   .app-version {
     padding-left: 0;
   }
@@ -53,12 +56,20 @@
   .app-version:before {
     content: "";
     display: block;
-    margin-top: 1em;
+    margin-top: 0.2em;
   }
 }
-@media (min-width: 992px) {
+.app-thanks {
+  display: inline-block;
+  margin-top: 165px;
+}
+@media (min-width: 991px) and (max-width: 1199px) {
   .app-thanks {
-    display: inline-block;
-    margin-top: 165px;
+    margin-top: 120px;
+  }
+}
+@media (max-width: 991px) {
+  .app-thanks {
+    margin-top: 0;
   }
 }
