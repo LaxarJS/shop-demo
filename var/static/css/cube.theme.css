@@ -206,6 +206,7 @@
 .fa-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 
@@ -213,6 +214,7 @@
 .fa-rotate-180 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
 
@@ -220,6 +222,7 @@
 .fa-rotate-270 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
   -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
   transform: rotate(270deg);
 }
 
@@ -227,6 +230,7 @@
 .fa-flip-horizontal {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
   -webkit-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
   transform: scale(-1, 1);
 }
 
@@ -234,6 +238,7 @@
 .fa-flip-vertical {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   -webkit-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
   transform: scale(1, -1);
 }
 
@@ -2877,7 +2882,6 @@ figure {
 
 /* line 209, ../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_normalize.scss */
 hr {
-  -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 0;
 }
@@ -2948,8 +2952,7 @@ input {
 /* line 332, ../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_normalize.scss */
 input[type="checkbox"],
 input[type="radio"] {
-  -moz-box-sizing: border-box;
-       box-sizing: border-box;
+  box-sizing: border-box;
   padding: 0;
 }
 
@@ -2962,7 +2965,6 @@ input[type="number"]::-webkit-outer-spin-button {
 /* line 355, ../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_normalize.scss */
 input[type="search"] {
   -webkit-appearance: textfield;
-  -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 
@@ -3115,14 +3117,12 @@ th {
 }
 /* line 11, ../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
 * {
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
 /* line 14, ../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
 *:before,
 *:after {
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -5179,7 +5179,6 @@ label {
 
 /* line 47, ../../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 input[type="search"] {
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -11066,12 +11065,24 @@ body:before {
   font-weight: 200;
 }
 
+/* line 64, ../scss/_application.scss */
+.app-header,
+.app-footer {
+  padding-left: 20px;
+  padding-right: 20px;
+}
 /* line 69, ../scss/_application.scss */
+.app-header a,
+.app-footer a {
+  white-space: nowrap;
+}
+
+/* line 79, ../scss/_application.scss */
 .app-content-wrapper {
   top: 155px;
 }
 
-/* line 73, ../scss/_application.scss */
+/* line 83, ../scss/_application.scss */
 .app-content {
   position: relative;
   background-color: white;
@@ -11081,38 +11092,31 @@ body:before {
   border-radius: 0 50px 0 0;
 }
 
-/* line 87, ../scss/_application.scss */
+/* line 97, ../scss/_application.scss */
 .app-footer {
   margin-top: 20px;
   text-shadow: 1px  1px 0px #fff;
   padding-bottom: 1em;
 }
+/* line 102, ../scss/_application.scss */
+.app-footer .app-version a {
+  margin-left: 0.5em;
+}
 
-/* line 93, ../scss/_application.scss */
+/* line 107, ../scss/_application.scss */
 .app-footer,
 .app-footer a {
   color: #8c8c8c;
 }
 
-/* line 98, ../scss/_application.scss */
+/* line 112, ../scss/_application.scss */
 .app-footer a {
   border-bottom: 1px dotted #bbb;
 }
-/* line 101, ../scss/_application.scss */
+/* line 115, ../scss/_application.scss */
 .app-footer a:hover, .app-footer a:focus {
   color: #2a6496;
   text-decoration: none;
-}
-
-/* line 108, ../scss/_application.scss */
-.app-version {
-  white-space: nowrap;
-}
-
-/* line 112, ../scss/_application.scss */
-.app-version {
-  padding-left: 26px;
-  padding-right: 26px;
 }
 
 /* line 2, ../scss/_type.scss */
@@ -11200,6 +11204,13 @@ em {
   padding-top: 27px;
   padding-bottom: 27px;
 }
+.app-header h1 {
+  text-align: right;
+}
+
+.app-footer {
+  margin-top: 1em;
+}
 
 .app-logo {
   display: block;
@@ -11216,6 +11227,13 @@ em {
   background-position: center right;
   background-size: contain;
 }
+@media (max-width: 991px) {
+  .app-flower {
+    margin: 0;
+    background-position: center;
+    height: 200px;
+  }
+}
 
 .app-flower-helper {
   display: block;
@@ -11224,40 +11242,35 @@ em {
 }
 
 .app-version {
-  white-space: nowrap;
+  text-align: right;
 }
-
-.app-version {
-  padding-left: 26px;
-  padding-right: 26px;
-}
-
-@media (max-width: 991px) {
-  .app-header,
-  .app-footer {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .app-content {
-    padding: 20px 40px 60px;
-  }
-
+@media (max-width: 992px) {
   .app-version {
-    padding-left: 0;
-  }
-
-  .app-version:before {
-    content: "";
-    display: block;
-    margin-top: 1em;
+    text-align: left;
   }
 }
-@media (min-width: 992px) {
+
+.app-thanks {
+  display: inline-block;
+  margin-top: 165px;
+}
+@media (min-width: 991px) and (max-width: 1199px) {
   .app-thanks {
-    display: inline-block;
-    margin-top: 185px;
+    margin-top: 120px;
   }
+}
+@media (max-width: 991px) {
+  .app-thanks {
+    margin-top: 0;
+  }
+}
+
+h1 > a,
+h1 > a:hover,
+h1 > a:focus,
+h1 > a:visited {
+  color: currentcolor;
+  text-decoration: none;
 }/**
  * Copyright 2014 aixigo AG
  * Released under the MIT license.
@@ -11347,47 +11360,49 @@ em {
   background-color: #ddd;
   padding: 11px 6px;
   margin: 0 -6px 10px;
-  font-weight: 500;
+  font-weight: 300;
   font-size: 14px;
   text-align: center;
 }
 /* line 22, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget .dl-horizontal dt {
   width: 100px;
+  float: left;
+  text-align: right;
 }
-/* line 26, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 27, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget .dl-horizontal dd {
   margin-left: 120px;
 }
-/* line 31, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 32, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget dt ~ dt,
 .article-teaser-widget dd ~ dd {
   margin-top: 1em;
 }
-/* line 36, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 37, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget .app-no-selection {
   color: #ed5565;
   text-align: center;
 }
-/* line 41, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 42, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget h3.app-selection {
   color: #5bc0de;
 }
-/* line 46, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 47, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget .app-teaser-wrapper {
   padding: 0 6px;
   margin-bottom: 20px;
 }
-/* line 50, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 51, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget .app-teaser-wrapper.app-selection {
   border-color: #5bc0de;
 }
-/* line 53, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 54, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget .app-teaser-wrapper.app-selection h4 {
   background-color: #5bc0de;
   color: white;
 }
-/* line 60, ../../default.theme/scss/article_teaser_widget.scss */
+/* line 61, ../../default.theme/scss/article_teaser_widget.scss */
 .article-teaser-widget .btn-default.ax-disabled {
   background-color: white;
   border-color: #ccc;

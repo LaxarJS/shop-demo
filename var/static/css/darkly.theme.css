@@ -15,6 +15,13 @@ page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-insid
   padding-top: 27px;
   padding-bottom: 27px;
 }
+.app-header h1 {
+  text-align: right;
+}
+
+.app-footer {
+  margin-top: 1em;
+}
 
 .app-logo {
   display: block;
@@ -31,6 +38,13 @@ page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-insid
   background-position: center right;
   background-size: contain;
 }
+@media (max-width: 991px) {
+  .app-flower {
+    margin: 0;
+    background-position: center;
+    height: 200px;
+  }
+}
 
 .app-flower-helper {
   display: block;
@@ -39,40 +53,35 @@ page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-insid
 }
 
 .app-version {
-  white-space: nowrap;
+  text-align: right;
 }
-
-.app-version {
-  padding-left: 26px;
-  padding-right: 26px;
-}
-
-@media (max-width: 991px) {
-  .app-header,
-  .app-footer {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .app-content {
-    padding: 20px 40px 60px;
-  }
-
+@media (max-width: 992px) {
   .app-version {
-    padding-left: 0;
-  }
-
-  .app-version:before {
-    content: "";
-    display: block;
-    margin-top: 1em;
+    text-align: left;
   }
 }
-@media (min-width: 992px) {
+
+.app-thanks {
+  display: inline-block;
+  margin-top: 165px;
+}
+@media (min-width: 991px) and (max-width: 1199px) {
   .app-thanks {
-    display: inline-block;
-    margin-top: 185px;
+    margin-top: 120px;
   }
+}
+@media (max-width: 991px) {
+  .app-thanks {
+    margin-top: 0;
+  }
+}
+
+h1 > a,
+h1 > a:hover,
+h1 > a:focus,
+h1 > a:visited {
+  color: currentcolor;
+  text-decoration: none;
 }/**
  * Copyright 2014 aixigo AG
  * Released under the MIT license.
