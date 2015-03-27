@@ -13,7 +13,7 @@
       background-color: #ddd;
       padding: 11px 6px;
       margin: 0 -6px 10px;
-      font-weight: 500;
+      font-weight: 300;
       font-size: $font-size-base;
       text-align: center;
    }
@@ -21,7 +21,8 @@
    .dl-horizontal {
       dt {
          width: 100px;
-
+         float: left;
+         text-align: right;
       }
       dd {
          margin-left: 120px;

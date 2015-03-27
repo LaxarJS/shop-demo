@@ -7,12 +7,14 @@
   background-color: #ddd;
   padding: 11px 6px;
   margin: 0 -6px 10px;
-  font-weight: 500;
+  font-weight: 300;
   font-size: 14px;
   text-align: center;
 }
 .article-teaser-widget .dl-horizontal dt {
   width: 100px;
+  float: left;
+  text-align: right;
 }
 .article-teaser-widget .dl-horizontal dd {
   margin-left: 120px;

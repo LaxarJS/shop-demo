@@ -10,7 +10,7 @@ module.exports = function( grunt ) {
    var path = require( 'path' );
    var _ = grunt.util._;
 
-   var serverPort = 8000;
+   var serverPort = 8003;
    var liveReloadPort = 30000 + serverPort;
 
    grunt.initConfig( {

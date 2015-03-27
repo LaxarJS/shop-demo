@@ -3,6 +3,16 @@
 ## Last Changes
 
 
+## v1.7.0
+
+- [#15] (https://github.com/LaxarJS/shop_demo/issues/15): navigation: made ShopDemo title a link to the entry place
+
+
+## v1.6.0
+
+- [#14] (https://github.com/LaxarJS/shop_demo/issues/14): theme: improved responsiveness
+
+
 ## v1.5.0
 
 - [#13] (https://github.com/LaxarJS/shop_demo/issues/13): theme: improved styling
