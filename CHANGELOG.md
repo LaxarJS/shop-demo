@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v1.7.0
+
 - [#15] (https://github.com/LaxarJS/shop_demo/issues/15): navigation: made ShopDemo title a link to the entry place
 
 
