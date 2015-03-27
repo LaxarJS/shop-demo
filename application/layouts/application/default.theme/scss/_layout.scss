@@ -5,6 +5,14 @@ $app-pot-flower: "../images/pot-flower.svg";
    height: 60px;
    padding-top: 27px;
    padding-bottom: 27px;
+
+   h1 {
+      text-align: right;
+   }
+}
+
+.app-footer {
+   margin-top: 1em;
 }
 
 .app-logo {
@@ -35,30 +43,11 @@ $app-pot-flower: "../images/pot-flower.svg";
    padding-top: 100%;
 }
 
-.app-version{
-   white-space: nowrap;
-}
-
 .app-version {
-   padding-left: 26px;
-   padding-right: 26px;
-}
+   text-align: right;
 
-.app-header,
-.app-footer {
-   padding-left: 20px;
-   padding-right: 20px;
-}
-@media (max-width: $screen-sm-max) {
-
-   .app-version {
-      padding-left: 0;
-   }
-
-   .app-version:before {
-      content: "";
-      display: block;
-      margin-top: 0.2em;
+   @media (max-width: $screen-md-min) {
+      text-align: left;
    }
 }
 
@@ -67,7 +56,7 @@ $app-pot-flower: "../images/pot-flower.svg";
    margin-top: 165px;
 
    @media (min-width: $screen-sm-max) and (max-width: $screen-md-max) {
-         margin-top: 120px;
+      margin-top: 120px;
    }
 
    @media (max-width: $screen-sm-max) {
