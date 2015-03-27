@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+
+## v1.6.0
 - [#14] (https://github.com/LaxarJS/shop_demo/issues/14): theme: improved responsiveness
 
 
