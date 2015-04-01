@@ -1,9 +1,6 @@
 {
    "name": "ArticleSearchBoxWidget",
    "description": "The ArticleSearchBoxWidget lets the user search for articles.",
-   "version": {
-      "spec": "0.1.0"
-   },
 
    "integration": {
       "type": "angular"
