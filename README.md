@@ -20,7 +20,7 @@ To fetch the required tools and libraries, make sure that you have `npm` (comes 
 Use a shell to issue the following commands:
 
 ```sh
-git clone https://github.com/LaxarJS/shop_demo.git
+git clone --single-branch --recursive https://github.com/LaxarJS/shop_demo.git
 cd shop_demo
 npm install
 npm start
