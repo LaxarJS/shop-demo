@@ -1,9 +1,6 @@
 {
    "name": "ShoppingCartWidget",
    "description": "Displays a cart with a list of articles, lets the user add or delete some and order them.",
-   "version": {
-      "spec": "0.1.0"
-   },
 
    "integration": {
       "type": "angular"
@@ -122,12 +119,12 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "Name of the data resource with the selected article.",
+                  "description": "Name of the data resource containing an article to add to the cart.",
                   "format": "topic"
                },
                "onActions": {
                   "type": "array",
-                  "description": "Add article to cart.",
+                  "description": "Add the article to cart.",
                   "items": {
                      "type": "string",
                      "format": "topic"

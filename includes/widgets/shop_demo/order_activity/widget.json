@@ -1,9 +1,6 @@
 {
    "name": "OrderActivity",
    "description": "Performs an order with articles from a shopping cart.",
-   "version": {
-      "spec": "0.1.0"
-   },
 
    "integration": {
       "type": "angular"

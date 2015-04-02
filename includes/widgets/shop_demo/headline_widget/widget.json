@@ -1,9 +1,6 @@
 {
    "name": "HeadlineWidget",
    "description": "Displays a simple headline and an intro html text.",
-   "version": {
-      "spec": "0.1.0"
-   },
 
    "integration": {
       "type": "angular"
