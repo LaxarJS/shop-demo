@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#6] (https://github.com/LaxarJS/shop_demo/issues/6): documentation: added more precise installation instructions in README
 - [#5] (https://github.com/LaxarJS/shop_demo/issues/5): documentation: added links to reference docs/manuals, and general fixes and improvements
 
 
