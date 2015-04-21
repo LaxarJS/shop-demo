@@ -1,0 +1,12 @@
+{
+   "name": "shop_demo/article-teaser-widget",
+   "version": "0.1.0",
+   "description": "The ArticleTeaserWidget displays the details of an article.",
+   "license": "MIT",
+   "dependencies": {
+   },
+   "devDependencies": {
+      "es5-shim": "2.3.x",
+      "jasmine": "1.3.x"
+   }
+}

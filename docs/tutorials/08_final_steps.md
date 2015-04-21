@@ -17,7 +17,7 @@ It interacts with the PouchDB backend and with the ShoppingCartWidget, but not w
 
 The base files for the OrderActivity can be created by the `grunt-init laxar-activity` script.
 If the order is successfully placed, our application should navigate to the second page named `finish_order.json`.
-To achieve this, the activity has to publish a [`navigateRequest` event](../../includes/widgets/shop_demo/order_activity/order_activity.js#L42) using a configured target that is navigated to.
+To achieve this, the activity has to publish a [`navigateRequest` event](../../includes/widgets/shop_demo/order-activity/order-activity.js#L37) using a configured target that is navigated to.
 
 
 ```javascript
@@ -52,7 +52,7 @@ And the [page](../../application/pages/shop_demo.json#L5) where we configure the
 ```json
 "activities": [
    {
-      "widget": "shop_demo/order_activity",
+      "widget": "shop_demo/order-activity",
       "features": {
          "cart": {
             "resource": "cart"

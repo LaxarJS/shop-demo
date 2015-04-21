@@ -5,9 +5,6 @@ var require = {
    ],
    shim: {
       angular: {
-         deps: [
-            'jquery'
-         ],
          exports: 'angular'
       },
       'angular-mocks': {
@@ -39,13 +36,6 @@ var require = {
       },
       'json-patch': {
          exports: 'jsonpatch'
-      },
-      underscore: {
-         exports: '_',
-         init: function () {
-            'use strict';
-            return this._.noConflict();
-         }
       }
    },
    packages: [
@@ -74,7 +64,6 @@ var require = {
       // LaxarJS Core:
       requirejs: 'requirejs/require',
       jquery: 'jquery/dist/jquery',
-      underscore: 'underscore/underscore',
       angular: 'angular/angular',
       'angular-mocks': 'angular-mocks/angular-mocks',
       'angular-route': 'angular-route/angular-route',

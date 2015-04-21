@@ -4,7 +4,7 @@
    "areas": {
       "content1a": [
          {
-            "widget": "shop_demo/headline_widget",
+            "widget": "shop_demo/headline-widget",
             "features": {
                "intro": {
                   "htmlText": "<div class='app-flower'><span class='app-flower-helper'></span></div>"
@@ -14,13 +14,13 @@
       ],
       "content1b": [
          {
-            "widget": "shop_demo/headline_widget",
+            "widget": "shop_demo/headline-widget",
             "features": {
                "headline": {
                   "htmlText": "<span class='app-thanks'>Thank you<br>for your order!</span>"
                },
                "intro": {
-                  "htmlText": "We will send your stuff as soon as possible.<br>Forgotten something to buy? <a href='#/' title='Go back'>Go Back.</a>"
+                  "htmlText": "We will send your stuff as soon as possible.<br>Forgot to buy something? <a href='#/' title='Go back'>Go Back.</a>"
                }
             }
          }

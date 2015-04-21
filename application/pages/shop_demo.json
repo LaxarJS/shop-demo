@@ -4,7 +4,7 @@
    "areas": {
       "activities": [
          {
-            "widget": "shop_demo/order_activity",
+            "widget": "shop_demo/order-activity",
             "features": {
                "cart": {
                   "resource": "cart"
@@ -24,7 +24,7 @@
 
       "searchBox": [
          {
-            "widget": "shop_demo/article_search_box_widget",
+            "widget": "shop_demo/article-search-box-widget",
             "features": {
                "resource": "articles",
                "database":{
@@ -38,7 +38,7 @@
 
       "content1a": [
          {
-            "widget": "shop_demo/article_browser_widget",
+            "widget": "shop_demo/article-browser-widget",
             "features": {
                "display": {
                   "resource": "articles"
@@ -51,7 +51,7 @@
       ],
       "content1b": [
          {
-            "widget": "shop_demo/article_teaser_widget",
+            "widget": "shop_demo/article-teaser-widget",
             "features": {
                "display": {
                   "resource": "selectedArticle"
@@ -65,7 +65,7 @@
       ],
       "content1c": [
          {
-            "widget": "shop_demo/shopping_cart_widget",
+            "widget": "shop_demo/shopping-cart-widget",
             "features": {
                "cart": {
                   "resource": "cart",
