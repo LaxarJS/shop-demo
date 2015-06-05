@@ -51,7 +51,7 @@ The widget publishes the result list as a resource on the EventBus for any subsc
 There are two use cases of the ArticleSearchBoxWidget in our application.
 First the initial fetching of a list of articles when the user has entered the page and secondly the fetching and filtering of articles after the user has submitted a search.
 
-To access the search term from the view we have to [provide it](../../includes/widgets/shop_demo/article-search-box-widget/article-search-box-widget.js#L18) on the AngularJS scope of the controller:
+To access the search term from the view we have to [provide it](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L18) on the AngularJS scope of the controller:
 
 ```javascript
 $scope.model = {
@@ -59,12 +59,12 @@ $scope.model = {
 };
 ```
 
-In the [HTML template](../../includes/widgets/shop_demo/article-search-box-widget/default.theme/article-search-box-widget.html#L7) we bind the `$scope.model` to the input field.
+In the [HTML template](../../includes/widgets/shop-demo/article-search-box-widget/default.theme/article-search-box-widget.html#L7) we bind the `$scope.model` to the input field.
 
 For the first use case, the search term is an empty string.
-Our [filterArticles](../../includes/widgets/shop_demo/article-search-box-widget/article-search-box-widget.js#L84) procedure does not filter anything if the search term is empty or is only one character.
+Our [filterArticles](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L84) procedure does not filter anything if the search term is empty or is only one character.
 In this case, all articles are returned.
-To publish all articles when the user enters the site, the ArticleSearchBoxWidget [subscribes](../../includes/widgets/shop_demo/article-search-box-widget/article-search-box-widget.js#L25) to the `beginLifecycleRequest` event:
+To publish all articles when the user enters the site, the ArticleSearchBoxWidget [subscribes](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L25) to the `beginLifecycleRequest` event:
 
 ```javascript
 $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
@@ -72,7 +72,7 @@ $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
 } );
 ```
 
-The [`search` method](../../includes/widgets/shop_demo/article-search-box-widget/article-search-box-widget.js#L31) first fetches the articles, then filters them and finally publishes the result:
+The [`search` method](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L31) first fetches the articles, then filters them and finally publishes the result:
 
 ```javascript
 $scope.search = function() {
@@ -87,8 +87,8 @@ $scope.search = function() {
 ```
 
 
-The methods [`fetchArticles`](../../includes/widgets/shop_demo/article-search-box-widget/article-search-box-widget.js#L52) and [`filterArticles`](../../includes/widgets/shop_demo/article-search-box-widget/article-search-box-widget.js#L84) are for integration with PouchDB, and would be implemented differently for, say, a REST service.
-After fetching the articles (either all of them or just the search results), the widget [publishes](../../includes/widgets/shop_demo/article-search-box-widget/article-search-box-widget.js#L102) them as a resource on the *event bus*:
+The methods [`fetchArticles`](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L52) and [`filterArticles`](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L84) are for integration with PouchDB, and would be implemented differently for, say, a REST service.
+After fetching the articles (either all of them or just the search results), the widget [publishes](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L102) them as a resource on the *event bus*:
 
 ```javascript
 var resourceName = $scope.features.resource;
@@ -103,7 +103,7 @@ The _event name_ for this event consists of the event type (`didReplace`), a dot
 The _event payload_ has two properties in this case, namely the configured _name_ of the resource (`$scope.features.cart.resource`) and the search results as data (`$scope.resources.cart`).
 Most of the time, the additional options are not required.
 
-To ensure that the widget gets the name of the resource from the configuration on the page, like the HeadLineWidget gets the `htmlText` for the  headline, we create a corresponding [feature definition](../../includes/widgets/shop_demo/article-search-box-widget/widget.json#L17).
+To ensure that the widget gets the name of the resource from the configuration on the page, like the HeadLineWidget gets the `htmlText` for the  headline, we create a corresponding [feature definition](../../includes/widgets/shop-demo/article-search-box-widget/widget.json#L17).
 We mark the `resource` property as `required` in the specification of its parent object:
 
 ```javascript
@@ -125,17 +125,17 @@ We mark the `resource` property as `required` in the specification of its parent
 The `resource` property is defined as a string using the `topic` format, which limits the set of allowed characters used to name it.
 For the scope of this demo application it is sufficient to know, that simple camel case strings with lowercase first character are totally valid.
 
-The second feature, [`database`](../../includes/widgets/shop_demo/article-search-box-widget/widget.json#L23), lets us configure an individual database ID to be used by the widget within this application.
+The second feature, [`database`](../../includes/widgets/shop-demo/article-search-box-widget/widget.json#L23), lets us configure an individual database ID to be used by the widget within this application.
 
 
 ## Adding the Widget to the Page
 
-We include the [ArticleSearchBoxWidget](../../includes/widgets/shop_demo/article-search-box-widget) in our [shop_demo](../../application/pages/shop_demo.json) page:
+We include the [ArticleSearchBoxWidget](../../includes/widgets/shop-demo/article-search-box-widget) in our [shop_demo](../../application/pages/shop_demo.json) page:
 
 ```javascript
 "searchBox": [
    {
-      "widget": "shop_demo/article-search-box-widget",
+      "widget": "shop-demo/article-search-box-widget",
       "features": {
          "resource": "articles",
          "database":{

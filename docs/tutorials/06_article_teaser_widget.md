@@ -29,8 +29,8 @@ We assume that this resource will be published by another widget or activity on 
 In our ShopDemo application it will be the article selected by the user.
 
 The implementation of this feature doesn't differ much from the *display* feature of the ArticleBrowserWidget.
-We add a required feature `display` to the [widget definition](../../includes/widgets/shop_demo/article-teaser-widget/widget.json#L20), adjust the [template](../../includes/widgets/shop_demo/article-teaser-widget/default.theme/article-teaser-widget.html) by adding the headline and a list for the article details, and add some [styling](../../includes/widgets/shop_demo/article-teaser-widget/default.theme/css/article-teaser-widget.css).
-Again we [use the resource handler](../../includes/widgets/shop_demo/article-teaser-widget/article-teaser-widget.js#L19) defined in the LaxarJS Patterns library to listen for the relevant events of the resource.
+We add a required feature `display` to the [widget definition](../../includes/widgets/shop-demo/article-teaser-widget/widget.json#L20), adjust the [template](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/article-teaser-widget.html) by adding the headline and a list for the article details, and add some [styling](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/css/article-teaser-widget.css).
+Again we [use the resource handler](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js#L19) defined in the LaxarJS Patterns library to listen for the relevant events of the resource.
 
 
 ## Let the User Add an Article to the Cart
@@ -39,9 +39,9 @@ The second requirement is that the user can add the displayed article to the sho
 For this feature we add a button which triggers a `takeActionRequest` event on the EventBus to broadcast our intention.
 Like the resource pattern, the [action pattern](https://github.com/LaxarJS/laxar_patterns/blob/master/docs/patterns/actions.md#action-patterns) is also described in the [LaxarJS Patterns documentation](https://github.com/LaxarJS/laxar_patterns/blob/master/docs/index.md#laxarjs-patterns).
 As the implementation of the cart is not part of this widget, the actual adding of the article to the items in the cart is also out of scope.
-The name of the action is configured in the [`button`](../../includes/widgets/shop_demo/article-teaser-widget/widget.json#L58) feature along with the label of the button.
+The name of the action is configured in the [`button`](../../includes/widgets/shop-demo/article-teaser-widget/widget.json#L58) feature along with the label of the button.
 
-To implement the feature *button* we add the method [`$scope.addToCart`](../../includes/widgets/shop_demo/article-teaser-widget/article-teaser-widget.js#L21) to the controller which causes a request for the configured action to be published:
+To implement the feature *button* we add the method [`$scope.addToCart`](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js#L21) to the controller which causes a request for the configured action to be published:
 
 ```javascript
 $scope.addToCart = function() {
@@ -52,7 +52,7 @@ $scope.addToCart = function() {
 };
 ```
 
-A simple button in the [HTML template](../../includes/widgets/shop_demo/article-teaser-widget/default.theme/article-teaser-widget.html#L25), triggers this method on click by using the `ngClick` directive from AngularJS:
+A simple button in the [HTML template](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/article-teaser-widget.html#L25), triggers this method on click by using the `ngClick` directive from AngularJS:
 
 ```html
 <button class="btn btn-default btn-info pull-right"
@@ -70,7 +70,7 @@ We add the widget to the `content1b` area of our [first page](../../application/
 ```json
 "content1b": [
    {
-      "widget": "shop_demo/article-teaser-widget",
+      "widget": "shop-demo/article-teaser-widget",
       "features": {
          "display": {
             "resource": "selectedArticle"

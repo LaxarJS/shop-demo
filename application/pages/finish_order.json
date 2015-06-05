@@ -4,7 +4,7 @@
    "areas": {
       "content1a": [
          {
-            "widget": "shop_demo/headline-widget",
+            "widget": "shop-demo/headline-widget",
             "features": {
                "intro": {
                   "htmlText": "<div class='app-flower'><span class='app-flower-helper'></span></div>"
@@ -14,7 +14,7 @@
       ],
       "content1b": [
          {
-            "widget": "shop_demo/headline-widget",
+            "widget": "shop-demo/headline-widget",
             "features": {
                "headline": {
                   "htmlText": "<span class='app-thanks'>Thank you<br>for your order!</span>"

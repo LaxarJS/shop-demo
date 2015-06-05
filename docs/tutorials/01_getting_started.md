@@ -28,8 +28,8 @@ git clone https://github.com/LaxarJS/grunt-init-laxar-widget.git ~/.grunt-init/l
 ## Creating a LaxarJS Application from the Template
 
 ```shell
-mkdir shop_demo
-cd shop_demo
+mkdir shop-demo
+cd shop-demo
 grunt-init laxar-application
 ```
 
@@ -40,7 +40,7 @@ Otherwise we have to change the port number and make sure to remember it in orde
 
 ```
 Please answer the following:
-[?] Application name (shop_demo)
+[?] Application name (shop-demo)
 [?] Application title (LaxarJS ShopDemo)
 [?] Description (My new LaxarJS application) A demo app to show how LaxarJS works.
 [?] Licenses (none) MIT

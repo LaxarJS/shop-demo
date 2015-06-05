@@ -37,7 +37,7 @@ For this we divide the tasks into three features *article*, *display* and *cart*
 ### Displaying the Shopping Cart Articles
 
 The widget has to display the shopping cart contents.
-The necessary labels with their defaults are described in the [widget definition](../../includes/widgets/shop_demo/shopping-cart-widget/widget.json), so that it is possible to configure custom labels when adding the widget to a page or to use the defaults.
+The necessary labels with their defaults are described in the [widget definition](../../includes/widgets/shop-demo/shopping-cart-widget/widget.json), so that it is possible to configure custom labels when adding the widget to a page or to use the defaults.
 If the shopping cart is empty the widget will display a hint with the html content configured under the path `features.display.htmlNoItemsText`.
 
 
@@ -56,9 +56,9 @@ Additionally the widget publishes a `takeActionRequest` to actually request orde
 
 ### Implementation
 
-The [features definition](../../includes/widgets/shop_demo/shopping-cart-widget/widget.json) of the ShoppingCartWidget is similar to the definition of the other widgets.
+The [features definition](../../includes/widgets/shop-demo/shopping-cart-widget/widget.json) of the ShoppingCartWidget is similar to the definition of the other widgets.
 
-In the [controller](../../includes/widgets/shop_demo/shopping-cart-widget/shopping-cart-widget.js#L30) we add two resource helpers for the cart resource:
+In the [controller](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L30) we add two resource helpers for the cart resource:
 
 ```javascript
 var updatePublisherForCart = patterns.resources.updatePublisherForFeature( $scope, 'cart' );
@@ -71,20 +71,20 @@ There is a handler for processing received updates, allowing other widgets to mo
 $scope.eventBus.subscribe( 'didUpdate.cart', updateHandlerForCart );
 ```
 
-Additionally there is a _publisher_ to [generate incremental updates](../../includes/widgets/shop_demo/shopping-cart-widget/shopping-cart-widget.js#L59):
+Additionally there is a _publisher_ to [generate incremental updates](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L59):
 
 ```javascript
 updatePublisherForCart.compareAndPublish( oldCart, resources.cart );
 ```
 
-The object [`oldCart`](../../includes/widgets/shop_demo/shopping-cart-widget/shopping-cart-widget.js#L56) is a clone of the resource which is used for comparison when generating updates.
+The object [`oldCart`](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L56) is a clone of the resource which is used for comparison when generating updates.
 For the creation we use the recursive [`deepClone`](https://github.com/LaxarJS/laxar/blob/master/docs/api/lib/utilities/object.md#deepclone-obj-) function of LaxarJS.
 ```javascript
 var oldCart = ax.object.deepClone( resources.cart );
 ```
 
 The method `compareAndPublish` of the updates-publisher creates patches in [JSON Patch](http://tools.ietf.org/html/rfc6902) format and publishes them as `didUpdate` event on the EventBus.
-For the initial publishing or to replace the resource completely we implement the method [`replaceCart`](../../includes/widgets/shop_demo/shopping-cart-widget/shopping-cart-widget.js#L130):
+For the initial publishing or to replace the resource completely we implement the method [`replaceCart`](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L130):
 
 ```javascript
 function replaceCart() {
@@ -98,7 +98,7 @@ function replaceCart() {
 }
 ```
 
-When the widget receives a `takeActionRequest` event for one of the actions configured through `features.article.onActions` it invokes the  [`addArticleToCart` method](../../includes/widgets/shop_demo/shopping-cart-widget/shopping-cart-widget.js#L37):
+When the widget receives a `takeActionRequest` event for one of the actions configured through `features.article.onActions` it invokes the  [`addArticleToCart` method](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L37):
 
 ```javascript
 $scope.features.article.onActions.forEach( function( action ) {
@@ -106,7 +106,7 @@ $scope.features.article.onActions.forEach( function( action ) {
 } );
 ```
 
-The method [`addArticleToCart`](../../includes/widgets/shop_demo/shopping-cart-widget/shopping-cart-widget.js#L94) publishes a `willTakeAction` event,
+The method [`addArticleToCart`](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L94) publishes a `willTakeAction` event,
 
 ```javascript
 function addArticleToCart( event ) {
@@ -115,13 +115,13 @@ function addArticleToCart( event ) {
 
 adds the article to the cart and publishes an update for the shopping cart resource.
 
-Finally, the widget publishes a [`didTakeAction`](../../includes/widgets/shop_demo/shopping-cart-widget/shopping-cart-widget.js#L114) event to indicate that action processing has been completed.
+Finally, the widget publishes a [`didTakeAction`](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L114) event to indicate that action processing has been completed.
 
 ```javascript
 $scope.eventBus.publish( 'didTakeAction.' + event.action, event );
 ```
 
-The [HTML template](../../includes/widgets/shop_demo/shopping-cart-widget/default.theme/shopping-cart-widget.html) does not have LaxarJS specific code beyond the fact that there are variables used which are defined in the [widget definition](../../includes/widgets/shop_demo/shopping-cart-widget/widget.json).
+The [HTML template](../../includes/widgets/shop-demo/shopping-cart-widget/default.theme/shopping-cart-widget.html) does not have LaxarJS specific code beyond the fact that there are variables used which are defined in the [widget definition](../../includes/widgets/shop-demo/shopping-cart-widget/widget.json).
 
 
 ## Adding the Widget to our Application
@@ -131,7 +131,7 @@ We add the widget to the `content1c` section of our [first page](../../applicati
 ```json
 "content1c": [
    {
-      "widget": "shop_demo/shopping-cart-widget",
+      "widget": "shop-demo/shopping-cart-widget",
       "features": {
          "cart": {
             "resource": "cart",

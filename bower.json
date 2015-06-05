@@ -5,7 +5,7 @@
    "license": "MIT",
    "repository": {
       "type": "https",
-      "url": "https://github.com/LaxarJS/shop_demo.git"
+      "url": "https://github.com/LaxarJS/shop-demo.git"
    },
    "dependencies": {
       "requirejs": "2.1.x",
