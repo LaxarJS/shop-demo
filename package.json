@@ -16,8 +16,10 @@
       "grunt-cli": "~0.1.13",
       "grunt-contrib-compass": "~0.7.2",
       "grunt-contrib-compress": "~0.7.0",
+      "grunt-contrib-concat": "~0.5.1",
       "grunt-contrib-cssmin": "~0.12.2",
       "grunt-contrib-watch": "~0.6.1",
-      "grunt-laxar": "~1.0.0-alpha.3"
+      "grunt-laxar": "~1.0.0",
+      "load-grunt-tasks": "~3.2.0"
    }
 }

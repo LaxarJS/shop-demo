@@ -7,7 +7,7 @@ define( [
    'json!../bower.json',
    '../shopping-cart-widget',
    'laxar/laxar_testing',
-   'laxar_patterns',
+   'laxar-patterns',
    'angular-mocks',
    'jquery',
    'json!./spec_data.json',

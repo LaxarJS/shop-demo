@@ -7,7 +7,7 @@ define( [
    'angular',
    'pouchdb',
    'laxar',
-   'laxar_patterns'
+   'laxar-patterns'
 ], function( ng, PouchDb, ax, patterns ) {
    'use strict';
 

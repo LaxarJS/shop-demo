@@ -1,15 +1,10 @@
 {
    "name": "ArticleBrowserWidget",
    "description": "The ArticleBrowserWidget displays a list of articles and lets the user select one.",
-   "version": {
-      "spec": "0.1.0"
-   },
 
    "integration": {
       "type": "angular"
    },
-
-   "compatibility": [ "json-patch" ],
 
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",

@@ -2,7 +2,8 @@
 
 The LaxarJS ShopDemo shows a simple web shop application (for ordering LaxarJS merchandise) implemented using the [LaxarJS](http://laxarjs.org) web application framework.
 
-It consists of a small set of LaxarJS widgets implemented in AngularJS. Storage is realised using PouchDB.
+It consists of a small set of LaxarJS widgets implemented in AngularJS.
+Storage is realised using PouchDB.
 
 * [Show the live demo](http://laxarjs.github.io/shop_demo/)
 
