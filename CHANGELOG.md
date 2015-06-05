@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v1.8.0
+
 - [#18] (https://github.com/LaxarJS/shop-demo/issues/18): Adapted demo to LaxarJS naming scheme
 - [#17] (https://github.com/LaxarJS/shop-demo/issues/17): Upgraded to LaxarJS 1.0.0 and added missing favicon
 - [#16] (https://github.com/LaxarJS/shop-demo/issues/16): refactoring: upgraded LaxarJS version
