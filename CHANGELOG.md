@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#17] (https://github.com/LaxarJS/shop_demo/issues/17): Upgraded to LaxarJS 1.0.0 and added missing favicon
 - [#16] (https://github.com/LaxarJS/shop_demo/issues/16): refactoring: upgraded LaxarJS version
 - [#6] (https://github.com/LaxarJS/shop_demo/issues/6): documentation: added more precise installation instructions in README
 - [#5] (https://github.com/LaxarJS/shop_demo/issues/5): documentation: added links to reference docs/manuals, and general fixes and improvements

@@ -1,13 +1,24 @@
 /**
- * Copyright 2014 Jonas Schulte
+ * Copyright 2015 LaxarJS
  * Released under the MIT license.
  * www.laxarjs.org
  */
 require( [
-   'portal_angular_dependencies',
-   'laxar'
-], function( widgetModules, ax ) {
+   'laxar',
+   'laxar-application-dependencies',
+   'json!laxar-application/var/listing/application_resources.json',
+   'json!laxar-application/var/listing/bower_components_resources.json',
+   'json!laxar-application/var/listing/includes_resources.json'
+], function( ax, applicationDependencies, applicationListing, bowerComponentsListing, includesListing ) {
    'use strict';
 
-   ax.bootstrap( widgetModules );
+   // prepare file listings for efficient asset loading
+   window.laxar.fileListings = {
+      application: applicationListing,
+      bower_components: bowerComponentsListing,
+      includes: includesListing
+   };
+
+   ax.bootstrap( applicationDependencies );
+
 } );

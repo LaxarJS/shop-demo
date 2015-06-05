@@ -10,9 +10,9 @@
    "dependencies": {
       "requirejs": "2.1.x",
       "requirejs-plugins": "1.0.x",
-      "laxar": "LaxarJS/laxar#^1.0.0-alpha.7",
-      "laxar_patterns": "LaxarJS/laxar_patterns#^1.0.0-alpha.0",
-      "laxar_uikit": "LaxarJS/laxar_uikit#^1.0.0-alpha.4",
+      "laxar": "~1.0.0",
+      "laxar-patterns": "~1.0.0",
+      "laxar-uikit": "~1.0.0",
       "bootswatch-scss": "3.2.x",
       "marked": "0.3.x",
       "pouchdb": "2.2.x"

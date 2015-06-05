@@ -6,7 +6,7 @@
 define( [
    'angular',
    'laxar',
-   'laxar_patterns',
+   'laxar-patterns',
    'angular-sanitize'
 ], function( ng, ax, patterns ) {
    'use strict';
