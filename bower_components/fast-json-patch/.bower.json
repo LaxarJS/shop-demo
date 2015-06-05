@@ -1,9 +1,9 @@
 {
   "name": "fast-json-patch",
-  "version": "0.3.8-plus-1-commit",
+  "version": "0.5.2",
   "homepage": "https://github.com/Starcounter-Jack/JSON-Patch",
-  "description": "JSON-Patch allows you to update a JSON document by sending the changes rather than the whole document.",
-  "main": "src/json-patch.js",
+  "description": "Fast implementation of JSON-Patch (RFC-6902) with duplex (observe changes) capabilities",
+  "main": "src/json-patch-duplex.js",
   "keywords": [
     "json",
     "patch",
@@ -14,20 +14,18 @@
   "ignore": [
     ".npmignore",
     ".gitignore",
-    "src/lib",
-    "src/test*",
-    "src/patchtest.html",
+    "test",
     "gruntfile.js",
     "node_modules",
     "package.json"
   ],
-  "_release": "0.3.8-plus-1-commit",
+  "_release": "0.5.2",
   "_resolution": {
     "type": "version",
-    "tag": "v0.3.8-plus-1-commit",
-    "commit": "b2435fa725a2a4efc7eb7b7059ddf5fa4c344771"
+    "tag": "0.5.2",
+    "commit": "28faf30170767a7dc8f2c1ef8beda61c1ddf810c"
   },
-  "_source": "git://github.com/LaxarJS/JSON-Patch.git",
-  "_target": "v0.3.8-plus-1-commit",
-  "_originalSource": "LaxarJS/JSON-Patch"
+  "_source": "git://github.com/Starcounter-Jack/JSON-Patch.git",
+  "_target": "~0.5.2",
+  "_originalSource": "fast-json-patch"
 }

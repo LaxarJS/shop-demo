@@ -1,35 +1,42 @@
-# Hello World!
+# Hello, World!
+
 This step is about developing our first LaxarJS widget and integrating it into our application.
-We are going to create a simple HeadlineWidget which displays a headline and an optional introduction text.
+We are going to create a simple _HeadlineWidget_ which displays a headline and an optional introductory text.
+
 
 ## What is a Widget?
-A LaxarJS application consists of pages which embed several small artifacts such as widgets and activities.
-Each widget is responsible for a part of the screen and allows the user to perform specific tasks within the application, while communication with a backend server is often carried out by activities.
-The technical difference between widgets and activities is that an activity doesn't render HTML or manipulate the DOM at all and could thus (at least theoretically) run on the server, whereas a widget requires the environment provided by a browser.
-As every widget and activity is an encapsulated artifact without any JavaScript API, communication among widgets takes place via the EventBus only as we will see later in this tutorial.
-For further information about widgets, activities and event communication there is a [additional document](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/concepts.md).
+
+A LaxarJS application consists of pages, each of which embeds several smaller artifacts, namely widgets and activities.
+A _widget_ is responsible for a part of the screen and allows the user to perform specific tasks within the application, while communication with a backend server is often carried out by _activities_.
+The technical difference between widgets and activities is that an activity does not render HTML or manipulate the DOM at all and could thus (at least in principle) run on the server, whereas a widget requires the environment provided by a browser.
+As every widget and activity is an encapsulated artifact without any JavaScript API, communication among widgets takes place only via the _event bus,_ as we will see later in this tutorial.
+For comprehensive information, consult the [widgets and activities manual](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/widgets_and_activities.md#widgets-and-activities) within the [LaxarJS documentation](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/index.md#manuals).
+
 
 ## Developing a Simple LaxarJS Widget
-The LaxarJS team develops test driven.
-The widgets of the final ShopDemo have spec tests.
-In this tutorial we skip the part about tests to set the focus on the base structure of a LaxarJS application.
+
+The LaxarJS team uses a test-driven development process, so the widgets of the completed ShopDemo application each have a suite of spec tests.
+However, in this tutorial we are not going into the details of testing, instead focusing on the basic structure and integration of a LaxarJS application.
+
 
 ### The Base Structure for Widgets
-To accelerate the process of developing a widget we instantiate the template *laxar-widget*, to generate a basic stub start from:
+
+To accelerate the process of developing a widget, we instantiate the _[grunt-init](http://gruntjs.com/project-scaffolding)_ template *laxar-widget*, to generate a basic stub to start from:
+
 ```shell
-mkdir -p includes/widgets/shop_demo/headline_widget
-cd includes/widgets/shop_demo/headline_widget
+mkdir -p includes/widgets/shop-demo/headline-widget
+cd includes/widgets/shop-demo/headline-widget
 grunt-init laxar-widget
 ```
 
-The script `grunt-init` will ask for some details about the widget and make suggestions.
-We change the description and some of the other default answers such as that on licenses.
-This information is automatically stored in the files `widget.json` and `bower.json` of the widget.
+Based on the template that was installed in the [previous step](01_getting_started.md), the _grunt-init_ tool asks for some details about the widget and makes suggestions.
+We should change the description and some of the other default answers such as that on licenses.
+This information is automatically stored in the files `widget.json` and `bower.json` of the new widget.
 
-```shell
+```
 Please answer the following:
-[?] Widget namespace (widgets.shop_demo)
-[?] Widget name (headline_widget)
+[?] Widget namespace (widgets.shop-demo)
+[?] Widget name (headline-widget)
 [?] Widget title (HeadlineWidget)
 [?] Description (My new LaxarJS widget) Displays a simple headline and an intro html text.
 [?] Licenses (none) MIT
@@ -43,40 +50,24 @@ Please answer the following:
 
 The HeadlineWidget exists as a set of files now:
 
-Every widget has a file defining its configuration options and other meta information:
-
-* widget.json
-
-Then there are some infrastructure files, which are rarely or never edited:
-
-* Dependencies of the widget for bower:
-   * bower.json
-* Files for the spec test runner:
-   * spec/spec_runner.js
-   * spec/spec_runner.html
-* LICENSE-MIT or another license
+Every widget has a `widget.json` file defining its configuration options and a `bower.json` containing dependencies and version-information that can be used with _[bower](http://bower.io)_ for automatic installation.
 
 The files that make up the *actual implementation* are named after the widget, in our case the HeadlineWidget:
 
-* The widget controller and any AngularJS directives belonging to the widget:
-   * headline_widget.js
-* The HTML template defining the view of the widget. Multiple themes may be defined for a widget, resulting in multiple directories (not part of this tutorial) but there is always a default theme:
-   * default.theme/headline_widget.html
-* Files for styling the view. The `.scss` file is only relevant if using [Sass](http://sass-lang.com/) to generate CSS, otherwise the `.css` file may be edited manually:
-   * default.theme/css/headline_widget.css
-   * default.theme/scss/headline_widget.scss
+* The _widget controller_ (`headline-widget.js`) contains the widget logic, possibly accompanied by AngularJS directives belonging to the widget.
+* The _HTML template_ (`default.theme/headline-widget.html`) defines the DOM-structure of the widget. Multiple _themes_ may be implemented for a widget, resulting in multiple directories (not part of this tutorial) but there is always a _default theme._
+* The _widget styles_ (`default.theme/css/headline-widget.css`) for styling the widget using _CSS._
 
-Finally there is a jasmine spec test for testing the functionality of the widget:
-
-   * spec/headline_widget_spec.js
-
+Then, there is a jasmine _spec test_ (`spec/headline-widget.spec.js`) for testing the functionality of the widget.
+It is accompanied by testing infrastructure files which are usually seldom modified: `spec/spec_runner.js` and `spec/spec_runner.html`.
 
 
 ### Widget Features
-The configuration options defined in the [widget.json](../../includes/widgets/shop_demo/headline_widget/widget.json) file are called *features* and can be found under the same key in the JSON structure.
-Everything that can later be configured when adding the widget to the page is specified here in [JSON schema draft v4](http://json-schema.org/documentation.html) format.
-The HeadlineWidget has the features *headline* and *intro*, each with the property *htmlText*. The *headline* feature has the additional property *level* which has to be a number between one and six.
 
+In the [widget.json](../../includes/widgets/shop-demo/headline-widget/widget.json) file, there are configuration options for the widget, grouped by *feature*.
+Everything that can later be configured when adding the widget to the page is specified here in [JSON schema draft v4](http://json-schema.org/documentation.html) format.
+The HeadlineWidget has the features *headline* and *intro*, each with the property *htmlText*.
+The *headline* feature has the additional property *level* which has to be a number between one and six.
 
 ```json
 "headline": {
@@ -116,25 +107,31 @@ If the validation is successful, an object `features` is created on the `$scope`
 
 
 ### The HTML Template
-Next we create the [HTML template](../../includes/widgets/shop_demo/headline_widget/default.theme/headline_widget.html) for our widget.
-As the `features` object is available on the `$scope`, we can directly reference the property `$scope.features.headline.htmlText` from the widget configuration using AngularJS directives.
+
+Next we create the [HTML template](../../includes/widgets/shop-demo/headline-widget/default.theme/headline-widget.html) for our widget.
+As the `features` object is available on the `$scope`, we can directly reference the property `$scope.features.headline.htmlText` from the widget instance configuration using AngularJS directives.
+
 
 ### The Widget Controller
-Our very simple HeadlineWidget does not require controller logic.
-The [controller definition](../../includes/widgets/shop_demo/headline_widget/headline_widget.js) generated by `grunt-init` already does everything we need:
+
+This very simple HeadlineWidget does not require controller logic.
+The [controller definition](../../includes/widgets/shop-demo/headline-widget/headline-widget.js) generated by `grunt-init` already does everything we need:
 It defines an AngularJS module and registers the constructor function for the controller, requesting the widget scope as a dependency.
 This is the same scope that is available to the template.
 
 
 ### Adding the HeadlineWidget to our Application
-With these steps we have completed the simple widget and we can add it to a *page* of the application now.
-A page consists of a set of widgets and activities and a layout which defines the arrangement of these elements.
-It represents a "screen" within the application flow.
-Out of the configured artifacts LaxarJS generates an HTML representation which can be accessed through a URL.
-Navigation between pages will be discussed in the next step of the tutorial.
-For more information about the concept of the flow, places and pages there is a other [document](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/concepts.md).
 
-**shop_demo/application/pages/page1.json:**
+With these steps we have completed the simple widget and we can add it to a *page* of the application now.
+A page consists of a set of widgets and activities and a _layout_ which defines the arrangement of these elements.
+It represents a single "screen" or "step" within the application flow.
+Out of the configured artifacts, LaxarJS generates an HTML representation which can be accessed through a URL.
+Navigation between pages will be discussed in the next step of the tutorial.
+There is also a [manual on writing pages](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/writing_pages.md#writing-pages) containing more information.
+
+Here is a simple page for our demo application:
+
+**shop-demo/application/pages/page1.json:**
 ```json
 {
    "layout": "one_column",
@@ -145,10 +142,10 @@ For more information about the concept of the flow, places and pages there is a 
 
       "header": [
          {
-            "widget": "shop_demo/headline_widget",
+            "widget": "shop-demo/headline-widget",
             "features": {
                "headline": {
-                  "htmlText": "Hello World!"
+                  "htmlText": "Hello, World!"
                }
             }
          }
@@ -171,6 +168,7 @@ Within such an area definition the widgets are listed in the order that they sho
 In our ShopDemo application we add the HeadlineWidget to the area called `header`.
 
 Initially the HTML layout `one_column.html` looks like this (we will change it in the next step):
+
 ```html
 <div class="one-column-layout container">
 
@@ -187,9 +185,11 @@ Initially the HTML layout `one_column.html` looks like this (we will change it i
 </div>
 ```
 
-Now we can start the application again (`npm start` in the project directory) to see **Hello World!** being displayed in our browser.
+Having added the new widget, we can restart the development server (`npm start` in the project directory) to see **Hello, World!** being displayed in our browser.
+
 
 ## The Next Step
+
 The [next step](03_application_flow.md) is to add a second page to the application, creating the application flow.
 
-[« Getting Started](01_getting_started.md) | Hello World! | [Application Flow »](03_application_flow.md)
+[« Getting Started](01_getting_started.md) | Hello, World! | [Defining the Application Flow »](03_application_flow.md)

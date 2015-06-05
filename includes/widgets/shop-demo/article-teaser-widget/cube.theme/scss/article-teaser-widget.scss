@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+@import "variables_all";
+
+// Overwrite some default variables
+
+// Load the default style if you want
+@import "../../default.theme/scss/article-teaser-widget";
+
+.article-teaser-widget {
+   h3.app-selection {
+      i {
+         background-color: $brand-info;
+      }
+   }
+
+   .app-teaser-wrapper {
+      border: 1px solid #ddd;
+      border-radius: 4px 4px 0 0;
+   }
+}

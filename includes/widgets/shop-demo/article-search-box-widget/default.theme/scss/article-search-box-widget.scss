@@ -1,0 +1,14 @@
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * www.laxarjs.org
+ */
+@charset "UTF-8";
+
+@import "variables_all";
+
+$app-search-box-top: 15px !default;
+
+.article-search-box-widget {
+   margin-top: $app-search-box-top;
+}

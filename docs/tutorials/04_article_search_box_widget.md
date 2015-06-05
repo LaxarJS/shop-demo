@@ -1,63 +1,79 @@
-# ArticleSearchBoxWidget
-By this time the ShopDemo only displays a headline and does not allow for user interaction.
-To change this we implement the ArticleSearchBoxWidget.
-It provides a search box, allowing the user to find articles by their name or description.
-Our widget will use *events* to transfer the resource with the list of articles matching a user's search term to other widgets.
+# The ArticleSearchBoxWidget
 
-For the following steps is it recommend to read the manual about the [widget communication](../missing_doc.md) first.
+By this time, our application only displays a headline and does not allow for any user interaction.
+To change this we implement the _ArticleSearchBoxWidget._
+It provides a search box, allowing the user to filter articles by their name or description.
+Our widget will use *events* to publish the list of articles matching a user's search term to other widgets.
+
+After going through this chapter, you will be familiar with the event bus and how it is accessed by a widget.
+It is recommended to have a look at the manual about [events and publish-subscribe](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/events.md#events-and-publish-subscribe) first, to allow for a better understanding.
 
 
-## Adding third party library
-For our ArticleSearchBoxWidget and the OrderActivity, which we will implement later, we use [PouchDB](http://pouchdb.com/) as a backend store and thus we need to add it as dependency to our bower [config](../../bower.json#L13) now:
+## Adding a Third-Party Library
+
+The ArticleSearchBoxWidget and the _OrderActivity_ (which we will implement later) we would like to use [PouchDB](http://pouchdb.com/) to simulate a backend store.
+To achieve this, we add PouchBD as a dependency to our application's [bower manifest](../../bower.json#L18):
 
 ```javascript
-"pouchdb": "2.2.x"
+"dependencies": {
+   ...,
+   "pouchdb": "2.2.x"
+}
 ```
+
 A simple call to `./node_modules/bower/bin/bower install` should fetch the new dependency for us.
 
-Adding it to the `paths` mapping the [`require_config.js`](../../require_config.js#L110) simplifies usage within our AMD define method a lot:
+Adding PouchDB to the `paths` mapping of the [RequireJS configuration](../../require_config.js#L99) allows for simple access from our widgets' AMD modules:
 
 ```javascript
-// PouchDB:
-'pouchdb': 'pouchdb/dist/pouchdb-nightly',
+paths: {
+   ...
+   // PouchDB:
+   'pouchdb': 'pouchdb/dist/pouchdb-nightly'
+}
 ```
 
 
 ## Creating the ArticleSearchBoxWidget
-This is how the ArticleSearchBoxWidget looks like:
+
+This is how the ArticleSearchBoxWidget will look like:
 
 ![ArticleSearchBoxWidget](img/article_search_box_widget.png)
 
 The widget has a simple input field and a submit button.
 
-### Implementing the Features
-The ArticleSearchBoxWidget fetches a list of articles from a database, in our case a PouchDB, and lets the user filter them with an input field.
-The widget publishes the result list as resource on the EventBus and any subscribed widget or activity receives it.
+
+### Implementing the Widget Features
+
+The ArticleSearchBoxWidget fetches a list of articles from a database, in our case provided by PouchDB, and lets the user filter them with an input field.
+The widget publishes the result list as a resource on the EventBus for any subscriber (widget or activity) to receive it.
 
 There are two use cases of the ArticleSearchBoxWidget in our application.
-First the initial fetching of a list of articles when the user entered the page and secondly the fetching and filtering of articles when the user submitted a search.
+First the initial fetching of a list of articles when the user has entered the page and secondly the fetching and filtering of articles after the user has submitted a search.
 
+To access the search term from the view we have to [provide it](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L18) on the AngularJS scope of the controller:
 
-To have access to the search term from the view we have to [define a object](../../includes/widgets/shop_demo/article_search_box_widget/article_search_box_widget.js#L23) in the scope:
 ```javascript
 $scope.model = {
    searchTerm: ''
 };
 ```
-In the [HTML template](../../includes/widgets/shop_demo/article_search_box_widget/default.theme/article_search_box_widget.html#L7) we bind the `$scope.model` to the input field.
 
-For the first use case the search term is an empty string.
-Our [filterArticles](../../includes/widgets/shop_demo/article_search_box_widget/article_search_box_widget.js#L80) function does not filter anything if the search term is empty or is only one character.
-All articles are returned.
+In the [HTML template](../../includes/widgets/shop-demo/article-search-box-widget/default.theme/article-search-box-widget.html#L7) we bind the `$scope.model` to the input field.
 
-To trigger the fetch at the beginning when the user enters the site, the ArticleSearchBoxWidget [subscribes](../../includes/widgets/shop_demo/article_search_box_widget/article_search_box_widget.js#L29) to the `beginLifecycleRequest` event:
+For the first use case, the search term is an empty string.
+Our [filterArticles](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L84) procedure does not filter anything if the search term is empty or is only one character.
+In this case, all articles are returned.
+To publish all articles when the user enters the site, the ArticleSearchBoxWidget [subscribes](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L25) to the `beginLifecycleRequest` event:
+
 ```javascript
 $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
-   $scope.search();
+   articlesPromise.then( publishArticles, handleError );
 } );
 ```
 
-The [`search`](../../includes/widgets/shop_demo/article_search_box_widget/article_search_box_widget.js#L35) function first fetches the articles, then filters them and finally publishes the result:
+The [`search` method](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L31) first fetches the articles, then filters them and finally publishes the result:
+
 ```javascript
 $scope.search = function() {
    fetchArticles()
@@ -71,9 +87,9 @@ $scope.search = function() {
 ```
 
 
-The [`fetchArticles`](../../includes/widgets/shop_demo/article_search_box_widget/article_search_box_widget.js#L47) function and the [`filterArticles`](../../includes/widgets/shop_demo/article_search_box_widget/article_search_box_widget.js#L79) function are design specially for this demo project with PouchDB instead of a real backend.
+The methods [`fetchArticles`](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L52) and [`filterArticles`](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L84) are for integration with PouchDB, and would be implemented differently for, say, a REST service.
+After fetching the articles (either all of them or just the search results), the widget [publishes](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L102) them as a resource on the *event bus*:
 
-After fetching the articles, either all articles or some filtered with a search term, the widget [publishes](../../includes/widgets/shop_demo/article_search_box_widget/article_search_box_widget.js#L97) them as data resource on the *EventBus*.
 ```javascript
 var resourceName = $scope.features.resource;
 $scope.eventBus.publish( 'didReplace.' + resourceName, {
@@ -82,41 +98,44 @@ $scope.eventBus.publish( 'didReplace.' + resourceName, {
 } );
 ```
 
-The `$scope.eventBus.publish` function expects the three parameters: event name, the event object and additional options.
-The event name consists of the event type (`didReplace`), a dot as separator and the resource name.
-The event object has two properties the configured name of the resource (`$scope.features.cart.resource`) and the cart as data (`$scope.resources.cart`).
-In this case we do not assign additional options.
+The method `$scope.eventBus.publish` expects three parameters: event name, the event payload and (if needed) additional options.
+The _event name_ for this event consists of the event type (`didReplace`), a dot as a topic separator, and the resource name.
+The _event payload_ has two properties in this case, namely the configured _name_ of the resource (`$scope.features.cart.resource`) and the search results as data (`$scope.resources.cart`).
+Most of the time, the additional options are not required.
 
-To ensure that the widget gets the name of the resource from the configuration on the page, like the HeadLineWidget gets the `htmlText` for the  headline, we create a accordant feature [`definition`](../../includes/widgets/shop_demo/article_search_box_widget/widget.json#L17).
-We define the `resource` property as `required` in the specification of its parent object:
-:
-```json
+To ensure that the widget gets the name of the resource from the configuration on the page, like the HeadLineWidget gets the `htmlText` for the  headline, we create a corresponding [feature definition](../../includes/widgets/shop-demo/article-search-box-widget/widget.json#L17).
+We mark the `resource` property as `required` in the specification of its parent object:
+
+```javascript
 "features": {
-...
-"required": [ "resource" ],
-"properties": {
-   "resource": {
-      "type": "string",
-      "description": "ID of the resource under which the result is published.",
-      "format": "topic"
-   },
-...
+   // ...
+   "required": [ "resource" ],
+   "properties": {
+      "resource": {
+         "type": "string",
+         "description": "ID of the resource under which the result is published.",
+         "format": "topic"
+      },
+   // ...
+   }
+   // ...
 }
 ```
 
 The `resource` property is defined as a string using the `topic` format, which limits the set of allowed characters used to name it.
 For the scope of this demo application it is sufficient to know, that simple camel case strings with lowercase first character are totally valid.
 
-The other feature [`database`](../../includes/widgets/shop_demo/article_search_box_widget/widget.json#L26) lets us configured an individual database id when adding the widget to our application.
+The second feature, [`database`](../../includes/widgets/shop-demo/article-search-box-widget/widget.json#L23), lets us configure an individual database ID to be used by the widget within this application.
 
 
-## Adding the Widget to Page
-We include the [ArticleSearchBoxWidget](../../includes/widgets/shop_demo/article_search_box_widget) in our page [`shopDemo`](../../application/pages/shop_demo.json):
+## Adding the Widget to the Page
+
+We include the [ArticleSearchBoxWidget](../../includes/widgets/shop-demo/article-search-box-widget) in our [shop_demo](../../application/pages/shop_demo.json) page:
 
 ```javascript
 "searchBox": [
    {
-      "widget": "shop_demo/article_search_box_widget",
+      "widget": "shop-demo/article-search-box-widget",
       "features": {
          "resource": "articles",
          "database":{
@@ -129,8 +148,10 @@ We include the [ArticleSearchBoxWidget](../../includes/widgets/shop_demo/article
 ]
 ```
 
-## The Next Step
-At the moment we can search for articles but they are not displayed.
-To change this the next step is to implement the [ArticleBrowserWidget](05_article_browser_widget.md) which displays the articles.
 
-[« Application Flow](03_application_flow.md) | ArticleBrowserWidget | [ArticleBrowserWidget »](05_article_browser_widget.md)
+## The Next Step
+
+Now we can search for articles but the results are still not visible.
+To change this, the next step is to implement the [ArticleBrowserWidget](05_article_browser_widget.md) which displays the articles.
+
+[« Defining the Application Flow](03_application_flow.md) | The ArticleBrowserWidget | [The ArticleBrowserWidget »](05_article_browser_widget.md)
