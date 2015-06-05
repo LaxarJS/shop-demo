@@ -22,7 +22,7 @@ The widget configuration has two features: *display* (a list of articles) and *s
 
 #### Displaying a List of Articles
 
-For the first feature [*display*](../../includes/widgets/shop_demo/article-browser-widget/widget.json#L20), we allow to configure the name of the resource containing the articles.
+For the first feature [*display*](../../includes/widgets/shop-demo/article-browser-widget/widget.json#L20), we allow to configure the name of the resource containing the articles.
 In this application, the widget will receive the articles through a `didReplace` event, with the name configured under the key `resource` from the ArticleSearchBoxWidget.
 Because the widget would be useless without a list of articles to render, we define the `resource` property as `required` in the feature schema.
 Using the format `topic` allows us to use the same set of allowed characters as for the `resource` feature of the ArticleSearchBoxWidget.
@@ -38,23 +38,23 @@ We can use the function `patterns.resource.handlerFor( $scope ).registerResource
 It automatically handles _didReplace-_ and _didUpdate_-events for the configured display-resource and keeps track of its current state.
 In the ArticleBrowserWidget, the data can be found on the object `$scope.resources.display`.
 
-We add `laxar` and `laxar_patterns` to the [define block](../../includes/widgets/shop_demo/article-browser-widget/article-browser-widget.js#L3) and add a handler for the resource to the [controller function](../../includes/widgets/shop_demo/article-browser-widget/article-browser-widget.js#L21):
+We add `laxar` and `laxar_patterns` to the [define block](../../includes/widgets/shop-demo/article-browser-widget/article-browser-widget.js#L3) and add a handler for the resource to the [controller function](../../includes/widgets/shop-demo/article-browser-widget/article-browser-widget.js#L21):
 ```javascript
 patterns.resources.handlerFor( $scope )
    .registerResourceFromFeature( 'display', { onUpdateReplace: checkArticles } );
 ```
 
 We will configure the resource *display* for the widget when adding it to a page so that it subscribes to the relevant events.
-To implement the desired appearance, we modify the [HTML template](../../includes/widgets/shop_demo/article-browser-widget/default.theme/article-browser-widget.html) to display articles contained in the resource, or a hint that there are no articles available (yet).
+To implement the desired appearance, we modify the [HTML template](../../includes/widgets/shop-demo/article-browser-widget/default.theme/article-browser-widget.html) to display articles contained in the resource, or a hint that there are no articles available (yet).
 
-Basic widget style is implemented using a [CSS stylesheet](../../includes/widgets/shop_demo/article-browser-widget/default.theme/css/article-browser-widget.css).
+Basic widget style is implemented using a [CSS stylesheet](../../includes/widgets/shop-demo/article-browser-widget/default.theme/css/article-browser-widget.css).
 
 
 ### Allowing the User to Select an Article
 
 Now we'll cover the second feature of the ArticleBrowserWidget, called *select*.
 This feature requires the configuration of a resource name under which the selected article will be published on the event bus.
-Add the property [`select`](../../includes/widgets/shop_demo/article-browser-widget/widget.json#L53) to the widget features:
+Add the property [`select`](../../includes/widgets/shop-demo/article-browser-widget/widget.json#L53) to the widget features:
 
 ```json
 "select": {
@@ -74,7 +74,7 @@ Add the property [`select`](../../includes/widgets/shop_demo/article-browser-wid
 The feature *select* has a required property `resource` of type string.
 In our application the ArticleTeaserWidget and the ShoppingCartWidget (implemented in the next steps) will listen for events related to this resource.
 
-In our [HTML template](../../includes/widgets/shop_demo/article-browser-widget/default.theme/article-browser-widget.html#L25) we use the directive `ngClick` to detect the selection of an article by the user:
+In our [HTML template](../../includes/widgets/shop-demo/article-browser-widget/default.theme/article-browser-widget.html#L25) we use the directive `ngClick` to detect the selection of an article by the user:
 
 ```html
 <td data-ng-click="selectArticle( article )">{{ article.details.id }}</td>
@@ -90,7 +90,7 @@ To give the user a visual feedback of the selected article we use `ngClass`:
     data-ng-class="{selected: article.id == selectedArticle.id }" >
 ```
 
-Now we implement the method [`$scope.selectArticle`](../../includes/widgets/shop_demo/article-browser-widget/article-browser-widget.js) which is invoked by `ngClick`.
+Now we implement the method [`$scope.selectArticle`](../../includes/widgets/shop-demo/article-browser-widget/article-browser-widget.js) which is invoked by `ngClick`.
 It publishes the selected article on the event bus:
 
 ```javascript
@@ -117,7 +117,7 @@ We update the [shop_demo](../../application/pages/shop_demo.json#L39) page and a
 
 ```json
 {
-  "widget": "shop_demo/article-browser-widget",
+  "widget": "shop-demo/article-browser-widget",
   "features": {
      "display": {
         "resource": "articles"
@@ -134,7 +134,7 @@ Because of the page configuration, the ArticleBrowserWidget expects the article 
 ```json
 "searchBox": [
    {
-      "widget": "shop_demo/article-search-box-widget",
+      "widget": "shop-demo/article-search-box-widget",
       "features": {
          "resource": "articles",
          "database":{
@@ -168,7 +168,7 @@ But in case the list is updated or replaced the widget doesn't check if the sele
 The widget needs to react to such a situation and reset the selection.
 If the selected article is missing in the changed list the widget has to reset the selection internally and send the appropriate event for the `select` resource.
 
-By implementing the function [`checkArticles`](../../includes/widgets/shop_demo/article-browser-widget/article-browser-widget.js#L40) we'll try to make these tests pass.
+By implementing the function [`checkArticles`](../../includes/widgets/shop-demo/article-browser-widget/article-browser-widget.js#L40) we'll try to make these tests pass.
 This functions uses the `laxar.object.path` function which returns the value of `$scope.resources.display.entries` if it exists or the alternative given as third parameter in case it doesn't exist.
 So in our case we'll either receive an array of entries, something that is no array or an empty array.
 The second case is caught by checking `entries.length`:
