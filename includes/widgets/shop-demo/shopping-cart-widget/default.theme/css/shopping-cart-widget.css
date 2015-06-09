@@ -4,10 +4,9 @@
  * www.laxarjs.org
  */
 .shopping-cart-widget .app-col-1 {
-  width: 60px;
-}
-.shopping-cart-widget .app-col-3 {
-  width: 85px;
+  width: 7rem;
+  font-size: x-small;
+  vertical-align: middle;
 }
 .shopping-cart-widget .app-col-4 {
   width: 55px;
@@ -22,7 +21,7 @@
   color: #d9534f;
   text-align: center;
   background-color: #ddd;
-  font-weight: 300;
+  font-weight: 500;
 }
 .shopping-cart-widget h3.app-articles {
   color: #5cb85c;

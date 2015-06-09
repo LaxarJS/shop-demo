@@ -1,37 +1,20 @@
-{
-   "entries": [
-      {
-         "article": {
-            "id": "ORD001",
-            "details": {
-               "id": "001",
-               "name": "Cup",
-               "htmlDescription": "A beautiful cup with LaxarJS logo.",
-               "price": 24.99
-            }
-         }
-      },
-      {
-         "article": {
-            "id": "ORD002",
-            "details": {
-               "id": "002",
-               "name": "Beer (Bottle)",
-               "htmlDescription": "Take a sip of pure LaxarJS beer.",
-               "price": 49.99
-            }
-         }
-      },
-      {
-         "article": {
-            "id": "ORD003",
-            "details": {
-               "id": "003",
-               "name": "T-Shirt",
-               "htmlDescription": "A LaxarJS T-shirt with shining orange",
-               "price": 17.10
-            }
-         }
-      }
-   ]
-}
+[
+   {
+      "id": "001",
+      "name": "Cup",
+      "htmlDescription": "A beautiful cup with LaxarJS logo.",
+      "price": 24.99
+   },
+   {
+      "id": "002",
+      "name": "Beer (Bottle)",
+      "htmlDescription": "Take a sip of pure LaxarJS beer.",
+      "price": 49.99
+   },
+   {
+      "id": "003",
+      "name": "T-Shirt",
+      "htmlDescription": "A LaxarJS T-shirt with shining orange",
+      "price": 17.10
+   }
+]

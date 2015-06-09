@@ -1,0 +1,14 @@
+{
+   "name": "shop_demo/dummy-articles-activity",
+   "version": "0.1.0",
+   "description": "Provides shopping articles from a JSON file",
+   "license": "MIT",
+   "dependencies": {
+      "laxar": "LaxarJS/laxar#0.x",
+      "laxar_patterns": "LaxarJS/laxar_patterns#0.x"
+   },
+   "devDependencies": {
+      "es5-shim": "2.3.x",
+      "jasmine": "1.3.x"
+   }
+}

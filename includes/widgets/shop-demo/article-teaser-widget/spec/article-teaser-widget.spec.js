@@ -4,14 +4,13 @@
  * www.laxarjs.org
  */
 define( [
-   'json!../bower.json',
    '../article-teaser-widget',
    'laxar/laxar_testing',
    'angular-mocks',
    'jquery',
    'json!./spec_data.json',
    'text!../default.theme/article-teaser-widget.html'
-], function( manifest, widgetModule, ax, ngMocks, $, resourceData, widgetMarkup  ) {
+], function( widgetModule, ax, ngMocks, $, resourceData, widgetMarkup  ) {
    'use strict';
 
    describe( 'A ArticleTeaserWidget', function() {
@@ -20,11 +19,10 @@ define( [
       var testBed;
       var $widget;
       var configuration = {
-         display: {
+         article: {
             resource: 'article'
          },
-         button: {
-            htmlLabel: 'Add to Cart',
+         confirmation: {
             action: 'addArticle'
          }
       };
@@ -32,9 +30,8 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function setup( features ) {
-         testBed = ax.testing.portalMocksAngular.createControllerTestBed( manifest.name );
+         testBed = ax.testing.portalMocksAngular.createControllerTestBed( 'shop-demo/article-teaser-widget' );
          testBed.featuresMock = features;
-         testBed.useWidgetJson();
          testBed.setup();
 
          ngMocks.inject( function( $compile ) {
@@ -53,7 +50,7 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      describe( 'with feature display and configured resource', function() {
+      describe( 'with feature article and configured resource', function() {
 
          beforeEach( function() {
             setup( configuration );
@@ -66,45 +63,16 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         it( 'acts as a slave of the resource and displays the details.', function() {
+         it( 'subscribes to didReplace events of the article resource', function() {
             expect( testBed.scope.eventBus.subscribe )
                .toHaveBeenCalledWith( 'didReplace.article', anyFunction );
-            expect( testBed.scope.eventBus.subscribe )
-               .toHaveBeenCalledWith( 'didUpdate.article', anyFunction );
-            expect( testBed.scope.resources.display ).toEqual( resourceData );
-         } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         describe( 'and an update of the article resource', function() {
-
-            beforeEach( function() {
-               testBed.eventBusMock.publish( 'didUpdate.article', {
-                  resource: 'article',
-                  patches: [
-                     {
-                        op: 'replace',
-                        path: '/details/price',
-                        value: 19.99
-                     }
-                  ]
-               } );
-               jasmine.Clock.tick( 0 );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'reflects updates to the published resource', function() {
-               expect( testBed.scope.resources.display.details.price ).toEqual( 19.99 );
-            } );
-
          } );
 
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      describe( 'with feature button and user adds an article to cart', function() {
+      describe( 'with feature confirmation, when the user adds an article to the cart', function() {
 
          beforeEach( function() {
             setup( configuration );
@@ -118,7 +86,7 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         it( 'publishes a takeActionRequest to add the selected article to cart', function() {
+         it( 'publishes an according takeActionRequest event', function() {
             expect( testBed.scope.eventBus.publish )
                .toHaveBeenCalledWith( 'takeActionRequest.addArticle', {
                   action: 'addArticle'

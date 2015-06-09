@@ -3,34 +3,36 @@
    "description": "The ArticleSearchBoxWidget lets the user search for articles.",
 
    "integration": {
-      "type": "angular"
+      "technology": "angular",
+      "type": "widget"
    },
 
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
-      "required": [ "resource" ],
+      "required": [ "articles", "filteredArticles" ],
       "properties": {
 
-         "resource": {
-            "type": "string",
-            "description": "ID of the resource under which the result is published.",
-            "format": "topic"
+         "articles": {
+            "type": "object",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "ID of the resource for the unfiltered list of articles to subscribe to.",
+                  "format": "topic"
+               }
+            }
          },
 
-         "database": {
+         "filteredArticles": {
             "type": "object",
-            "required": [ "pouchDb" ],
+            "required": [ "resource" ],
             "properties": {
-               "pouchDb": {
-                  "type": "object",
-                  "required": [ "dbId" ],
-                  "properties": {
-                     "dbId": {
-                        "type": "string",
-                        "description": "ID of the database."
-                     }
-                  }
+               "resource": {
+                  "type": "string",
+                  "description": "ID of the resource under which the filtered list of articles is published.",
+                  "format": "topic"
                }
             }
          }

@@ -1,58 +1,44 @@
 {
    "name": "ArticleBrowserWidget",
-   "description": "The ArticleBrowserWidget displays a list of articles and lets the user select one.",
+   "description": "Displays a list of articles and lets the user select one.",
 
    "integration": {
-      "type": "angular"
+      "technology": "angular",
+      "type": "widget"
    },
 
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
-      "required": [ "display", "select" ],
+      "required": [ "articles", "selection" ],
       "properties": {
 
-         "display": {
+         "articles": {
             "type": "object",
-            "description": "Display a list with articles.",
+            "description": "Display a list of articles.",
             "required": [ "resource" ],
             "properties": {
-               "headline": {
-                  "type": "string",
-                  "default": "Articles",
-                  "description": "The title for the widget."
-               },
                "resource": {
                   "type": "string",
                   "description": "Name of the data resource with articles.",
                   "format": "topic"
-               },
-               "htmlNameLabel": {
-                  "type": "string",
-                  "description": "Label for the article name.",
-                  "default": "Article"
-               },
-               "htmlIdLabel": {
-                  "type": "string",
-                  "description": "Label for the article id.",
-                  "default": "Art. ID"
-               },
-               "htmlPriceLabel": {
-                  "type": "string",
-                  "description": "Label for the article price.",
-                  "default": "Price"
                }
             }
          },
 
-         "select": {
+         "selection": {
             "type": "object",
             "description": "Select an article.",
             "required": [ "resource" ],
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "Name of the data resource with the selected article.",
+                  "description": "Name of the resource for the user selection",
+                  "format": "topic"
+               },
+               "action": {
+                  "type": "string",
+                  "description": "Action to trigger after user selection",
                   "format": "topic"
                }
             }

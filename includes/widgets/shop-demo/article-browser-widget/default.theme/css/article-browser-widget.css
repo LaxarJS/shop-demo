@@ -7,10 +7,7 @@
   position: relative;
 }
 .article-browser-widget .app-col-1 {
-  width: 60px;
-}
-.article-browser-widget .app-col-3 {
-  width: 85px;
+  width: 7rem;
 }
 .article-browser-widget .app-no-articles {
   color: #d9534f;
@@ -28,7 +25,11 @@
 .article-browser-widget table.app-articles > thead > tr > th {
   color: white;
   background-color: #737373;
-  font-weight: 300;
+  font-weight: 500;
+}
+.article-browser-widget td.app-col-1 {
+  font-size: x-small;
+  vertical-align: middle;
 }
 .article-browser-widget .table-hover > tbody > tr:hover > td {
   background-color: #b5deea;

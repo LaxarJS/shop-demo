@@ -4,10 +4,9 @@
  * www.laxarjs.org
  */
 define( [
-   'json!../bower.json',
    '../headline-widget',
    'laxar/laxar_testing'
-], function( manifest, widgetModule, ax ) {
+], function(  widgetModule, ax ) {
    'use strict';
 
    describe( 'A HeadlineWidget', function() {
@@ -15,7 +14,7 @@ define( [
       var testBed_;
 
       beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( manifest.name );
+         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'shop-demo/headline-widget' );
          testBed_.featuresMock = {};
          testBed_.setup();
       } );

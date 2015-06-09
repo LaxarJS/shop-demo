@@ -5,105 +5,60 @@
  */
 define( [
    'angular',
-   'pouchdb',
-   'laxar',
-   './articles_data'
-], function( ng, PouchDb, ax, articlesData ) {
+   'laxar'
+], function( ng, ax ) {
    'use strict';
 
-   Controller.$inject = [ '$scope' ];
+   Controller.$inject = [ '$scope', 'axEventBus' ];
 
-   function Controller( $scope ) {
+   function Controller( $scope, eventBus ) {
 
       $scope.model = {
          searchTerm: ''
       };
+      $scope.search = refreshAndPublishFilteredArticles;
 
-      var db = new PouchDb( $scope.features.database.pouchDb.dbId );
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      var articlesPromise = search();
-      $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
-         articlesPromise.then( publishArticles, handleError );
+      var unfilteredArticles = [];
+      var filteredArticles = [];
+      var articlesResource = $scope.features.articles.resource;
+      var filterArticlesResource = $scope.features.filteredArticles.resource;
+
+      eventBus.subscribe( 'didReplace.' + articlesResource, function( event ) {
+         unfilteredArticles = ax.object.path( event, 'data.entries', [] );
+
+         refreshAndPublishFilteredArticles();
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      $scope.search = function() {
-         search().then( publishArticles, handleError );
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function handleError( error ) {
-         ax.log.debug( error );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function search() {
-         return fetchArticles()
-            .then( function( articles ) {
-               return filterArticles( articles, $scope.model.searchTerm );
+      function refreshAndPublishFilteredArticles() {
+         var newFilteredArticles = unfilteredArticles;
+         var searchTerm = $scope.model.searchTerm;
+         if( searchTerm ) {
+            newFilteredArticles = unfilteredArticles.filter( function( article ) {
+               return infixMatch( article.name, searchTerm ) ||
+                  infixMatch( article.id, searchTerm ) ||
+                  infixMatch( article.htmlDescription, searchTerm );
             } );
-      }
+         }
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function fetchArticles() {
-
-         return db.query( map )
-            .then( function( response ) {
-               if( response.rows.length === 0 ) {
-                  // For demoing purposes we insert some items into the database here if it is empty.
-                  return db.bulkDocs( articlesData )
-                     .then( function() {
-                        return db.query( map );
-                     } )
-                     .then( function( response ) {
-                        return response.rows;
-                     } );
+         if( !ng.equals( newFilteredArticles, filteredArticles ) ) {
+            filteredArticles = newFilteredArticles;
+            $scope.eventBus.publish( 'didReplace.' + filterArticlesResource, {
+               resource: filterArticlesResource,
+               data: {
+                  entries: filteredArticles
                }
-               return response.rows;
-            } )
-            .then( function( rows ) {
-               return rows.map( function( entry ) {
-                  return { id: entry.id, details: entry.value };
-               } );
             } );
-
-         function map( doc ) {
-            if( doc.details ) {
-               /* global emit */
-               emit( doc.id, doc.details );
-            }
          }
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function filterArticles( articles, searchTerm ) {
-         if( searchTerm.length < 2 ) {
-            return articles;
-         }
-
-         var lcSearchTerm = searchTerm.toLowerCase();
-         return articles.filter( function( article ) {
-            var title = article.details.name.toLowerCase();
-            var description = article.details.htmlDescription.toLowerCase();
-            return title.indexOf( lcSearchTerm ) !== -1 || description.indexOf( lcSearchTerm ) !== -1;
-         } );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function publishArticles( articles ) {
-         if( articles ) {
-            var resourceName = $scope.features.resource;
-            $scope.eventBus.publish( 'didReplace.' + resourceName, {
-               resource: resourceName,
-               data: { entries: articles }
-            } );
-         }
+      function infixMatch( subject, query ) {
+         return ( subject || '' ).toLowerCase().indexOf( query.toLowerCase() ) !== -1;
       }
 
    }

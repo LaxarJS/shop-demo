@@ -1,114 +1,17 @@
 {
    "name": "ShoppingCartWidget",
-   "description": "Displays a cart with a list of articles, lets the user add or delete some and order them.",
+   "description": "A shopping cart with a list of articles, lets the user add articles and change their quantity.",
 
    "integration": {
-      "type": "angular"
+      "technology": "angular",
+      "type": "widget"
    },
 
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
-      "required": [ "cart", "article" ],
+      "required": [ "article", "order" ],
       "properties": {
-
-         "cart": {
-            "type": "object",
-            "description": "The shopping cart with articles.",
-            "required": [ "resource" ],
-            "properties": {
-               "resource": {
-                  "type": "string",
-                  "description": "Name of the data resource with articles of the cart.",
-                  "format": "topic"
-               },
-               "order": {
-                  "type": "object",
-                  "description": "Reset the cart.",
-                  "properties": {
-                     "required": [ "action" ],
-                     "button": {
-                        "type": "object",
-                        "description": "A button to perform the order.",
-                        "properties": {
-                           "htmlLabel": {
-                              "type": "string",
-                              "description": "Label of the button.",
-                              "default": "Order"
-                           }
-                        }
-                     },
-                     "action": {
-                        "type": "string",
-                        "description": "Name of the action to perform the order.",
-                        "format": "topic"
-                     }
-                  }
-               }
-            }
-         },
-
-         "display": {
-            "type": "object",
-            "description": "Display the articles of the shopping cart in a table.",
-            "properties": {
-               "headline": {
-                  "type": "string",
-                  "description": "Title of the item list.",
-                  "default": "Shopping Cart"
-               },
-               "htmlNameLabel": {
-                  "type": "string",
-                  "description": "Label for the article name.",
-                  "default": "Article"
-               },
-               "htmlIdLabel": {
-                  "type": "string",
-                  "description": "Label for the article id.",
-                  "default": "Art. ID"
-               },
-               "htmlPriceLabel": {
-                  "type": "string",
-                  "description": "Label for the article price.",
-                  "default": "Price"
-               },
-               "htmlQuantityLabel": {
-                  "type": "string",
-                  "description": "Label for the quantity of articles.",
-                  "default": "Quantity"
-               },
-               "htmlSumLabel": {
-                  "type": "string",
-                  "description": "Label for the subtotal of all items.",
-                  "default": "Subtotal"
-               },
-               "htmlAddItemLabel": {
-                  "type": "string",
-                  "description": "Label for the button to add the article again.",
-                  "default": "<i class='fa fa-plus-square'></i>"
-               },
-               "htmlDeleteItemLabel": {
-                  "type": "string",
-                  "description": "Label for the button to delete one item of the article.",
-                  "default": "<i class='fa fa-minus-square'></i>"
-               },
-               "htmlNoItemsText": {
-                  "type": "string",
-                  "description": "A hint if the cart is empty.",
-                  "default": "The cart is empty"
-               },
-               "htmlOrderedCartText": {
-                  "type": "string",
-                  "description": "A hint that the order was performed.",
-                  "default": "Articles ordered!"
-               },
-               "htmlOrderedCartErrorText": {
-                  "type": "string",
-                  "description": "A hint that a error occurred when trying to order.",
-                  "default": "Could not order Articles. Try again later."
-               }
-            }
-         },
 
          "article": {
             "type": "object",
@@ -117,16 +20,28 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "Name of the data resource containing an article to add to the cart.",
+                  "description": "ID of the article resource to add to the cart.",
                   "format": "topic"
                },
                "onActions": {
                   "type": "array",
-                  "description": "Add the article to cart.",
+                  "description": "Adds the article to the cart.",
                   "items": {
                      "type": "string",
                      "format": "topic"
                   }
+               }
+            }
+         },
+
+         "order": {
+            "type": "object",
+            "description": "Performs an order.",
+            "required": [ "target" ],
+            "properties": {
+               "target": {
+                  "type": "string",
+                  "description": "The target to be used in the navigateRequest event after placing the order."
                }
             }
          }

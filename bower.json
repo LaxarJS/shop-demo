@@ -11,11 +11,8 @@
       "requirejs": "2.1.x",
       "requirejs-plugins": "1.0.x",
       "laxar": "~1.0.0",
-      "laxar-patterns": "~1.0.0",
-      "laxar-uikit": "~1.0.0",
-      "bootswatch-scss": "3.2.x",
-      "marked": "0.3.x",
-      "pouchdb": "2.2.x"
+      "laxar-uikit": "1.0.0",
+      "bootswatch-scss": "3.2.x"
    },
    "devDependencies": {
       "es5-shim": "2.3.x",

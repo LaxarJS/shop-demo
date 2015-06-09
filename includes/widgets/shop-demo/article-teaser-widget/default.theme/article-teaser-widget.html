@@ -1,32 +1,42 @@
 <h3 class="ax-function-point"
-    data-ng-class="{ 'app-selection': resources.display.details.name }">
-   <i class='fa fa-search'></i> {{ features.display.headline }}
+    data-ng-class="{ 'app-selection': resources.article }">
+   <i class='fa fa-search'></i> Details
 </h3>
-<div class="app-teaser-wrapper"
-     data-ng-class="{ 'app-selection': resources.display.details.name }">
 
-   <h4 data-ng-class="{ 'app-no-selection': !resources.display.details.name }"
-      >{{ resources.display.details.name || features.display.noArticleLabel }}</h4>
+<div class="app-teaser-wrapper clearfix"
+     data-ng-class="{ 'app-selection': resources.article }">
 
-   <dl class="dl-horizontal">
-      <dt data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
-          data-ng-bind-html="features.display.htmlIdLabel"></dt>
-      <dd>{{ resources.display.details.id }}</dd>
+   <h4 data-ng-class="{ 'app-no-selection': !resources.article }"
+      >{{ resources.article.name || 'No article selected' }}</h4>
 
-      <dt data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
-          data-ng-bind-html="features.display.htmlDescriptionLabel"></dt>
-      <dd data-ng-bind-html="resources.display.details.htmlDescription"></dd>
+   <div class="row">
+      <div class="col col-md-12 app-teaser-image-wrapper">
+         <img class="app-teaser-image"
+              data-ng-if="resources.article.pictureUrl"
+              data-ng-src="{{ resources.article.pictureUrl }}">
+      </div>
+   </div>
 
-      <dt data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
-          data-ng-bind-html="features.display.htmlPriceLabel" ></dt>
-      <dd>{{ resources.display.details.price | currency : "€ " }}</dd>
-   </dl>
+   <div class="row">
+      <div class="col col-md-12">
+         <dl class="dl-horizontal">
+            <dt data-ng-class="{ 'ax-disabled': !resources.article }">Art. ID</dt>
+            <dd>{{ resources.article.id }}</dd>
 
+            <dt data-ng-class="{ 'ax-disabled': !resources.article }">Description</dt>
+            <dd data-ng-bind-html="resources.article.htmlDescription"></dd>
+
+            <dt data-ng-class="{ 'ax-disabled': !resources.article }">Price</dt>
+            <dd>{{ resources.article.price | currency : "€ " }}</dd>
+         </dl>
+      </div>
+
+   </div>
 </div>
-<div class="clearfix">
+<div data-ng-if="resources.article"
+     class="clearfix">
    <button class="btn btn-default btn-info pull-right"
            type="button"
-           data-ng-class="{ 'ax-disabled': !resources.display.details.name }"
-           data-ng-click="addToCart()"
-           data-ng-bind-html="features.button.htmlLabel"></button>
+           data-ng-class="{ 'ax-disabled': !resources.article }"
+           data-ng-click="addToCart()"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
 </div>

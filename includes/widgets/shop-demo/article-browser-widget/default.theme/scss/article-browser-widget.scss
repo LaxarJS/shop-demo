@@ -12,8 +12,7 @@ $app-articles-color: #737373;
 .article-browser-widget {
    position: relative;
 
-   .app-col-1 { width: 60px; }
-   .app-col-3 { width: 85px; }
+   .app-col-1 { width: 7rem; }
 
    .app-no-articles {
       color: $brand-danger;
@@ -37,8 +36,13 @@ $app-articles-color: #737373;
       > thead > tr > th {
          color: white;
          background-color: $app-articles-color;
-         font-weight: 300;
+         font-weight: 500;
       }
+   }
+
+   td.app-col-1 {
+      font-size: x-small;
+      vertical-align: middle;
    }
 
    .table-hover > tbody > tr:hover > td {

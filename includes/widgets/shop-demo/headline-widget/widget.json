@@ -3,7 +3,8 @@
    "description": "Displays a simple headline and an intro html text.",
 
    "integration": {
-      "type": "angular"
+      "technology": "angular",
+      "type": "widget"
    },
 
    "features": {
