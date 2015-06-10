@@ -1,12 +1,11 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 define( [
-   'angular',
-   'laxar'
-], function( ng, ax ) {
+   'angular'
+], function( ng ) {
    'use strict';
 
    Controller.$inject = [ '$scope', 'axEventBus' ];
@@ -16,7 +15,7 @@ define( [
       $scope.model = {
          searchTerm: ''
       };
-      $scope.search = refreshAndPublishFilteredArticles;
+      $scope.search = search;
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,14 +25,13 @@ define( [
       var filterArticlesResource = $scope.features.filteredArticles.resource;
 
       eventBus.subscribe( 'didReplace.' + articlesResource, function( event ) {
-         unfilteredArticles = ax.object.path( event, 'data.entries', [] );
-
-         refreshAndPublishFilteredArticles();
+         unfilteredArticles = event.data.entries || [];
+         search();
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function refreshAndPublishFilteredArticles() {
+      function search() {
          var newFilteredArticles = unfilteredArticles;
          var searchTerm = $scope.model.searchTerm;
          if( searchTerm ) {
@@ -46,7 +44,7 @@ define( [
 
          if( !ng.equals( newFilteredArticles, filteredArticles ) ) {
             filteredArticles = newFilteredArticles;
-            $scope.eventBus.publish( 'didReplace.' + filterArticlesResource, {
+            eventBus.publish( 'didReplace.' + filterArticlesResource, {
                resource: filterArticlesResource,
                data: {
                   entries: filteredArticles

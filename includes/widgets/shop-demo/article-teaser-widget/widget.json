@@ -15,12 +15,11 @@
 
          "article": {
             "type": "object",
-            "description": "The source with data of an article.",
             "required": [ "resource" ],
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "Name of the data resource resembling an article.",
+                  "description": "Name of the data resource representing an article.",
                   "format": "topic"
                }
             }
@@ -28,7 +27,6 @@
 
          "confirmation": {
             "type": "object",
-            "description": "A button to add an article to cart.",
             "required": [ "action" ],
             "properties": {
                "action": {
@@ -38,6 +36,7 @@
                }
             }
          }
+
       }
    }
 }

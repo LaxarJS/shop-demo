@@ -2,7 +2,7 @@
    "layout": "application",
 
    "areas": {
-      "content1a": [
+      "contentA": [
          {
             "widget": "shop-demo/headline-widget",
             "features": {
@@ -12,7 +12,7 @@
             }
          }
       ],
-      "content1b": [
+      "contentB": [
          {
             "widget": "shop-demo/headline-widget",
             "features": {

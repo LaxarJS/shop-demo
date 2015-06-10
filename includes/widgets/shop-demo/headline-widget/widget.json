@@ -14,7 +14,7 @@
 
          "headline": {
             "type": "object",
-            "description": "The HTML text to be shown as a headline.",
+            "required": [ "htmlText" ],
             "properties": {
                "htmlText": {
                   "type": "string",
@@ -32,14 +32,14 @@
 
          "intro": {
             "type": "object",
-            "description": "Additional introductory HTML text to be shown below the headline.",
             "properties": {
                "htmlText": {
                   "type": "string",
-                  "description": "The HTML intro content."
+                  "description": "Additional introductory HTML text to be shown below the headline."
                }
             }
          }
+
       }
    }
 }

@@ -3,10 +3,9 @@
  * Released under the MIT license.
  */
 define( [
-   'require',
    'angular',
    './articles'
-], function( require, ng, articles ) {
+], function( ng, articles ) {
    'use strict';
 
    Controller.$inject = [ 'axContext', 'axEventBus' ];
@@ -17,11 +16,7 @@ define( [
          eventBus.publish( 'didReplace.' + articleResource, {
             resource: articleResource,
             data: {
-               entries: articles.map( function( article ) {
-                  var copy = ng.copy( article );
-                  copy.pictureUrl = article.picture ? require.toUrl( './images/' + article.picture ) : null;
-                  return copy;
-               } )
+               entries: articles
             }
          } );
       } );

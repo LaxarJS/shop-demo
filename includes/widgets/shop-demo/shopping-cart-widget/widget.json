@@ -15,7 +15,6 @@
 
          "article": {
             "type": "object",
-            "description": "The selected article",
             "required": [ "resource", "onActions" ],
             "properties": {
                "resource": {
@@ -36,7 +35,6 @@
 
          "order": {
             "type": "object",
-            "description": "Performs an order.",
             "required": [ "target" ],
             "properties": {
                "target": {
@@ -45,6 +43,7 @@
                }
             }
          }
+
       }
    }
 }

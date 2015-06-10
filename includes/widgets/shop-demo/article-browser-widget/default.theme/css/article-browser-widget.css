@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 .article-browser-widget {
   position: relative;
@@ -42,9 +42,6 @@
 }
 .article-browser-widget .selectable {
   cursor: pointer;
-}
-.article-browser-widget .clickable {
-  cursor: auto;
 }
 .article-browser-widget .price {
   text-align: right !important;

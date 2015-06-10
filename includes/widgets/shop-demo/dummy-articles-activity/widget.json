@@ -18,7 +18,9 @@
             "type": "object",
             "properties": {
                "resource": {
-                  "type": "string"
+                  "description": "The event bus topic under which to publish the list of articles",
+                  "type": "string",
+                  "format": "topic"
                }
             }
          }

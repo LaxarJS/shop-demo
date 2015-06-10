@@ -1,9 +1,9 @@
 # Getting Started
 
-This tutorial explains how to create simple web-based shopping application using [LaxarJS](http://laxarjs.org).
-It provides a step by step introduction into creating widgets and activities and using them in an application.
+This tutorial explains how to create a simple web-based shopping application using [LaxarJS](http://laxarjs.org).
+It provides a step-by-step introduction into creating widgets and activities and using them in an application.
 It is intended for programmers who are familiar with [*AngularJS*](https://angularjs.org/) and the related web technologies.
-Basic knowledge of *git* is assumed as well.
+Rudimentary knowledge of *git* is assumed as well.
 If you are unfamiliar with LaxarJS, you might want to check out [Why LaxarJS](https://github.com/LaxarJS/laxar/blob/master/docs/why_laxar.md) and maybe have a brief look at the [key concepts](https://github.com/LaxarJS/laxar/blob/master/docs/concepts.md) first.
 
 
@@ -35,41 +35,39 @@ grunt-init laxar-application
 
 The script will ask for some details about the application and offer suggestions for possible answers to these questions.
 It creates the basic file- and directory structure of a LaxarJS application.
-If currently there is no service running locally on port 8000 we can just accept the suggested answers.
-Otherwise we have to change the port number and make sure to remember it in order to access the application later on.
+If there is no service currently running on port 8000 we can just accept the suggested answer.
+Otherwise, we need to make sure to remember to port we choose, and use it to access the application later on.
 
 ```
 Please answer the following:
 [?] Application name (shop-demo)
-[?] Application title (LaxarJS ShopDemo)
-[?] Description (My new LaxarJS application) A demo app to show how LaxarJS works.
+[?] Application title (ShopDemo) LaxarJS ShopDemo
+[?] Description (My new LaxarJS application) A demo application to learn how LaxarJS works.
 [?] Licenses (none) MIT
-[?] Project homepage (none) www.laxarjs.org
+[?] Project homepage (none) http://www.laxarjs.org
 [?] Author name (author) LaxarJS
-[?] Version (0.1.0)
-[?] LaxarJS version (0.x)
+[?] Version (0.1.0-pre)
 [?] Development server port (8000)
+[?] Should a set of example widgets be generated? (Y/n) no
 [?] Do you need to make any changes to the above before continuing? (y/N)
 ```
 
-The script creates the application _ShopDemo_ which has some dependencies to LaxarJS and to third party libraries.
+The script creates the application _ShopDemo_ with the necessary dependencies to LaxarJS.
 
 First, we set up the development server and fetch the dependencies:
 ```shell
 npm install
 ```
 
-Now we can start the development server to access our application from a browser:
+Now we can start the development server to access our application from a web browser:
 ```shell
 npm start
 ```
 
 The empty application can now be visited at [http://localhost:8000/debug.html](http://localhost:8000/debug.html).
-If we used a different port previously, we have to change the port in the URL.
+Here we see an empty document containing nothing but a greeting message to inform us that everything was set up correctly.
 
-We see an empty site with the page title "LaxarJS ShopDemo".
-
-To stop the server we press `Ctrl-C`.
+To stop the server for now, we press `Ctrl-C`.
 
 
 ## The Next Step

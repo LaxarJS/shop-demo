@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 /* line 12, ../../default.theme/scss/article-browser-widget.scss */
 .article-browser-widget {
@@ -60,10 +60,6 @@
   cursor: pointer;
 }
 /* line 63, ../../default.theme/scss/article-browser-widget.scss */
-.article-browser-widget .clickable {
-  cursor: auto;
-}
-/* line 67, ../../default.theme/scss/article-browser-widget.scss */
 .article-browser-widget .price {
   text-align: right !important;
 }

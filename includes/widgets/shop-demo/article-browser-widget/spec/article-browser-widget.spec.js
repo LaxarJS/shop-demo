@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 define( [
    '../article-browser-widget',
@@ -85,43 +85,6 @@ define( [
                   .toHaveBeenCalledWith( 'didReplace.selectedArticle', {
                      resource: 'selectedArticle',
                      data: testBed.scope.resources.articles[ 1 ]
-                  } );
-            } );
-
-         } );
-
-      } );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      describe( 'when a selection action is configured and the list of articles is replaced', function() {
-
-         beforeEach( function() {
-            defaultFeatures.selection.action = 'articleSelected';
-            setup( defaultFeatures );
-            testBed.eventBusMock.publish( 'didReplace.articles', {
-               resource: 'articles',
-               data: data
-            } );
-            jasmine.Clock.tick( 0 );
-         } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         describe( 'and the user selects an article', function() {
-
-            beforeEach( function() {
-               testBed.scope.eventBus.publish.reset();
-               testBed.scope.selectArticle( testBed.scope.resources.articles[ 1 ] );
-               jasmine.Clock.tick( 0 );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'the configured selection action is published', function() {
-               expect( testBed.scope.eventBus.publish )
-                  .toHaveBeenCalledWith( 'takeActionRequest.articleSelected', {
-                     action: 'articleSelected'
                   } );
             } );
 

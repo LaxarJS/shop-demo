@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 define( [
    'angular'
@@ -16,7 +16,6 @@ define( [
       $scope.selectedArticle = null;
 
       var articlesResource = $scope.features.articles.resource;
-
       eventBus.subscribe( 'didReplace.' + articlesResource, function( event ) {
          $scope.resources.articles = event.data;
          $scope.selectArticle( null );
@@ -31,13 +30,6 @@ define( [
          eventBus.publish( 'didReplace.' + selectionResource, {
             resource: selectionResource,
             data: article
-         } ).then( function() {
-            var selectionAction = $scope.features.selection.action;
-            if( selectionAction ) {
-               eventBus.publish( 'takeActionRequest.' + selectionAction, {
-                  action: selectionAction
-               } );
-            }
          } );
       };
 

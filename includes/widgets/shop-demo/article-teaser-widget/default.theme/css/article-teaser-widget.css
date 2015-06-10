@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 .article-teaser-widget h4 {
   background-color: #ddd;
@@ -26,7 +26,6 @@
 }
 .article-teaser-widget .dl-horizontal dd {
   margin-left: 9rem;
-  width: 65%;
 }
 .article-teaser-widget dt ~ dt,
 .article-teaser-widget dd ~ dd {

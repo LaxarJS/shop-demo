@@ -1,4 +1,4 @@
-define( function() {
+define( [ 'require', 'laxar' ], function( require, ax ) {
    'use strict';
    return [
       {
@@ -71,5 +71,7 @@ define( function() {
          'htmlDescription': 'Just throw it away!',
          'price': 49.95
       }
-   ];
+   ].map( function( article ) {
+      return ax.object.options( article, { pictureUrl: require.toUrl( './images/' + article.picture ) } );
+   } );
 } );
