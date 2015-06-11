@@ -83,7 +83,7 @@ In order to trigger navigation to a another page, the widgets allows to configur
 
 ## Adding the Widget to our Application
 
-We add the widget to the `contentC` section of our [first page](../../application/pages/shop_demo.json#L77), where we connect it to the ArticleBrowserWidget and to the ArticleTeaserWidget, and configure the navigation target.
+We add the widget to the `contentC` section of our [first page](../../application/pages/shop_demo.json#L56-69), where we connect it to the ArticleBrowserWidget and to the ArticleTeaserWidget, and configure the navigation target.
 
 ```json
 "contentC": [

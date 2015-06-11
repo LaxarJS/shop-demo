@@ -1,7 +1,7 @@
 # The ArticleTeaserWidget
 
 The _ArticleTeaserWidget_ that we will implement in this step is going to have two features:
-It will display details on a given *article*, and it will allows the user to *confirm* adding that article to the shopping cart.
+It will display details on a given *article*, and it will allow the user to *confirm* adding that article to the shopping cart.
 Having learned about the event bus and the *resource*-pattern already, this part of the tutorial will introduce the *action*-pattern and explain how widgets may respond to events asynchronously.
 
 In the previous chapter we implemented the ArticleBrowserWidget which publishes its selected article as a resource on the event bus.
@@ -85,7 +85,6 @@ We add the widget to the area `contentB` of our [first page](../../application/p
       }
    }
 ]
-"
 ```
 
 As always after adding a new widget, we will need to restart the development server at this point.

@@ -46,7 +46,7 @@ Please answer the following:
 [?] Do you need to make any changes to the above before continuing? (y/N)
 ```
 
-The HeadlineWidget now consists of a the following files:
+The HeadlineWidget now consists of the following files:
 
 Every widget has a _descriptor_ (`widget.json`) containing its configuration options and (optionally) a _Bower manifest_ (`bower.json`) containing dependencies and version-information that can be used with _[Bower](http://bower.io)_ for automatic installation.
 
