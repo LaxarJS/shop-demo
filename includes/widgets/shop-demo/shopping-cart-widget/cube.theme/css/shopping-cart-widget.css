@@ -5,13 +5,13 @@
  */
 /* line 12, ../../default.theme/scss/shopping-cart-widget.scss */
 .shopping-cart-widget .app-col-1 {
-  width: 7rem;
+  width: 6rem;
   font-size: x-small;
-  vertical-align: middle;
+  line-height: 2;
 }
 /* line 17, ../../default.theme/scss/shopping-cart-widget.scss */
 .shopping-cart-widget .app-col-3 {
-  width: 4rem;
+  width: 5rem;
 }
 /* line 18, ../../default.theme/scss/shopping-cart-widget.scss */
 .shopping-cart-widget .app-col-4 {

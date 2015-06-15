@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#19] (https://github.com/LaxarJS/shop-demo/issues/19): Simplified demo
+
 
 ## v1.8.0
 
