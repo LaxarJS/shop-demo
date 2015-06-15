@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 @charset "UTF-8";
 
@@ -9,9 +9,13 @@
 
 .shopping-cart-widget {
 
-   .app-col-1 { width: 60px; }
-   .app-col-3 { width: 85px; }
-   .app-col-4 { width: 55px; }
+   .app-col-1 {
+      width: 7rem;
+      font-size: x-small;
+      vertical-align: middle;
+   }
+   .app-col-3 { width: 4rem; }
+   .app-col-4 { width: 3.5rem; }
    .app-col-5 { width: 20px; }
 
    table {
@@ -23,7 +27,7 @@
       text-align: center;
 
       background-color: #ddd;
-      font-weight: 300;
+      font-weight: 500;
    }
 
    h3.app-articles {

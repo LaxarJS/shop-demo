@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 @charset "UTF-8";
 
@@ -13,25 +13,9 @@
       background-color: #ddd;
       padding: 11px 6px;
       margin: 0 -6px 10px;
-      font-weight: 300;
+      font-weight: 500;
       font-size: $font-size-base;
       text-align: center;
-   }
-
-   .dl-horizontal {
-      dt {
-         width: 100px;
-         float: left;
-         text-align: right;
-      }
-      dd {
-         margin-left: 120px;
-      }
-   }
-
-   dt ~ dt,
-   dd ~ dd {
-      margin-top: 1em;
    }
 
    .app-no-selection {
@@ -44,7 +28,37 @@
    }
 
 
+   .dl-horizontal {
+
+      dt {
+         width: 9rem;
+         float: left;
+         padding-right: 1rem;
+         text-align: right;
+      }
+      dd {
+         margin-left: 9rem;
+      }
+   }
+
+   dt ~ dt,
+   dd ~ dd {
+      margin-top: 1em;
+   }
+
+   .app-teaser-image-wrapper {
+      text-align: center;
+      padding: 1rem 0;
+   }
+
+   .app-teaser-image {
+      max-width: calc( 100% - 40px);
+      max-height: 170px;
+   }
+
    .app-teaser-wrapper {
+      position: relative;
+
       padding: 0 6px;
       margin-bottom: $ax-unit-vertical-double;
 

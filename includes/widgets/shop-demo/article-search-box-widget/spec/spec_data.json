@@ -1,62 +1,23 @@
 {
-   "response": {
-      "rows": [
-         {
-            "id": "ORD001",
-            "value": {
-               "id": "001",
-               "name": "Cup",
-               "htmlDescription": "A beautiful cup with LaxarJS logo.",
-               "price": 24.99
-            }
-         },
-         {
-            "id": "ORD002",
-            "value": {
-               "id": "002",
-               "name": "Beer (Bottle)",
-               "htmlDescription": "Take a sip of pure LaxarJS beer.",
-               "price": 49.99
-            }
-         },
-         {
-            "id": "ORD003",
-            "value": {
-               "id": "003",
-               "name": "T-Shirt",
-               "htmlDescription": "A LaxarJS T-shirt with shining orange",
-               "price": 17.10
-            }
-         }
-      ]
-   },
    "entries": [
       {
-         "id": "ORD001",
-         "details": {
-            "id": "001",
-            "name": "Cup",
-            "htmlDescription": "A beautiful cup with LaxarJS logo.",
-            "price": 24.99
-         }
+         "id": "001",
+         "name": "Cup",
+         "htmlDescription": "A beautiful cup with LaxarJS logo.",
+         "price": 24.99
+
       },
       {
-         "id": "ORD002",
-         "details": {
-            "id": "002",
-            "name": "Beer (Bottle)",
-            "htmlDescription": "Take a sip of pure LaxarJS beer.",
-            "price": 49.99
-         }
+         "id": "002",
+         "name": "Beer (Bottle)",
+         "htmlDescription": "Take a sip of pure LaxarJS beer.",
+         "price": 49.99
       },
       {
-         "id": "ORD003",
-         "details": {
-            "id": "003",
-            "name": "T-Shirt",
-            "htmlDescription": "A LaxarJS T-shirt with shining orange",
-            "price": 17.10
-         }
+         "id": "003",
+         "name": "T-Shirt",
+         "htmlDescription": "A LaxarJS T-shirt with shining orange",
+         "price": 17.10
       }
    ]
 }

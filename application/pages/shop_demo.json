@@ -4,19 +4,10 @@
    "areas": {
       "activities": [
          {
-            "widget": "shop-demo/order-activity",
+            "widget": "shop-demo/dummy-articles-activity",
             "features": {
-               "cart": {
-                  "resource": "cart"
-               },
-               "order":{
-                  "action": "order",
-                  "target": "finishOrder"
-               },
-               "database":{
-                  "pouchDb": {
-                     "dbId": "orders"
-                  }
+               "articles": {
+                  "resource": "articles"
                }
             }
          }
@@ -26,65 +17,55 @@
          {
             "widget": "shop-demo/article-search-box-widget",
             "features": {
-               "resource": "articles",
-               "database":{
-                  "pouchDb": {
-                     "dbId": "articles"
-                  }
+               "articles": {
+                  "resource": "articles"
+               },
+               "filteredArticles": {
+                  "resource": "filteredArticles"
                }
             }
          }
       ],
 
-      "content1a": [
+      "contentA": [
          {
             "widget": "shop-demo/article-browser-widget",
             "features": {
-               "display": {
-                  "resource": "articles"
+               "articles": {
+                  "resource": "filteredArticles"
                },
-               "select": {
+               "selection": {
                   "resource": "selectedArticle"
                }
             }
          }
       ],
-      "content1b": [
+      "contentB": [
          {
             "widget": "shop-demo/article-teaser-widget",
             "features": {
-               "display": {
+               "article": {
                   "resource": "selectedArticle"
                },
-               "button": {
-                  "htmlLabel": "<i class='fa fa-shopping-cart'></i> Add to Cart",
+               "confirmation": {
                   "action": "addArticle"
                }
             }
          }
       ],
-      "content1c": [
+      "contentC": [
          {
             "widget": "shop-demo/shopping-cart-widget",
             "features": {
-               "cart": {
-                  "resource": "cart",
-                  "order": {
-                     "action": "order",
-                     "button": {
-                        "htmlLabel": "<i class='fa fa-send'></i> Order"
-                     }
-                  }
-               },
                "article": {
                   "resource": "selectedArticle",
                   "onActions": [ "addArticle" ]
+               },
+               "order": {
+                  "target": "finishOrder"
                }
             }
          }
-      ],
-
-      "footer": [
       ]
    }
 }

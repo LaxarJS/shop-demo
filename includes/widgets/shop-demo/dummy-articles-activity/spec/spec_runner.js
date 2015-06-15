@@ -1,14 +1,13 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * laxarjs.org
  */
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'OrderActivity Specification',
+      title: 'DummyArticlesActivity Specification',
       tests: [
-         'order-activity.spec'
+         'dummy-articles-activity.spec'
       ]
    };
 } )( this );
