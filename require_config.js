@@ -11,9 +11,6 @@ var require = {
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
 
-      // LaxarJS Patterns:
-      'json-patch': 'fast-json-patch/src/json-patch-duplex',
-
       // LaxarJS Core Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',
       q_mock: 'q_mock/q',
@@ -21,11 +18,6 @@ var require = {
       // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
       json: 'requirejs-plugins/src/json',
-
-      // UIKit:
-      jquery_ui: 'jquery_ui',
-      'bootstrap-tooltip': 'bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip',
-      trunk8: 'trunk8/trunk8',
 
       // App Parts:
       'laxar-path-root': '..',
@@ -39,13 +31,9 @@ var require = {
 
       'laxar': 'laxar/dist/laxar',
       'laxar/laxar_testing': 'laxar/dist/laxar_testing',
-      'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
       'laxar-uikit/controls': 'laxar-uikit/dist/controls',
-      'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
-
-      // PouchDB:
-      'pouchdb': 'pouchdb/dist/pouchdb-nightly'
+      'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme'
    },
    packages: [
       {
@@ -89,9 +77,6 @@ var require = {
             'use strict';
             return angular;
          }
-      },
-      'json-patch': {
-         exports: 'jsonpatch'
       }
    }
 };

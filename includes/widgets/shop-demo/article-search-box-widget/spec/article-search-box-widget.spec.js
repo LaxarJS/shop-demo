@@ -1,45 +1,33 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 define( [
-   'json!../bower.json',
    '../article-search-box-widget',
    'laxar/laxar_testing',
-   'angular-mocks',
-   'jquery',
-   'pouchdb',
    'json!./spec_data.json'
-], function( manifest, widgetModule, ax, ngMocks, $, PouchDb, testData ) {
+], function( widgetModule, ax, testData ) {
    'use strict';
 
    describe( 'A ArticleSearchBoxWidget', function() {
 
       var testBed;
-      var qMock;
-      var configuration = {
-         resource: 'articles',
-         database: {
-            pouchDb: {
-               'dbId': 'articles'
-            }
-         }
-      };
-
-      var pouchDb = new PouchDb().constructor.prototype;
-
-      function setup( features ) {
-         testBed = ax.testing.portalMocksAngular.createControllerTestBed( manifest.name );
-         testBed.featuresMock = features;
-         testBed.setup();
-      }
+      var data;
 
       beforeEach( function() {
-         qMock = ax.testing.qMock;
-         spyOn( pouchDb, 'query' ).andCallFake( function() {
-            return qMock.when( testData.response );
-         } );
+         data = ax.object.deepClone( testData );
+         testBed = ax.testing.portalMocksAngular
+            .createControllerTestBed( 'shop-demo/article-search-box-widget' );
+         testBed.featuresMock = {
+            articles: {
+               resource: 'articles'
+            },
+            filteredArticles: {
+               resource: 'filteredArticles'
+            }
+         };
+         testBed.setup();
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,49 +38,74 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      describe( 'with feature resource and database with configured pouchDB', function() {
+      describe( 'when articles were published without given search term', function() {
 
          beforeEach( function() {
-            setup( configuration );
-            testBed.eventBusMock.publish( 'beginLifecycleRequest' );
+            testBed.eventBusMock.publish( 'didReplace.articles', {
+               resource: 'articles',
+               data: data
+            } );
             jasmine.Clock.tick( 0 );
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         it( 'gets all articles from pouchDB', function() {
+         it( 'publishes the same list as filtered articles', function() {
             expect( testBed.scope.eventBus.publish )
-               .toHaveBeenCalledWith( 'didReplace.articles', {
-                  resource: 'articles',
-                  data: { entries: testData.entries }
+               .toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+                  resource: 'filteredArticles',
+                  data: data
                } );
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         describe( 'and a search was initiated afterwards', function() {
+
+            beforeEach( function() {
+               testBed.scope.eventBus.publish.reset();
+               testBed.scope.model.searchTerm = 'beer';
+               testBed.scope.search();
+            } );
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            it( 'publishes the matching articles only', function() {
+               expect( testBed.scope.eventBus.publish )
+                  .toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+                     resource: 'filteredArticles',
+                     data: {
+                        entries: [ data.entries[ 1 ] ]
+                     }
+                  } );
+            } );
+
          } );
 
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-     describe( 'if the user searches for "be"', function() {
+      describe( 'when articles were published with already given search term', function() {
 
          beforeEach( function() {
-            setup( configuration );
-
-            testBed.eventBusMock.publish( 'beginLifecycleRequest' );
-            jasmine.Clock.tick( 0 );
-            testBed.scope.eventBus.publish.reset();
-
-            testBed.scope.model.searchTerm = 'be';
-            testBed.scope.search();
+            testBed.scope.model.searchTerm = 'beer';
+            testBed.eventBusMock.publish( 'didReplace.articles', {
+               resource: 'articles',
+               data: data
+            } );
             jasmine.Clock.tick( 0 );
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         it( 'gets the two articles containing "be" in the name or description from pouchDB', function() {
+         it( 'publishes the matching articles only', function() {
             expect( testBed.scope.eventBus.publish )
-               .toHaveBeenCalledWith( 'didReplace.articles', {
-                  resource: 'articles',
-                  data: { entries: testData.entries.slice( 0, 2 ) }
+               .toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+                  resource: 'filteredArticles',
+                  data: {
+                     entries: [ data.entries[ 1 ] ]
+                  }
                } );
          } );
 

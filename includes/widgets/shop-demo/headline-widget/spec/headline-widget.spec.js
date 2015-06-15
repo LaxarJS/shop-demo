@@ -1,13 +1,12 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://www.laxarjs.org
  */
 define( [
-   'json!../bower.json',
    '../headline-widget',
    'laxar/laxar_testing'
-], function( manifest, widgetModule, ax ) {
+], function(  widgetModule, ax ) {
    'use strict';
 
    describe( 'A HeadlineWidget', function() {
@@ -15,8 +14,8 @@ define( [
       var testBed_;
 
       beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( manifest.name );
-         testBed_.featuresMock = {};
+         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'shop-demo/headline-widget' );
+         testBed_.featuresMock = { headline: { htmlText: 'I am here!' } };
          testBed_.setup();
       } );
 

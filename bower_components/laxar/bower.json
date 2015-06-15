@@ -1,6 +1,6 @@
 {
    "name": "laxar",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "description": "Building large applications is hard, so don't do that!",
    "main": "dist/laxar.js",
    "authors": [],
@@ -25,6 +25,6 @@
       "q_mock": "LaxarJS/q_mock#0.1.x"
    },
    "devDependencies": {
-      "laxar": "LaxarJS/laxar#^1.0.0"
+      "laxar": "LaxarJS/laxar#1.0.1"
    }
 }

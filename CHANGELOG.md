@@ -3,6 +3,11 @@
 ## Last Changes
 
 
+## v1.9.0
+
+- [#19] (https://github.com/LaxarJS/shop-demo/issues/19): Simplified demo
+
+
 ## v1.8.0
 
 - [#18] (https://github.com/LaxarJS/shop-demo/issues/18): Adapted demo to LaxarJS naming scheme

@@ -1,6 +1,6 @@
 {
    "name": "ShopDemo",
-   "version": "1.8.0",
+   "version": "1.9.0",
    "description": "A DemoApp to learn how LaxarJS works.",
    "license": "MIT",
    "scripts": {
@@ -19,7 +19,6 @@
       "grunt-contrib-concat": "~0.5.1",
       "grunt-contrib-cssmin": "~0.12.2",
       "grunt-contrib-watch": "~0.6.1",
-      "grunt-laxar": "~1.0.0",
-      "load-grunt-tasks": "~3.2.0"
+      "grunt-laxar": "~1.0.0"
    }
 }

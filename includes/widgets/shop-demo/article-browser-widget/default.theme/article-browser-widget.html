@@ -1,35 +1,35 @@
 <h3 class="ax-function-point"
-    data-ng-class="{ 'app-articles': resources.display.entries.length }">
-   <i class='fa fa-gift'></i> {{ features.display.headline }}
+    data-ng-class="{ 'app-articles': resources.articles.entries.length }">
+   <i class='fa fa-gift'></i> Articles
 </h3>
 <table class="table table-hover table-striped"
-       data-ng-class="{ 'app-articles': resources.display.entries.length }">
+       data-ng-class="{ 'app-articles': resources.articles.entries.length }">
    <colgroup>
       <col class="app-col-1">
       <col class="app-col-2">
       <col class="app-col-3">
    </colgroup>
    <thead>
-      <tr data-ng-if="!resources.display.entries.length">
+      <tr data-ng-if="!resources.articles.entries.length">
          <th class="app-no-articles" colspan="3">No articles</th>
       </tr>
-      <tr data-ng-if="resources.display.entries.length">
-         <th data-ng-bind-html="features.display.htmlIdLabel"></th>
-         <th data-ng-bind-html="features.display.htmlNameLabel"></th>
-         <th class="price" data-ng-bind-html="features.display.htmlPriceLabel"></th>
+      <tr data-ng-if="resources.articles.entries.length">
+         <th>Art. ID</th>
+         <th>Article</th>
+         <th class="price">Price</th>
       </tr>
    </thead>
    <tbody>
       <tr class="selectable"
-          data-ng-repeat="article in resources.display.entries track by article.id"
-          data-ng-class="{selected: article.id == selectedArticle.id }" >
-         <td data-ng-click="selectArticle( article )">{{ article.details.id }}</td>
-         <td data-ng-click="selectArticle( article )">{{ article.details.name }}</td>
-         <td class="price"
-             data-ng-click="selectArticle( article )">{{ article.details.price | currency : "€ " }}</td>
+          data-ng-repeat="article in resources.articles.entries"
+          data-ng-click="selectArticle( article )"
+          data-ng-class="{ selected: article.id === selectedArticle.id }">
+         <td class="app-col-1">{{ article.id }}</td>
+         <td>{{ article.name }}</td>
+         <td class="price">{{ article.price | currency : "€ " }}</td>
       </tr>
       <tr class="app-no-articles"
-          data-ng-if="!resources.display.entries.length">
+          data-ng-if="!resources.articles.entries.length">
          <td colspan="5">&nbsp;</td>
       </tr>
    </tbody>

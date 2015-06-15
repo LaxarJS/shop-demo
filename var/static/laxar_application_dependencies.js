@@ -1,5 +1,5 @@
 define( [
-   'laxar-application/includes/widgets/shop-demo/order-activity/order-activity',
+   'laxar-application/includes/widgets/shop-demo/dummy-articles-activity/dummy-articles-activity',
    'laxar-application/includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget',
    'laxar-application/includes/widgets/shop-demo/article-browser-widget/article-browser-widget',
    'laxar-application/includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget',

@@ -1,6 +1,6 @@
 {
   "name": "laxar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Building large applications is hard, so don't do that!",
   "main": "dist/laxar.js",
   "authors": [],
@@ -24,14 +24,14 @@
     "q_mock": "LaxarJS/q_mock#0.1.x"
   },
   "devDependencies": {
-    "laxar": "LaxarJS/laxar#^1.0.0"
+    "laxar": "LaxarJS/laxar#1.0.1"
   },
   "homepage": "https://github.com/LaxarJS/dist-laxar",
-  "_release": "1.0.0",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0",
-    "commit": "7b58c25f641ed4c69eeb98bfe984302a0541241d"
+    "tag": "v1.0.1",
+    "commit": "148ca8a9a9c5c820fc5aa11d559ea0a8c9ce4dda"
   },
   "_source": "git://github.com/LaxarJS/dist-laxar.git",
   "_target": "~1.0.0",

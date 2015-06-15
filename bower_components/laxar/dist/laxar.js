@@ -2460,7 +2460,7 @@ define( 'laxar/lib/runtime/runtime',[
    module.run( [ '$rootScope', 'axConfiguration', function( $rootScope, configuration ) {
       $rootScope.i18n = {
          locale: 'default',
-         tags: configuration.get( 'i18n.locales' )
+         tags: configuration.get( 'i18n.locales', { 'default': 'en' } )
       };
    } ] );
 

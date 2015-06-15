@@ -2,17 +2,20 @@
    "layout": "application",
 
    "areas": {
-      "content1a": [
+      "contentA": [
          {
             "widget": "shop-demo/headline-widget",
             "features": {
+               "headline": {
+                  "htmlText": ""
+               },
                "intro": {
                   "htmlText": "<div class='app-flower'><span class='app-flower-helper'></span></div>"
                }
             }
          }
       ],
-      "content1b": [
+      "contentB": [
          {
             "widget": "shop-demo/headline-widget",
             "features": {
