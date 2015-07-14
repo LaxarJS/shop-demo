@@ -2,6 +2,10 @@
 
 ## Last Changes
 
+- [#20](https://github.com/LaxarJS/shop-demo/issues/20): added Travis-CI build integration
+    + NEW FEATURE: see ticket for details
+
+
 ## v1.9.0
 
 - [#19] (https://github.com/LaxarJS/shop-demo/issues/19): Simplified demo
