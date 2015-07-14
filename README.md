@@ -1,4 +1,4 @@
-# LaxarJS ShopDemo
+# LaxarJS ShopDemo [![Build Status](https://travis-ci.org/LaxarJS/shop-demo.svg?branch=master)](https://travis-ci.org/LaxarJS/shop-demo)
 
 The LaxarJS ShopDemo shows a simple web shop application (for ordering LaxarJS merchandise) implemented using the [LaxarJS](http://laxarjs.org) web application framework.
 
