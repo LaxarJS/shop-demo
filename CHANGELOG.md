@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#21](https://github.com/LaxarJS/shop-demo/issues/21): use laxar-testing instead of laxar/laxar_testing
+    + NEW FEATURE: see ticket for details
 - [#22](https://github.com/LaxarJS/shop-demo/issues/22): project: switched to flow-based grunt tasks
 - [#20](https://github.com/LaxarJS/shop-demo/issues/20): added Travis-CI build integration
     + NEW FEATURE: see ticket for details

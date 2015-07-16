@@ -4,58 +4,59 @@
  * http://www.laxarjs.org
  */
 define( [
-   '../article-search-box-widget',
-   'laxar/laxar_testing',
+   'json!../widget.json',
+   'laxar-testing',
+   'laxar',
    'json!./spec_data.json'
-], function( widgetModule, ax, testData ) {
+], function( descriptor, testing, ax, resourceData ) {
    'use strict';
 
    describe( 'A ArticleSearchBoxWidget', function() {
 
-      var testBed;
       var data;
+      var widgetEventBus;
+      var widgetScope;
+      var testEventBus;
 
+      beforeEach( testing.createSetupForWidget( descriptor ) );
       beforeEach( function() {
-         data = ax.object.deepClone( testData );
-         testBed = ax.testing.portalMocksAngular
-            .createControllerTestBed( 'shop-demo/article-search-box-widget' );
-         testBed.featuresMock = {
+         testing.widget.configure( {
             articles: {
                resource: 'articles'
             },
             filteredArticles: {
                resource: 'filteredArticles'
             }
-         };
-         testBed.setup();
+         } );
       } );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      afterEach( function() {
-         testBed.tearDown();
+      beforeEach( testing.widget.load );
+      beforeEach( function() {
+         data = ax.object.deepClone( resourceData );
+         widgetScope = testing.widget.$scope;
+         widgetEventBus = testing.widget.axEventBus;
+         testEventBus = testing.eventBus;
       } );
+      afterEach( testing.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       describe( 'when articles were published without given search term', function() {
 
          beforeEach( function() {
-            testBed.eventBusMock.publish( 'didReplace.articles', {
+            testEventBus.publish( 'didReplace.articles', {
                resource: 'articles',
                data: data
             } );
-            jasmine.Clock.tick( 0 );
+            testEventBus.flush();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'publishes the same list as filtered articles', function() {
-            expect( testBed.scope.eventBus.publish )
-               .toHaveBeenCalledWith( 'didReplace.filteredArticles', {
-                  resource: 'filteredArticles',
-                  data: data
-               } );
+            expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+               resource: 'filteredArticles',
+               data: data
+            } );
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,21 +64,20 @@ define( [
          describe( 'and a search was initiated afterwards', function() {
 
             beforeEach( function() {
-               testBed.scope.eventBus.publish.reset();
-               testBed.scope.model.searchTerm = 'beer';
-               testBed.scope.search();
+               // testBed.scope.eventBus.publish.reset();
+               widgetScope.model.searchTerm = 'beer';
+               widgetScope.search();
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             it( 'publishes the matching articles only', function() {
-               expect( testBed.scope.eventBus.publish )
-                  .toHaveBeenCalledWith( 'didReplace.filteredArticles', {
-                     resource: 'filteredArticles',
-                     data: {
-                        entries: [ data.entries[ 1 ] ]
-                     }
-                  } );
+               expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+                  resource: 'filteredArticles',
+                  data: {
+                     entries: [ data.entries[ 1 ] ]
+                  }
+               } );
             } );
 
          } );
@@ -89,24 +89,23 @@ define( [
       describe( 'when articles were published with already given search term', function() {
 
          beforeEach( function() {
-            testBed.scope.model.searchTerm = 'beer';
-            testBed.eventBusMock.publish( 'didReplace.articles', {
+            widgetScope.model.searchTerm = 'beer';
+            testEventBus.publish( 'didReplace.articles', {
                resource: 'articles',
                data: data
             } );
-            jasmine.Clock.tick( 0 );
+            testEventBus.flush();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'publishes the matching articles only', function() {
-            expect( testBed.scope.eventBus.publish )
-               .toHaveBeenCalledWith( 'didReplace.filteredArticles', {
-                  resource: 'filteredArticles',
-                  data: {
-                     entries: [ data.entries[ 1 ] ]
-                  }
-               } );
+            expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+               resource: 'filteredArticles',
+               data: {
+                  entries: [ data.entries[ 1 ] ]
+               }
+            } );
          } );
 
       } );

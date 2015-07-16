@@ -9,6 +9,8 @@
       title: 'ArticleBrowserWidget Specification',
       tests: [
          'article-browser-widget.spec'
-      ]
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

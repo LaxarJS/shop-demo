@@ -9,6 +9,8 @@
       title: 'HeadlineWidget Specification',
       tests: [
          'headline-widget.spec'
-      ]
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

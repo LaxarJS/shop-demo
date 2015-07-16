@@ -1,48 +1,41 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
+ * http://www.laxarjs.org
  */
 define( [
-   '../dummy-articles-activity',
-   'laxar/laxar_testing',
+   'json!../widget.json',
+   'laxar-testing',
    '../articles'
-], function( widgetModule, ax, articles ) {
+], function( descriptor, testing, articles ) {
    'use strict';
 
-   describe( 'A DummyArticlesActivity', function() {
+   describe( 'The DummyArticlesActivity', function() {
 
-      var testBed;
-
-      beforeEach( function setup() {
-         testBed = ax.testing.portalMocksAngular
-            .createControllerTestBed( 'shop-demo/dummy-articles-activity' );
-         testBed.featuresMock = {
+      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( function() {
+         testing.widget.configure( {
             articles: {
                resource: 'articles'
             }
-         };
-         testBed.setup();
+         } );
       } );
+      beforeEach( testing.widget.load );
 
-      /////////////////////////////////////////////////////////////////////////
-
-      afterEach( function() {
-         testBed.tearDown();
-      } );
+      afterEach( testing.tearDown );
 
       /////////////////////////////////////////////////////////////////////////
 
       describe( 'on beginLifecycleRequest', function() {
 
          beforeEach( function() {
-            testBed.eventBusMock.publish( 'beginLifecycleRequest' );
-            jasmine.Clock.tick( 0 );
+            testing.triggerStartupEvents();
          } );
 
          //////////////////////////////////////////////////////////////////////
 
          it( 'publishes some dummy articles', function() {
-            expect( testBed.scope.eventBus.publish )
+            expect( testing.widget.axEventBus.publish )
                .toHaveBeenCalledWith( 'didReplace.articles', {
                   resource: 'articles',
                   data: {
