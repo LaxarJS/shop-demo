@@ -10,9 +10,10 @@
    "dependencies": {
       "requirejs": "2.1.x",
       "requirejs-plugins": "1.0.x",
-      "laxar": "~1.0.0",
-      "laxar-uikit": "1.0.0",
-      "bootswatch-scss": "3.2.x"
+      "laxar": "~1.1.0-alpha.2",
+      "laxar-uikit": "~1.0.1",
+      "bootswatch-scss": "3.2.x",
+      "angular": "~1.4.3"
    },
    "devDependencies": {
       "jasmine": "1.3.x"
