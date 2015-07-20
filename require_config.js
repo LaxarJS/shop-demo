@@ -10,10 +10,13 @@ var require = {
       'angular-mocks': 'angular-mocks/angular-mocks',
       'angular-route': 'angular-route/angular-route',
       'angular-sanitize': 'angular-sanitize/angular-sanitize',
-      jjv: 'jjv/lib/jjv',
-      jjve: 'jjve/jjve',
 
-      // LaxarJS Core Testing:
+      'laxar': 'laxar/dist/laxar.with-deps',
+      'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
+      'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
+
+      // LaxarJS Testing:
+      'laxar-testing': 'laxar-testing/dist/laxar-testing',
       jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
       'promise-polyfill': 'promise-polyfill/Promise',
 
@@ -23,26 +26,13 @@ var require = {
       'laxar-path-pages': '../application/pages',
       'laxar-path-widgets': '../includes/widgets',
       'laxar-path-themes': '../includes/themes',
-      'laxar-path-flow': '../application/flow/flow.json',
-
-      'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
-
-      'laxar': 'laxar/dist/laxar',
-      'laxar-testing': 'laxar-testing/dist/laxar-testing',
-      'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
-      'laxar-uikit/controls': 'laxar-uikit/dist/controls',
-      'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme'
+      'laxar-path-flow': '../application/flow/flow.json'
    },
    packages: [
       {
          name: 'laxar-application',
          location: '..',
          main: 'init'
-      },
-      {
-         name: 'moment',
-         location: 'moment',
-         main: 'moment'
       }
    ],
    shim: {
