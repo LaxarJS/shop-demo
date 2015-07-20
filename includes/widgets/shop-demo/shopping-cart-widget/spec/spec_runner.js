@@ -9,6 +9,8 @@
       title: 'ShoppingCartWidget Specification',
       tests: [
          'shopping-cart-widget.spec'
-      ]
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

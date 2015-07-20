@@ -4,30 +4,36 @@
  * http://www.laxarjs.org
  */
 define( [
-   '../headline-widget',
-   'laxar/laxar_testing'
-], function(  widgetModule, ax ) {
+   'json!../widget.json',
+   'laxar-testing'
+], function( descriptor, testing ) {
    'use strict';
 
-   describe( 'A HeadlineWidget', function() {
+   describe( 'The HeadlineWidget', function() {
 
-      var testBed_;
+      var widgetDom;
 
-      beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'shop-demo/headline-widget' );
-         testBed_.featuresMock = { headline: { htmlText: 'I am here!' } };
-         testBed_.setup();
+      beforeEach( testing.createSetupForWidget( descriptor, {
+         knownMissingResources: [ 'css/headline-widget.css' ]
+      } ) );
+
+      beforeEach( function() {
+         testing.widget.configure( {
+            headline: { htmlText: 'I am here!', level: 2 }
+         } );
       } );
+      beforeEach( testing.widget.load );
+      beforeEach( function() {
+         widgetDom = testing.widget.render();
+      } );
+
+      afterEach( testing.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      afterEach( function() {
-         testBed_.tearDown();
+      it( 'displays a headline', function() {
+         expect( widgetDom.querySelector( 'h2' ).textContent ).toEqual( 'I am here!' );
       } );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      it( 'does nothing that needs to be tested' );
 
    } );
 

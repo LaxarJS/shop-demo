@@ -13,10 +13,14 @@
       "laxar": "~1.1.0-alpha.2",
       "laxar-uikit": "~1.0.1",
       "bootswatch-scss": "3.2.x",
-      "angular": "~1.4.3"
+      "angular": "~1.4.3",
+      "angular-mocks": "~1.4.3",
+      "angular-route": "~1.4.3",
+      "angular-sanitize": "~1.4.3"
    },
    "devDependencies": {
-      "jasmine": "1.3.x"
+      "jasmine2": "jasmine#2.3.x",
+      "laxar-testing": "0.3.x"
    },
    "resolutions": {
       "bootstrap-sass-official": "3.3.x"

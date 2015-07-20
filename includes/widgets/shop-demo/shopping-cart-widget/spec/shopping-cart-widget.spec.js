@@ -4,79 +4,62 @@
  * laxarjs.org
  */
 define( [
-   '../shopping-cart-widget',
-   'laxar/laxar_testing',
-   'angular-mocks',
-   'jquery',
-   'json!./spec_data.json',
-   'text!../default.theme/shopping-cart-widget.html'
-], function( widgetModule, ax, ngMocks, $, articles, widgetMarkup ) {
+   'json!../widget.json',
+   'laxar-testing',
+   'json!./spec_data.json'
+], function( descriptor, testing, articles ) {
    'use strict';
 
-   describe( 'A ShoppingCartWidget', function() {
+   describe( 'The ShoppingCartWidget', function() {
 
-      var testBed;
-      var configuration = {
-         article: {
-            resource: 'article',
-            onActions: [ 'addArticle' ]
-         },
-         order: {
-            target: 'placeOrder'
-         }
-      };
+      var widgetDom;
 
-      /////////////////////////////////////////////////////////////////////////
-
-      function setup( features ) {
-         testBed = ax.testing.portalMocksAngular
-            .createControllerTestBed( 'shop-demo/shopping-cart-widget' );
-         testBed.featuresMock = features;
-         testBed.setup();
-
-         ngMocks.inject( function( $compile ) {
-            var $widget = $( '<div id="container"></div>' )
-               .html( widgetMarkup );
-            $compile( $widget )( testBed.scope );
-            $widget.appendTo( 'body' );
+      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( function() {
+         testing.widget.configure( {
+            article: {
+               resource: 'article',
+               onActions: [ 'addArticle' ]
+            },
+            order: {
+               target: 'placeOrder'
+            }
          } );
-      }
-
-      /////////////////////////////////////////////////////////////////////////
-
-      afterEach( function() {
-         testBed.tearDown();
-         $( '#container' ).remove();
+      } );
+      beforeEach( testing.widget.load );
+      beforeEach( function() {
+         widgetDom = testing.widget.render();
       } );
 
+      afterEach( testing.tearDown );
+
       /////////////////////////////////////////////////////////////////////////
 
-      describe( 'with feature article, and a published article', function() {
+      describe( 'with a configured article', function() {
 
          beforeEach( function() {
-            setup( configuration );
-
-            testBed.eventBusMock.publish( 'didReplace.article', {
+            testing.eventBus.publish( 'didReplace.article', {
                resource: 'article',
                data: articles[ 0 ]
             } );
-            jasmine.Clock.tick( 0 );
+            testing.eventBus.flush();
          } );
 
          //////////////////////////////////////////////////////////////////////
 
-         it( 'subscribes to the resource.', function() {
-            expect( testBed.scope.eventBus.subscribe ).toHaveBeenCalledWith(
+         it( 'subscribes to the article resource.', function() {
+            expect( testing.widget.axEventBus.subscribe ).toHaveBeenCalledWith(
                'didReplace.article',
-               jasmine.any( Function )
-            );
-            expect( testBed.scope.resources.article ).toEqual( articles[ 0 ] );
+               jasmine.any( Function ) );
+
+            expect( testing.widget.$scope.resources.article )
+               .toEqual( articles[ 0 ] );
          } );
 
          //////////////////////////////////////////////////////////////////////
 
          it( 'listens to configured action events.', function() {
-            expect( testBed.scope.eventBus.subscribe ).toHaveBeenCalledWith(
+            expect( testing.widget.axEventBus.subscribe ).toHaveBeenCalledWith(
                'takeActionRequest.addArticle',
                jasmine.any( Function )
             );
@@ -87,26 +70,25 @@ define( [
          describe( 'when the article action was triggered', function() {
 
             beforeEach( function() {
-               testBed.eventBusMock.publish( 'takeActionRequest.addArticle', {
+               testing.eventBus.publish( 'takeActionRequest.addArticle', {
                   action: 'addArticle'
                } );
-               jasmine.Clock.tick( 0 );
+               testing.eventBus.flush();
             } );
 
             ///////////////////////////////////////////////////////////////////
 
             it( 'publishes a willTakeAction event', function() {
-               expect( testBed.scope.eventBus.publish )
+               expect( testing.widget.axEventBus.publish )
                   .toHaveBeenCalledWith( 'willTakeAction.addArticle', {
                      action: 'addArticle'
-                  }
-               );
+                  } );
             } );
 
             ///////////////////////////////////////////////////////////////////
 
             it( 'adds the new article to the cart', function() {
-               var firstItem = testBed.scope.cart[ 0 ];
+               var firstItem = testing.widget.$scope.cart[ 0 ];
                expect( firstItem.article ).toEqual( articles[ 0 ] );
                expect( firstItem.quantity ).toBe( 1 );
             } );
@@ -114,11 +96,10 @@ define( [
             ///////////////////////////////////////////////////////////////////
 
             it( 'publishes a didTakeAction event', function() {
-               expect( testBed.scope.eventBus.publish )
+               expect( testing.widget.axEventBus.publish )
                   .toHaveBeenCalledWith( 'didTakeAction.addArticle', {
                      action: 'addArticle'
-                  }
-               );
+                  } );
             } );
 
             ///////////////////////////////////////////////////////////////////
@@ -126,38 +107,35 @@ define( [
             describe( 'and then triggered again', function() {
 
                beforeEach( function() {
-                  testBed.scope.eventBus.publish.reset();
-                  testBed.eventBusMock
+                  testing.eventBus
                      .publish( 'takeActionRequest.addArticle', {
                         action: 'addArticle'
                      } );
-                  jasmine.Clock.tick( 0 );
+                  testing.eventBus.flush();
                } );
 
                ////////////////////////////////////////////////////////////////
 
                it( 'publishes a willTakeAction event', function() {
-                  expect( testBed.scope.eventBus.publish )
+                  expect( testing.widget.axEventBus.publish )
                      .toHaveBeenCalledWith( 'willTakeAction.addArticle', {
                         action: 'addArticle'
-                     }
-                  );
+                     } );
                } );
 
                ////////////////////////////////////////////////////////////////
 
                it( 'increases the quantity', function() {
-                  expect( testBed.scope.cart[ 0 ].quantity ).toBe( 2 );
+                  expect( testing.widget.$scope.cart[ 0 ].quantity ).toBe( 2 );
                } );
 
                ////////////////////////////////////////////////////////////////
 
                it( 'publishes a didTakeAction event', function() {
-                  expect( testBed.scope.eventBus.publish )
+                  expect( testing.widget.axEventBus.publish )
                      .toHaveBeenCalledWith( 'didTakeAction.addArticle', {
                         action: 'addArticle'
-                     }
-                  );
+                     } );
                } );
 
                ////////////////////////////////////////////////////////////////
@@ -165,15 +143,16 @@ define( [
                describe( 'when the user increases the quantity', function() {
 
                   beforeEach( function() {
-                     $( 'tbody tr:first td:last button:first' )
-                        .trigger( 'click' );
-                     jasmine.Clock.tick( 0 );
+                     var increaseButton = widgetDom.querySelector(
+                        'tbody tr:first-child td:last-child button:first-child'
+                     );
+                     increaseButton.click();
                   } );
 
                   /////////////////////////////////////////////////////////////
 
                   it( 'updates the sum accordingly', function() {
-                     expect( testBed.scope.sum ).toEqual( 74.97 );
+                     expect( testing.widget.$scope.sum ).toEqual( 74.97 );
                   } );
 
                } );
@@ -181,23 +160,24 @@ define( [
                ////////////////////////////////////////////////////////////////
 
                describe( 'when the user decreases the quantity', function() {
-
+                  var decreaseButton;
                   beforeEach( function() {
-                     $( 'tbody tr:first td:last button:last' )
-                        .trigger( 'click' );
-                     jasmine.Clock.tick( 0 );
+                     decreaseButton = widgetDom.querySelector(
+                        'tbody tr:first-child td:last-child button:last-child'
+                     );
+                     decreaseButton.click();
                   } );
 
                   /////////////////////////////////////////////////////////////
 
                   it( 'updates the sum accordingly', function() {
-                     expect( testBed.scope.sum ).toEqual( 24.99 );
+                     expect( testing.widget.$scope.sum ).toEqual( 24.99 );
                   } );
 
                   /////////////////////////////////////////////////////////////
 
                   it( 'removes one item from the cart', function() {
-                     expect( testBed.scope.cart[ 0 ].quantity ).toBe( 1 );
+                     expect( testing.widget.$scope.cart[ 0 ].quantity ).toBe( 1 );
                   } );
 
                   /////////////////////////////////////////////////////////////
@@ -205,14 +185,13 @@ define( [
                   describe( 'and decreases it again', function() {
 
                      beforeEach( function() {
-                        $( 'tbody tr:first td:last button:last' )
-                           .trigger( 'click' );
+                        decreaseButton.click();
                      } );
 
                      //////////////////////////////////////////////////////////
 
                      it( 'deletes the article from the cart', function() {
-                        expect( testBed.scope.cart.length ).toBe( 0 );
+                        expect( testing.widget.$scope.cart.length ).toBe( 0 );
                      } );
 
                   } );
@@ -227,11 +206,11 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
       describe( 'with feature order', function() {
 
          beforeEach( function() {
-            setup( configuration );
-            testBed.scope.cart = [
+            testing.widget.$scope.cart = [
                {
                   article: articles[0],
                   quantity: 1
@@ -241,7 +220,7 @@ define( [
                   quantity: 4
                }
             ];
-            testBed.scope.$digest();
+            testing.widget.$scope.$digest();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -249,13 +228,13 @@ define( [
          describe( 'and the user clicks the order button', function() {
 
             beforeEach( function() {
-               $( '#container' ).find( 'button.btn-success' ).click();
+               widgetDom.querySelector( 'button.btn-success' ).click();
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             it( 'triggers a navigateRequest with the configured target', function() {
-               expect( testBed.scope.eventBus.publish )
+               expect( testing.widget.axEventBus.publish )
                   .toHaveBeenCalledWith( 'navigateRequest.placeOrder',{
                      target: 'placeOrder'
                   } );

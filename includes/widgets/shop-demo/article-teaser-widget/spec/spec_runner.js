@@ -9,6 +9,8 @@
       title: 'ArticleTeaserWidget Specification',
       tests: [
          'article-teaser-widget.spec'
-      ]
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

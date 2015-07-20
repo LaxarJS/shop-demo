@@ -4,46 +4,45 @@
  * http://www.laxarjs.org
  */
 define( [
-   '../article-browser-widget',
-   'laxar/laxar_testing',
+   'json!../widget.json',
+   'laxar-testing',
+   'laxar',
    'json!./spec_data.json'
-], function( widgetModule, ax, resourceData ) {
+], function( descriptor, testing, ax, resourceData ) {
    'use strict';
 
-   describe( 'A ArticleBrowserWidget', function() {
+   describe( 'The ArticleBrowserWidget', function() {
 
-      var anyFunction = jasmine.any( Function );
-      var testBed;
       var data;
-      var defaultFeatures = {
-         articles: {
-            resource: 'articles'
-         },
-         selection: {
-            resource: 'selectedArticle'
-         }
-      };
+      var widgetEventBus;
+      var widgetScope;
+      var testEventBus;
 
-      function setup( features ) {
-         data = ax.object.deepClone( resourceData );
-         testBed = ax.testing.portalMocksAngular
-            .createControllerTestBed( 'shop-demo/article-browser-widget' );
-         testBed.featuresMock = features;
-         testBed.setup();
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      afterEach( function() {
-         testBed.tearDown();
+      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( function() {
+         testing.widget.configure( {
+            articles: {
+               resource: 'articles'
+            },
+            selection: {
+               resource: 'selectedArticle'
+            }
+         } );
       } );
+      beforeEach( testing.widget.load );
+      beforeEach( function() {
+         data = ax.object.deepClone( resourceData );
+         widgetScope = testing.widget.$scope;
+         widgetEventBus = testing.widget.axEventBus;
+         testEventBus = testing.eventBus;
+      } );
+      afterEach( testing.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       it( 'subscribes to didReplace events of the articles resource', function() {
-         setup( defaultFeatures );
-         expect( testBed.scope.eventBus.subscribe )
-            .toHaveBeenCalledWith( 'didReplace.articles', anyFunction );
+         expect( widgetEventBus.subscribe )
+            .toHaveBeenCalledWith( 'didReplace.articles', jasmine.any( Function ) );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,22 +50,20 @@ define( [
       describe( 'when the list of articles is replaced', function() {
 
          beforeEach( function() {
-            setup( defaultFeatures );
-            testBed.eventBusMock.publish( 'didReplace.articles', {
+            testEventBus.publish( 'didReplace.articles', {
                resource: 'articles',
                data: data
             } );
-            jasmine.Clock.tick( 0 );
+            testEventBus.flush();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'resets the article selection', function() {
-            expect( testBed.scope.eventBus.publish )
-               .toHaveBeenCalledWith( 'didReplace.selectedArticle', {
-                  resource: 'selectedArticle',
-                  data: null
-               } );
+            expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.selectedArticle', {
+               resource: 'selectedArticle',
+               data: null
+            } );
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,18 +71,16 @@ define( [
          describe( 'and the user selects an article', function() {
 
             beforeEach( function() {
-               testBed.scope.eventBus.publish.reset();
-               testBed.scope.selectArticle( testBed.scope.resources.articles[ 1 ] );
+               testing.widget.$scope.selectArticle( testing.widget.$scope.resources.articles[ 1 ] );
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             it( 'the configured selection resource is replaced', function() {
-               expect( testBed.scope.eventBus.publish )
-                  .toHaveBeenCalledWith( 'didReplace.selectedArticle', {
-                     resource: 'selectedArticle',
-                     data: testBed.scope.resources.articles[ 1 ]
-                  } );
+               expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.selectedArticle', {
+                  resource: 'selectedArticle',
+                  data: testing.widget.$scope.resources.articles[ 1 ]
+               } );
             } );
 
          } );

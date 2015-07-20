@@ -10,8 +10,7 @@
       tests: [
          'article-search-box-widget.spec'
       ],
-      requireConfig: {
-         paths: { }
-      }
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

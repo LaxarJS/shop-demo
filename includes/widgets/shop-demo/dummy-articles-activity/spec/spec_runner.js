@@ -8,6 +8,8 @@
       title: 'DummyArticlesActivity Specification',
       tests: [
          'dummy-articles-activity.spec'
-      ]
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );
