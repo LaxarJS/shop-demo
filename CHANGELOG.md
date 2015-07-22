@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#24](https://github.com/LaxarJS/shop-demo/issues/24): tests: use latest HTML spec-runner
 - [#23](https://github.com/LaxarJS/shop-demo/issues/23): project: simplified the RequireJS configuration
 - [#21](https://github.com/LaxarJS/shop-demo/issues/21): use laxar-testing instead of laxar/laxar_testing
     + NEW FEATURE: see ticket for details
