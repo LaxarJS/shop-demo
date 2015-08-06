@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#26](https://github.com/LaxarJS/shop-demo/issues/26): documentation: fixed grunt-init instructions for windows
+
 
 ## v1.9.0
 
