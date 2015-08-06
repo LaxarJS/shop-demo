@@ -21,7 +21,7 @@ Now we can obtain the LaxarJS templates which we will instantiate using `grunt-i
 ```shell
 git clone https://github.com/LaxarJS/grunt-init-laxar-application.git ~/.grunt-init/laxar-application
 git clone https://github.com/LaxarJS/grunt-init-laxar-widget.git ~/.grunt-init/laxar-widget
-git clone https://github.com/LaxarJS/grunt-init-laxar-widget.git ~/.grunt-init/laxar-activity
+git clone https://github.com/LaxarJS/grunt-init-laxar-activity.git ~/.grunt-init/laxar-activity
 ```
 
 **Note for Windows users:** Instead of the `~`, you have to use `%USERPROFILE%` to reference your home directory.
