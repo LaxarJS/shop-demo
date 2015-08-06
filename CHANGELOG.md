@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#25](https://github.com/LaxarJS/shop-demo/issues/25): documentation: fixed the grunt-init-laxar-activity URL
 - [#26](https://github.com/LaxarJS/shop-demo/issues/26): documentation: fixed grunt-init instructions for windows
 
 
