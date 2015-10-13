@@ -1,15 +1,15 @@
-# The ArticleSearchBoxWidget
+# The article-search-box-widget
 
 By this time, our application only displays a headline and does not allow the user to do anything.
-To change this we implement the _DummyArticlesActivity_ that provides articles for us, simulating an actual network-based data source.
-Also, we add another widget, the  _ArticleSearchBoxWidget,_ helping us to filter articles by name and description.
+To change this we implement the _dummy-articles-activity_ that provides articles for us, simulating an actual network-based data source.
+Also, we add another widget, the  _article-search-box-widget,_ helping us to filter articles by name and description.
 The activity and widget will use *events* to publish and filter a list of articles to each other and to other widgets.
 
 After going through this chapter, you will be familiar with the event bus and how it is accessed by a widget.
 It is recommended to have a look at the manual about [events and publish-subscribe](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/events.md#events-and-publish-subscribe) first, to allow for a better understanding.
 
 
-## Creating the DummyArticlesActivity
+## Creating the dummy-articles-activity
 
 This dummy activity has _one job:_ publish a resource that contains a list of _articles_.
 Each article in the list has title, price, and description as well as a URL to a teaser image.
@@ -68,18 +68,18 @@ This allows you to extend the resource in the future, and to add meta-data such 
 Keep in mind that all event payloads must be directly representable as JSON, so we cannot just add properties to the `articles` array itself.
 
 
-## Creating the ArticleSearchBoxWidget
+## Creating the article-search-box-widget
 
-This is what the ArticleSearchBoxWidget will look like:
+This is what the article-search-box-widget will look like:
 
-![ArticleSearchBoxWidget](img/article_search_box_widget.png)
+![article-search-box-widget](img/article_search_box_widget.png)
 
 The widget has a simple input field and a submit button, and allows the user to filter a list of articles.
 
 
 ### Implementing the Widget Features
 
-The ArticleSearchBoxWidget subscribes to a resource containing incoming *articles* and publishes a resource containing *filteredArticles* that match a user-specified term.
+The article-search-box-widget subscribes to a resource containing incoming *articles* and publishes a resource containing *filteredArticles* that match a user-specified term.
 Accordingly, we require the configuration of two resource topics using the [widget descriptor](../../includes/widgets/shop-demo/article-search-box-widget/widget.json#L16-38).
 If no filter term has been entered by the user, the incoming articles are simply passed through in their entirety.
 
@@ -141,7 +141,7 @@ function infixMatch( subject, query ) {
 
 ## Adding the Widget to the Page
 
-Finally, we include the [ArticleSearchBoxWidget](../../includes/widgets/shop-demo/article-search-box-widget) into our [shop_demo](../../application/pages/shop_demo.json#L16-28) page:
+Finally, we include the [article-search-box-widget](../../includes/widgets/shop-demo/article-search-box-widget) into our [shop_demo](../../application/pages/shop_demo.json#L16-28) page:
 
 ```javascript
 "searchBox": [
@@ -163,6 +163,6 @@ Finally, we include the [ArticleSearchBoxWidget](../../includes/widgets/shop-dem
 ## The Next Step
 
 Now the user can search for articles but the results are still not visible.
-To change this, the next step is to implement the [ArticleBrowserWidget](05_article_browser_widget.md) which actually *displays* the matching articles.
+To change this, the next step is to implement the [article-browser-widget](05_article_browser_widget.md) which actually *displays* the matching articles.
 
-[« Defining the Application Flow](03_application_flow.md) | The ArticleBrowserWidget | [The ArticleBrowserWidget »](05_article_browser_widget.md)
+[« Defining the Application Flow](03_application_flow.md) | The article-browser-widget | [The article-browser-widget »](05_article_browser_widget.md)

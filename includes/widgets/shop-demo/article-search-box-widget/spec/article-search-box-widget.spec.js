@@ -5,10 +5,10 @@
  */
 define( [
    'json!../widget.json',
-   'laxar-testing',
+   'laxar-mocks',
    'laxar',
    'json!./spec_data.json'
-], function( descriptor, testing, ax, resourceData ) {
+], function( descriptor, axMocks, ax, resourceData ) {
    'use strict';
 
    describe( 'A ArticleSearchBoxWidget', function() {
@@ -18,9 +18,9 @@ define( [
       var widgetScope;
       var testEventBus;
 
-      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( axMocks.createSetupForWidget( descriptor ) );
       beforeEach( function() {
-         testing.widget.configure( {
+         axMocks.widget.configure( {
             articles: {
                resource: 'articles'
             },
@@ -29,14 +29,14 @@ define( [
             }
          } );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
       beforeEach( function() {
          data = ax.object.deepClone( resourceData );
-         widgetScope = testing.widget.$scope;
-         widgetEventBus = testing.widget.axEventBus;
-         testEventBus = testing.eventBus;
+         widgetScope = axMocks.widget.$scope;
+         widgetEventBus = axMocks.widget.axEventBus;
+         testEventBus = axMocks.eventBus;
       } );
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

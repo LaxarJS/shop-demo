@@ -1,5 +1,5 @@
 {
-   "name": "ShoppingCartWidget",
+   "name": "shopping-cart-widget",
    "description": "A shopping cart with a list of articles, lets the user add articles and change their quantity.",
 
    "integration": {

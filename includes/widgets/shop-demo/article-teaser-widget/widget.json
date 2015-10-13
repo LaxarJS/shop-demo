@@ -1,6 +1,6 @@
 {
-   "name": "ArticleTeaserWidget",
-   "description": "The ArticleTeaserWidget displays the details of an article.",
+   "name": "article-teaser-widget",
+   "description": "Displays details (description, image) for an article.",
 
    "integration": {
       "technology": "angular",

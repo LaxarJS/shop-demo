@@ -6,11 +6,11 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'ArticleBrowserWidget Specification',
+      title: 'article-browser-widget Specification',
       tests: [
          'article-browser-widget.spec'
       ],
-      testRunner: 'laxar-testing',
+      testRunner: 'laxar-mocks',
       jasmineMajorVersion: 2
    };
 } )( this );

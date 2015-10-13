@@ -16,7 +16,7 @@ var require = {
       'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
 
       // LaxarJS Testing:
-      'laxar-testing': 'laxar-testing/dist/laxar-testing',
+      'laxar-mocks': 'laxar-mocks/dist/laxar-mocks',
       jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
       'promise-polyfill': 'promise-polyfill/Promise',
 

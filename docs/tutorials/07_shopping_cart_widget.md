@@ -1,25 +1,25 @@
-# The ShoppingCartWidget
+# The shopping-cart-widget
 
-The next step for our ShopDemo application is to implement the _ShoppingCartWidget_.
+The next step for our ShopDemo application is to implement the _shopping-cart-widget_.
 It will display the current shopping cart contents with all articles added by the user and allows the user change the order quantity for each article.
 You will learn how widgets can use events to trigger flow-based navigation.
 
 ![Step 7](img/step7.png)
 
-The ShoppingCartWidget receives the selected article and listens to the `addArticle` action event.
+The shopping-cart-widget receives the selected article and listens to the `addArticle` action event.
 When the action is triggered, the widget adds the currently selected article to the cart.
 
 
-## Appearance of the ShoppingCartWidget
+## Appearance of the shopping-cart-widget
 
-This is what the finished ShoppingCartWidget will look like:
+This is what the finished shopping-cart-widget will look like:
 
-![ShoppingCartWidget](img/shopping_cart_widget.png)
+![shopping-cart-widget](img/shopping_cart_widget.png)
 
-The ShoppingCartWidget displays a headline, a table of current contents and buttons to modify the quantity of each article as well as a button that allows to complete the process.
+The shopping-cart-widget displays a headline, a table of current contents and buttons to modify the quantity of each article as well as a button that allows to complete the process.
 
 
-## Features of the ShoppingCartWidget
+## Features of the shopping-cart-widget
 
 In detail the widget has two things to do:
 
@@ -38,7 +38,7 @@ If the shopping cart is empty, the widget simply displays an unobtrusive message
 This works very similar to the previous widgets.
 
 The widget also allows to configure a [list of action topics](../../includes/widgets/shop-demo/shopping-cart-widget/widget.json#L25-32).
-This is the glue that allows us to combine the article *selection resource* published by the ArticleBrowserWidget with the *confirmation action* requested by the ArticleTeaserWidget.
+This is the glue that allows us to combine the article *selection resource* published by the article-browser-widget with the *confirmation action* requested by the article-teaser-widget.
 By convention, we allow multiple actions to be configured for all widgets that handle action requests so that it is always possible to form many-to-one relations.
 In the controller, action handling is [implemented](../../includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.js#L24-32) using a _will/did_ pattern:
 
@@ -83,7 +83,7 @@ In order to trigger navigation to a another page, the widgets allows to configur
 
 ## Adding the Widget to our Application
 
-We add the widget to the `contentC` section of our [first page](../../application/pages/shop_demo.json#L56-69), where we connect it to the ArticleBrowserWidget and to the ArticleTeaserWidget, and configure the navigation target.
+We add the widget to the `contentC` section of our [first page](../../application/pages/shop_demo.json#L56-69), where we connect it to the article-browser-widget and to the article-teaser-widget, and configure the navigation target.
 
 ```json
 "contentC": [
@@ -109,4 +109,4 @@ The user can now select an article, have a look at its details and add it to the
 But when trying to order, nothing happens because the second page is still missing!
 Adding that page and configuring the control are the [final steps](08_final_steps.md) for completing our demo.
 
-[« The ArticleTeaserWidget](06_article_teaser_widget.md)  | The ShoppingCartWidget | [Final steps »](08_final_steps.md)
+[« The article-teaser-widget](06_article_teaser_widget.md)  | The shopping-cart-widget | [Final steps »](08_final_steps.md)

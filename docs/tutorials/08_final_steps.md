@@ -6,7 +6,7 @@ In this final part of the tutorial, you will also learn how to create an optimiz
 
 ## Adding Another Page
 
-The ShoppingCartWidget from our previous step publishes a _navigateRequest_ for the configured target _finishOrder_.
+The shopping-cart-widget from our previous step publishes a _navigateRequest_ for the configured target _finishOrder_.
 How is this target resolved to a JSON page definition?
 At this point, we go back to the [flow definition](../../application/flow/flow.json#L11-13), that was introduced in [step 3](03_application_flow.md):
 
@@ -31,7 +31,7 @@ At this point, we go back to the [flow definition](../../application/flow/flow.j
 The flow definition allows to configure _global places_ as we have done here, which either point directly to a page or which redirect to another place.
 It is also possible to define _targets_ from each place to other places, establishing flow relations such as _next_ and _previous_.
 
-The [second page *finish_order.json*](../../application/pages/finish_order.json) uses and configures only the HeadlineWidget, which we [introduced previously](02_hello_world.md).
+The [second page *finish_order.json*](../../application/pages/finish_order.json) uses and configures only the headline-widget, which we [introduced previously](02_hello_world.md).
 
 Now we start the server with `npm start` again and visit the application.
 By "placing" an order we can now navigate to the confirmation page.
@@ -68,4 +68,4 @@ The stylesheet reference and the `body` contents are required, and do not forget
 Go ahead and develop your own application!
 Check out the [LaxarJS manuals](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/index.md#manuals) for more information, and get familiar with the [LaxarJS Patterns](https://github.com/LaxarJS/laxar-patterns/blob/master/docs/index.md#laxarjs-patterns) to learn how to create the best and most reusable widgets.
 
-[« The ShoppingCartWidget](07_shopping_cart_widget.md)  | Final steps
+[« The shopping-cart-widget](07_shopping_cart_widget.md)  | Final steps
