@@ -1,23 +1,23 @@
-# The ArticleTeaserWidget
+# The article-teaser-widget
 
-The _ArticleTeaserWidget_ that we will implement in this step is going to have two features:
+The _article-teaser-widget_ that we will implement in this step is going to have two features:
 It will display details on a given *article*, and it will allow the user to *confirm* adding that article to the shopping cart.
 Having learned about the event bus and the *resource*-pattern already, this part of the tutorial will introduce the *action*-pattern and explain how widgets may respond to events asynchronously.
 
-In the previous chapter we implemented the ArticleBrowserWidget which publishes its selected article as a resource on the event bus.
-This is exactly the information that the ArticleTeaserWidget will use.
-Whenever the user presses the _"add to cart"_ button, the widget publishes a `takeActionRequest` event for the ShoppingCartWidget (described in the next chapter) to add the selected article to the cart or to increase the amount if the article was already added.
+In the previous chapter we implemented the article-browser-widget which publishes its selected article as a resource on the event bus.
+This is exactly the information that the article-teaser-widget will use.
+Whenever the user presses the _"add to cart"_ button, the widget publishes a `takeActionRequest` event for the shopping-cart-widget (described in the next chapter) to add the selected article to the cart or to increase the amount if the article was already added.
 
 ![Step 6](img/step6.png)
 
-As shown on the diagram, the ArticleTeaserWidget will get the selected article from the ArticleBrowserWidget.
+As shown on the diagram, the article-teaser-widget will get the selected article from the article-browser-widget.
 
 
-## Appearance of the ArticleTeaserWidget
+## Appearance of the article-teaser-widget
 
-This is what the finished ArticleTeaserWidget will look like:
+This is what the finished article-teaser-widget will look like:
 
-![ArticleTeaserWidget](img/article_teaser_widget.png)
+![article-teaser-widget](img/article_teaser_widget.png)
 
 The widget has a headline, a picture of the article, a table containing details and the *add to cart* button.
 
@@ -27,7 +27,7 @@ The widget has a headline, a picture of the article, a table containing details 
 First, it must be possible to configure a resource representing the *article* to showcase.
 In our ShopDemo application it will contain the article currently selected by the user.
 
-The [implementation](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js#L17-20) of this feature does not differ much from the *articles* feature of the ArticleBrowserWidget:
+The [implementation](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js#L17-20) of this feature does not differ much from the *articles* feature of the article-browser-widget:
 
 ```javascript
 var articleResource = $scope.features.article.resource;
@@ -93,7 +93,7 @@ As always after adding a new widget, we will need to restart the development ser
 ## The Next Step
 
 Our app shows details on the selected article now.
-When pressing the *add to cart* button however, there is no visible reaction since the [ShoppingCartWidget](07_shopping_cart_widget.md) is still missing.
+When pressing the *add to cart* button however, there is no visible reaction since the [shopping-cart-widget](07_shopping_cart_widget.md) is still missing.
 Let us implement that widget next.
 
-[« The ArticleBrowserWidget](05_article_browser_widget.md) | The ArticleTeaserWidget | [The ShoppingCartWidget »](07_shopping_cart_widget.md)
+[« The article-browser-widget](05_article_browser_widget.md) | The article-teaser-widget | [The shopping-cart-widget »](07_shopping_cart_widget.md)

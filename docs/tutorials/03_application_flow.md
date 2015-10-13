@@ -41,8 +41,8 @@ Now we have a place for each of our two pages and an entry place, used whenever 
 
 At the moment our layout only has one column.
 The final version of our [ShopDemo](http://laxarjs.github.io/shop-demo/#/shopDemo) has a header, three columns and a footer.
-The header will contain a logo, an _ArticleSearchBoxWidget_ to filter articles, and the _HeadlineWidget_ we already created.
-The main contents consist of an _ArticleBrowserWidget_ to view matching articles, an _ArticleTeaserWidget_ for details on a specific item and a _ShoppingCartWidget_ to keep track of what will be "bought".
+The header will contain a logo, an _article-search-box-widget_ to filter articles, and the _headline-widget_ we already created.
+The main contents consist of an _article-browser-widget_ to view matching articles, an _article-teaser-widget_ for details on a specific item and a _shopping-cart-widget_ to keep track of what will be "bought".
 
 We delete the template files from the folder `application/layouts` and create our own [application layout](../../application/layouts/application/default.theme/application.html) with associated [styles](https://github.com/LaxarJS/shop-demo/blob/feature/5-documentation-add-manual-references/application/layouts/application/default.theme/css/application.css).
 Then, we change both of the pages to use the new layout:
@@ -61,6 +61,6 @@ After restarting the development server, the application should look similar to 
 
 ## The Next Step
 
-The next step is to fetch and filter the articles that we are going to offer for sale, using the *DummyArticlesActivity* and the [ArticleSearchBoxWidget](04_article_search_box_widget.md).
+The next step is to fetch and filter the articles that we are going to offer for sale, using the *dummy-articles-activity* and the [article-search-box-widget](04_article_search_box_widget.md).
 
-[« Hello, World!](02_hello_world.md) | Defining the Application Flow | [The ArticleSearchBoxWidget »](04_article_search_box_widget.md)
+[« Hello, World!](02_hello_world.md) | Defining the Application Flow | [The article-search-box-widget »](04_article_search_box_widget.md)
