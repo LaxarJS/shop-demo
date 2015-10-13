@@ -5,12 +5,12 @@
  */
 define( [
    'json!../widget.json',
-   'laxar-testing',
+   'laxar-mocks',
    'json!./spec_data.json'
-], function( descriptor, testing, resourceData ) {
+], function( descriptor, axMocks, resourceData ) {
    'use strict';
 
-   describe( 'The ArticleTeaserWidget', function() {
+   describe( 'The article-teaser-widget', function() {
 
       var features = {
          article: {
@@ -25,23 +25,23 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( axMocks.createSetupForWidget( descriptor ) );
       beforeEach( function() {
-         testing.widget.configure( features );
+         axMocks.widget.configure( features );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
       beforeEach( function() {
-         widgetDom = testing.widget.render();
+         widgetDom = axMocks.widget.render();
       } );
 
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       describe( 'with feature article and configured resource', function() {
 
          beforeEach( function() {
-            testing.eventBus.publish( 'didReplace.article', {
+            axMocks.eventBus.publish( 'didReplace.article', {
                resource: 'article',
                data: resourceData
             } );
@@ -50,7 +50,7 @@ define( [
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'subscribes to didReplace events of the article resource', function() {
-            expect( testing.widget.axEventBus.subscribe )
+            expect( axMocks.widget.axEventBus.subscribe )
                .toHaveBeenCalledWith( 'didReplace.article', jasmine.any( Function ) );
          } );
 
@@ -61,18 +61,18 @@ define( [
       describe( 'with feature confirmation, when the user adds an article to the cart', function() {
 
          beforeEach( function() {
-            testing.eventBus.publish( 'didReplace.article', {
+            axMocks.eventBus.publish( 'didReplace.article', {
                resource: 'article',
                data: resourceData
             } );
-            testing.eventBus.flush();
+            axMocks.eventBus.flush();
             widgetDom.querySelector( 'button' ).click();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          it( 'publishes a corresponding takeActionRequest event', function() {
-            expect( testing.widget.axEventBus.publish )
+            expect( axMocks.widget.axEventBus.publish )
                .toHaveBeenCalledWith( 'takeActionRequest.addArticle', { action: 'addArticle' } );
          } );
 

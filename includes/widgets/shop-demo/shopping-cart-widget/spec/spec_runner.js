@@ -6,11 +6,11 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'ShoppingCartWidget Specification',
+      title: 'shopping-cart-widget Specification',
       tests: [
          'shopping-cart-widget.spec'
       ],
-      testRunner: 'laxar-testing',
+      testRunner: 'laxar-mocks',
       jasmineMajorVersion: 2
    };
 } )( this );

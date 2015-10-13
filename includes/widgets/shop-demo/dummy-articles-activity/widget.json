@@ -1,5 +1,5 @@
 {
-   "name": "DummyArticlesActivity",
+   "name": "dummy-articles-activity",
    "description": "Provides shopping articles from a JSON file",
 
    "integration": {

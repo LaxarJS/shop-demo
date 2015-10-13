@@ -5,22 +5,22 @@
  */
 define( [
    'json!../widget.json',
-   'laxar-testing',
+   'laxar-mocks',
    'laxar',
    'json!./spec_data.json'
-], function( descriptor, testing, ax, resourceData ) {
+], function( descriptor, axMocks, ax, resourceData ) {
    'use strict';
 
-   describe( 'The ArticleBrowserWidget', function() {
+   describe( 'The article-browser-widget', function() {
 
       var data;
       var widgetEventBus;
       var widgetScope;
       var testEventBus;
 
-      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( axMocks.createSetupForWidget( descriptor ) );
       beforeEach( function() {
-         testing.widget.configure( {
+         axMocks.widget.configure( {
             articles: {
                resource: 'articles'
             },
@@ -29,14 +29,14 @@ define( [
             }
          } );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
       beforeEach( function() {
          data = ax.object.deepClone( resourceData );
-         widgetScope = testing.widget.$scope;
-         widgetEventBus = testing.widget.axEventBus;
-         testEventBus = testing.eventBus;
+         widgetScope = axMocks.widget.$scope;
+         widgetEventBus = axMocks.widget.axEventBus;
+         testEventBus = axMocks.eventBus;
       } );
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -71,7 +71,7 @@ define( [
          describe( 'and the user selects an article', function() {
 
             beforeEach( function() {
-               testing.widget.$scope.selectArticle( testing.widget.$scope.resources.articles[ 1 ] );
+               axMocks.widget.$scope.selectArticle( axMocks.widget.$scope.resources.articles[ 1 ] );
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ define( [
             it( 'the configured selection resource is replaced', function() {
                expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.selectedArticle', {
                   resource: 'selectedArticle',
-                  data: testing.widget.$scope.resources.articles[ 1 ]
+                  data: axMocks.widget.$scope.resources.articles[ 1 ]
                } );
             } );
 

@@ -5,37 +5,37 @@
  */
 define( [
    'json!../widget.json',
-   'laxar-testing',
+   'laxar-mocks',
    '../articles'
-], function( descriptor, testing, articles ) {
+], function( descriptor, axMocks, articles ) {
    'use strict';
 
-   describe( 'The DummyArticlesActivity', function() {
+   describe( 'The dummy-articles-activity', function() {
 
-      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( axMocks.createSetupForWidget( descriptor ) );
       beforeEach( function() {
-         testing.widget.configure( {
+         axMocks.widget.configure( {
             articles: {
                resource: 'articles'
             }
          } );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
 
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       /////////////////////////////////////////////////////////////////////////
 
       describe( 'on beginLifecycleRequest', function() {
 
          beforeEach( function() {
-            testing.triggerStartupEvents();
+            axMocks.triggerStartupEvents();
          } );
 
          //////////////////////////////////////////////////////////////////////
 
          it( 'publishes some dummy articles', function() {
-            expect( testing.widget.axEventBus.publish )
+            expect( axMocks.widget.axEventBus.publish )
                .toHaveBeenCalledWith( 'didReplace.articles', {
                   resource: 'articles',
                   data: {

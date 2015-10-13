@@ -5,29 +5,29 @@
  */
 define( [
    'json!../widget.json',
-   'laxar-testing'
-], function( descriptor, testing ) {
+   'laxar-mocks'
+], function( descriptor, axMocks ) {
    'use strict';
 
-   describe( 'The HeadlineWidget', function() {
+   describe( 'The headline-widget', function() {
 
       var widgetDom;
 
-      beforeEach( testing.createSetupForWidget( descriptor, {
+      beforeEach( axMocks.createSetupForWidget( descriptor, {
          knownMissingResources: [ 'css/headline-widget.css' ]
       } ) );
 
       beforeEach( function() {
-         testing.widget.configure( {
+         axMocks.widget.configure( {
             headline: { htmlText: 'I am here!', level: 2 }
          } );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
       beforeEach( function() {
-         widgetDom = testing.widget.render();
+         widgetDom = axMocks.widget.render();
       } );
 
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

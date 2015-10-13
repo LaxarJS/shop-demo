@@ -5,18 +5,18 @@
  */
 define( [
    'json!../widget.json',
-   'laxar-testing',
+   'laxar-mocks',
    'json!./spec_data.json'
-], function( descriptor, testing, articles ) {
+], function( descriptor, axMocks, articles ) {
    'use strict';
 
    describe( 'The ShoppingCartWidget', function() {
 
       var widgetDom;
 
-      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( axMocks.createSetupForWidget( descriptor ) );
       beforeEach( function() {
-         testing.widget.configure( {
+         axMocks.widget.configure( {
             article: {
                resource: 'article',
                onActions: [ 'addArticle' ]
@@ -26,40 +26,40 @@ define( [
             }
          } );
       } );
-      beforeEach( testing.widget.load );
+      beforeEach( axMocks.widget.load );
       beforeEach( function() {
-         widgetDom = testing.widget.render();
+         widgetDom = axMocks.widget.render();
       } );
 
-      afterEach( testing.tearDown );
+      afterEach( axMocks.tearDown );
 
       /////////////////////////////////////////////////////////////////////////
 
       describe( 'with a configured article', function() {
 
          beforeEach( function() {
-            testing.eventBus.publish( 'didReplace.article', {
+            axMocks.eventBus.publish( 'didReplace.article', {
                resource: 'article',
                data: articles[ 0 ]
             } );
-            testing.eventBus.flush();
+            axMocks.eventBus.flush();
          } );
 
          //////////////////////////////////////////////////////////////////////
 
          it( 'subscribes to the article resource.', function() {
-            expect( testing.widget.axEventBus.subscribe ).toHaveBeenCalledWith(
+            expect( axMocks.widget.axEventBus.subscribe ).toHaveBeenCalledWith(
                'didReplace.article',
                jasmine.any( Function ) );
 
-            expect( testing.widget.$scope.resources.article )
+            expect( axMocks.widget.$scope.resources.article )
                .toEqual( articles[ 0 ] );
          } );
 
          //////////////////////////////////////////////////////////////////////
 
          it( 'listens to configured action events.', function() {
-            expect( testing.widget.axEventBus.subscribe ).toHaveBeenCalledWith(
+            expect( axMocks.widget.axEventBus.subscribe ).toHaveBeenCalledWith(
                'takeActionRequest.addArticle',
                jasmine.any( Function )
             );
@@ -70,16 +70,16 @@ define( [
          describe( 'when the article action was triggered', function() {
 
             beforeEach( function() {
-               testing.eventBus.publish( 'takeActionRequest.addArticle', {
+               axMocks.eventBus.publish( 'takeActionRequest.addArticle', {
                   action: 'addArticle'
                } );
-               testing.eventBus.flush();
+               axMocks.eventBus.flush();
             } );
 
             ///////////////////////////////////////////////////////////////////
 
             it( 'publishes a willTakeAction event', function() {
-               expect( testing.widget.axEventBus.publish )
+               expect( axMocks.widget.axEventBus.publish )
                   .toHaveBeenCalledWith( 'willTakeAction.addArticle', {
                      action: 'addArticle'
                   } );
@@ -88,7 +88,7 @@ define( [
             ///////////////////////////////////////////////////////////////////
 
             it( 'adds the new article to the cart', function() {
-               var firstItem = testing.widget.$scope.cart[ 0 ];
+               var firstItem = axMocks.widget.$scope.cart[ 0 ];
                expect( firstItem.article ).toEqual( articles[ 0 ] );
                expect( firstItem.quantity ).toBe( 1 );
             } );
@@ -96,7 +96,7 @@ define( [
             ///////////////////////////////////////////////////////////////////
 
             it( 'publishes a didTakeAction event', function() {
-               expect( testing.widget.axEventBus.publish )
+               expect( axMocks.widget.axEventBus.publish )
                   .toHaveBeenCalledWith( 'didTakeAction.addArticle', {
                      action: 'addArticle'
                   } );
@@ -107,17 +107,17 @@ define( [
             describe( 'and then triggered again', function() {
 
                beforeEach( function() {
-                  testing.eventBus
+                  axMocks.eventBus
                      .publish( 'takeActionRequest.addArticle', {
                         action: 'addArticle'
                      } );
-                  testing.eventBus.flush();
+                  axMocks.eventBus.flush();
                } );
 
                ////////////////////////////////////////////////////////////////
 
                it( 'publishes a willTakeAction event', function() {
-                  expect( testing.widget.axEventBus.publish )
+                  expect( axMocks.widget.axEventBus.publish )
                      .toHaveBeenCalledWith( 'willTakeAction.addArticle', {
                         action: 'addArticle'
                      } );
@@ -126,13 +126,13 @@ define( [
                ////////////////////////////////////////////////////////////////
 
                it( 'increases the quantity', function() {
-                  expect( testing.widget.$scope.cart[ 0 ].quantity ).toBe( 2 );
+                  expect( axMocks.widget.$scope.cart[ 0 ].quantity ).toBe( 2 );
                } );
 
                ////////////////////////////////////////////////////////////////
 
                it( 'publishes a didTakeAction event', function() {
-                  expect( testing.widget.axEventBus.publish )
+                  expect( axMocks.widget.axEventBus.publish )
                      .toHaveBeenCalledWith( 'didTakeAction.addArticle', {
                         action: 'addArticle'
                      } );
@@ -152,7 +152,7 @@ define( [
                   /////////////////////////////////////////////////////////////
 
                   it( 'updates the sum accordingly', function() {
-                     expect( testing.widget.$scope.sum ).toEqual( 74.97 );
+                     expect( axMocks.widget.$scope.sum ).toEqual( 74.97 );
                   } );
 
                } );
@@ -171,13 +171,13 @@ define( [
                   /////////////////////////////////////////////////////////////
 
                   it( 'updates the sum accordingly', function() {
-                     expect( testing.widget.$scope.sum ).toEqual( 24.99 );
+                     expect( axMocks.widget.$scope.sum ).toEqual( 24.99 );
                   } );
 
                   /////////////////////////////////////////////////////////////
 
                   it( 'removes one item from the cart', function() {
-                     expect( testing.widget.$scope.cart[ 0 ].quantity ).toBe( 1 );
+                     expect( axMocks.widget.$scope.cart[ 0 ].quantity ).toBe( 1 );
                   } );
 
                   /////////////////////////////////////////////////////////////
@@ -191,7 +191,7 @@ define( [
                      //////////////////////////////////////////////////////////
 
                      it( 'deletes the article from the cart', function() {
-                        expect( testing.widget.$scope.cart.length ).toBe( 0 );
+                        expect( axMocks.widget.$scope.cart.length ).toBe( 0 );
                      } );
 
                   } );
@@ -210,7 +210,7 @@ define( [
       describe( 'with feature order', function() {
 
          beforeEach( function() {
-            testing.widget.$scope.cart = [
+            axMocks.widget.$scope.cart = [
                {
                   article: articles[0],
                   quantity: 1
@@ -220,7 +220,7 @@ define( [
                   quantity: 4
                }
             ];
-            testing.widget.$scope.$digest();
+            axMocks.widget.$scope.$digest();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +234,7 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             it( 'triggers a navigateRequest with the configured target', function() {
-               expect( testing.widget.axEventBus.publish )
+               expect( axMocks.widget.axEventBus.publish )
                   .toHaveBeenCalledWith( 'navigateRequest.placeOrder',{
                      target: 'placeOrder'
                   } );
