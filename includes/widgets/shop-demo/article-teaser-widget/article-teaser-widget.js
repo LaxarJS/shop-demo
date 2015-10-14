@@ -33,15 +33,10 @@ define(['exports', 'module', 'react'], function (exports, module, _react) {
          }
 
          function render() {
-            var result = _React['default'].createElement(
+            reactRender(_React['default'].createElement(
                'div',
                null,
-               _React['default'].createElement(
-                  'h3',
-                  { className: 'ax-function-point' + (resources.article ? ' app-selection' : '') },
-                  _React['default'].createElement('i', { className: 'fa fa-search' }),
-                  ' Details'
-               ),
+               _React['default'].createElement(ArticleHeader, { isSelected: !!resources.article }),
                _React['default'].createElement(ArticleTeaser, { article: resources.article || { name: 'No article selected' } }),
                _React['default'].createElement(
                   'div',
@@ -49,20 +44,33 @@ define(['exports', 'module', 'react'], function (exports, module, _react) {
                   _React['default'].createElement(
                      'button',
                      { type: 'button',
-                        className: 'btn btn-info pull-right' + (resources.article ? '' : ' ax-disabled'),
+                        className: '\'btn btn-info pull-right ' + (resources.article ? '' : ' ax-disabled'),
                         onClick: addToCart },
                      _React['default'].createElement('i', { className: 'fa fa-shopping-cart' }),
                      ' Add to Cart'
                   )
                )
-            );
-
-            reactRender(result);
+            ));
          }
 
          return { onDomAvailable: render };
       }
    };
+
+   var ArticleHeader = _React['default'].createClass({
+      displayName: 'ArticleHeader',
+
+      render: function render() {
+         var isSelected = this.props.isSelected;
+
+         return _React['default'].createElement(
+            'h3',
+            { className: 'ax-function-point ' + (isSelected ? 'app-selection' : '') },
+            _React['default'].createElement('i', { className: 'fa fa-search' }),
+            ' Details'
+         );
+      }
+   });
 
    var ArticleTeaser = _React['default'].createClass({
       displayName: 'ArticleTeaser',

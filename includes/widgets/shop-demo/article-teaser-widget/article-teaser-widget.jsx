@@ -8,7 +8,6 @@
  */
 import React from 'react';
 
-
 export default {
    name: 'article-teaser-widget',
    injections: [ 'axEventBus', 'axFeatures', 'axReactRender' ],
@@ -29,24 +28,29 @@ export default {
       }
 
       function render() {
-         const result = <div>
-            <h3 className={ 'ax-function-point' + (resources.article ? ' app-selection' : '') }>
-               <i className='fa fa-search'></i> Details
-            </h3>
+         reactRender( <div>
+            <ArticleHeader isSelected={ !!resources.article } />
             <ArticleTeaser article={ resources.article || { name: 'No article selected' } } />
             <div className='clearfix'>
                <button type='button'
-                       className={ 'btn btn-info pull-right' + (resources.article ? '' : ' ax-disabled') }
+                       className={ `'btn btn-info pull-right ${resources.article ? '' : ' ax-disabled'}` }
                        onClick={addToCart}><i className='fa fa-shopping-cart'></i> Add to Cart</button>
             </div>
-         </div>;
-
-         reactRender( result );
+         </div> );
       }
 
       return { onDomAvailable: render };
    }
 };
+
+const ArticleHeader = React.createClass({
+   render() {
+      const { isSelected } = this.props;
+      return <h3 className={ `ax-function-point ${isSelected ? 'app-selection' : ''}` }>
+         <i className='fa fa-search'></i> Details
+      </h3>;
+   }
+});
 
 const ArticleTeaser = React.createClass({
    render() {
