@@ -6,9 +6,10 @@
  */
 require( [
    'laxar',
+   'laxar-react-adapter',
    'laxar-application/var/flows/main/dependencies',
    'json!laxar-application/var/flows/main/resources.json'
-], function( ax, mainDependencies, mainResources ) {
+], function( ax, axReactAdapter, mainDependencies, mainResources ) {
    'use strict';
 
    window.laxar.fileListings = {
@@ -17,6 +18,6 @@ require( [
       includes: mainResources
    };
 
-   ax.bootstrap( mainDependencies );
+   ax.bootstrap( mainDependencies, [ axReactAdapter ] );
 
 } );

@@ -2,7 +2,8 @@
 
 ## Last Changes
 
-- [#27](https://github.com/LaxarJS/shop-demo/issues/27): project: updated to laxar#1.1.0-beta.1, laxar-mocks#0.5.0
+- [#27](https://github.com/LaxarJS/shop-demo/issues/27): project: re-implemented article-teaser-widget using React
+- [#28](https://github.com/LaxarJS/shop-demo/issues/28): project: updated to laxar#1.1.0-beta.1, laxar-mocks#0.5.0
 - [#25](https://github.com/LaxarJS/shop-demo/issues/25): documentation: fixed the grunt-init-laxar-activity URL
 - [#26](https://github.com/LaxarJS/shop-demo/issues/26): documentation: fixed grunt-init instructions for windows
 - [#24](https://github.com/LaxarJS/shop-demo/issues/24): tests: use latest HTML spec-runner

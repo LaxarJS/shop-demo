@@ -3,7 +3,7 @@
    "description": "Displays details (description, image) for an article.",
 
    "integration": {
-      "technology": "angular",
+      "technology": "react",
       "type": "widget"
    },
 

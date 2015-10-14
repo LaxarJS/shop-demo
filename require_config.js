@@ -6,11 +6,6 @@ var require = {
       text: 'requirejs-plugins/lib/text',
       json: 'requirejs-plugins/src/json',
 
-      angular: 'angular/angular',
-      'angular-mocks': 'angular-mocks/angular-mocks',
-      'angular-route': 'angular-route/angular-route',
-      'angular-sanitize': 'angular-sanitize/angular-sanitize',
-
       'laxar': 'laxar/dist/laxar.with-deps',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
       'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
@@ -26,7 +21,17 @@ var require = {
       'laxar-path-pages': '../application/pages',
       'laxar-path-widgets': '../includes/widgets',
       'laxar-path-themes': '../includes/themes',
-      'laxar-path-flow': '../application/flow/flow.json'
+      'laxar-path-flow': '../application/flow/flow.json',
+
+      // AngularJS:
+      angular: 'angular/angular',
+      'angular-mocks': 'angular-mocks/angular-mocks',
+      'angular-route': 'angular-route/angular-route',
+      'angular-sanitize': 'angular-sanitize/angular-sanitize',
+
+      // React:
+      'react': 'react/react',
+      'laxar-react-adapter': 'laxar-react-adapter/laxar-react-adapter'
    },
    packages: [
       {
