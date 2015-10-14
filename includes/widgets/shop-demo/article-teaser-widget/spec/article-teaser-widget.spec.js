@@ -6,8 +6,9 @@
 define( [
    'json!../widget.json',
    'laxar-mocks',
+   'laxar-react-adapter',
    'json!./spec_data.json'
-], function( descriptor, axMocks, resourceData ) {
+], function( descriptor, axMocks, axReactAdapter, resourceData ) {
    'use strict';
 
    describe( 'The article-teaser-widget', function() {
@@ -25,7 +26,7 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      beforeEach( axMocks.createSetupForWidget( descriptor ) );
+      beforeEach( axMocks.createSetupForWidget( descriptor, { adapter: axReactAdapter } ) );
       beforeEach( function() {
          axMocks.widget.configure( features );
       } );

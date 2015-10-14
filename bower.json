@@ -1,28 +1,29 @@
 {
-   "name": "ShopDemo",
-   "version": "1.10.0-pre",
-   "description": "A demo application to learn how LaxarJS works.",
-   "license": "MIT",
-   "repository": {
-      "type": "https",
-      "url": "https://github.com/LaxarJS/shop-demo.git"
-   },
-   "dependencies": {
-      "requirejs": "2.1.x",
-      "requirejs-plugins": "1.0.x",
-      "laxar": "~1.1.0-beta.1",
-      "laxar-uikit": "~1.1.0",
-      "bootswatch-scss": "3.2.x",
-      "angular": "~1.4.3",
-      "angular-mocks": "~1.4.3",
-      "angular-route": "~1.4.3",
-      "angular-sanitize": "~1.4.3"
-   },
-   "devDependencies": {
-      "jasmine2": "jasmine#2.3.x",
-      "laxar-mocks": "~0.5.1"
-   },
-   "resolutions": {
-      "bootstrap-sass-official": "3.3.x"
-   }
+  "name": "ShopDemo",
+  "version": "1.10.0-pre",
+  "description": "A demo application to learn how LaxarJS works.",
+  "license": "MIT",
+  "repository": {
+    "type": "https",
+    "url": "https://github.com/LaxarJS/shop-demo.git"
+  },
+  "dependencies": {
+    "requirejs": "2.1.x",
+    "requirejs-plugins": "1.0.x",
+    "laxar": "~1.1.0-beta.1",
+    "laxar-uikit": "~1.1.0",
+    "bootswatch-scss": "3.2.x",
+    "angular": "~1.4.3",
+    "angular-mocks": "~1.4.3",
+    "angular-route": "~1.4.3",
+    "angular-sanitize": "~1.4.3",
+    "laxar-react-adapter": "~0.2.0"
+  },
+  "devDependencies": {
+    "jasmine2": "jasmine#2.3.x",
+    "laxar-mocks": "~0.5.1"
+  },
+  "resolutions": {
+    "bootstrap-sass-official": "3.3.x"
+  }
 }
