@@ -33,7 +33,7 @@ export default {
             <ArticleTeaser article={ resources.article || { name: 'No article selected' } } />
             <div className='clearfix'>
                <button type='button'
-                       className={ `'btn btn-info pull-right ${resources.article ? '' : ' ax-disabled'}` }
+                       className={ `btn pull-right ${resources.article ? 'btn-info' : 'ax-disabled'}` }
                        onClick={addToCart}><i className='fa fa-shopping-cart'></i> Add to Cart</button>
             </div>
          </div> );
@@ -65,7 +65,7 @@ const ArticleTeaser = React.createClass({
          <div className='row'>
             <div className='col col-md-12'>
                <dl className='dl-horizontal'>
-                  <dt data-ng-class={ article.id || 'ax-disabled' }>Art. ID</dt>
+                  <dt className={ article.id || 'ax-disabled' }>Art. ID</dt>
                   <dd>{ article.id }</dd>
 
                   <dt className={ article.id || 'ax-disabled' }>Description</dt>

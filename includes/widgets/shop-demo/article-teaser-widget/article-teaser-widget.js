@@ -44,7 +44,7 @@ define(['exports', 'module', 'react'], function (exports, module, _react) {
                   _React['default'].createElement(
                      'button',
                      { type: 'button',
-                        className: '\'btn btn-info pull-right ' + (resources.article ? '' : ' ax-disabled'),
+                        className: 'btn pull-right ' + (resources.article ? 'btn-info' : 'ax-disabled'),
                         onClick: addToCart },
                      _React['default'].createElement('i', { className: 'fa fa-shopping-cart' }),
                      ' Add to Cart'
@@ -106,7 +106,7 @@ define(['exports', 'module', 'react'], function (exports, module, _react) {
                      { className: 'dl-horizontal' },
                      _React['default'].createElement(
                         'dt',
-                        { 'data-ng-class': article.id || 'ax-disabled' },
+                        { className: article.id || 'ax-disabled' },
                         'Art. ID'
                      ),
                      _React['default'].createElement(
