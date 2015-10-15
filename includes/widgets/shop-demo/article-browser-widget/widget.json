@@ -1,5 +1,5 @@
 {
-   "name": "ArticleBrowserWidget",
+   "name": "article-browser-widget",
    "description": "Displays a list of articles and lets the user select one.",
 
    "integration": {
