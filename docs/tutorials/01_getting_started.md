@@ -9,22 +9,18 @@ If you are unfamiliar with LaxarJS, you might want to check out [Why LaxarJS](ht
 
 ## Get the Prerequisites
 
-First, we install the *grunt* command-line interface and the *grunt-init* scaffolding tool.
-Depending on the system we have to do this using `sudo` or from an administrative shell.
+First, we install the *grunt* command-line interface and the *Yeoman* scaffolding tool.
+Depending on the system, we have to do this using `sudo` or from an administrative shell.
 
 ```shell
-npm install -g grunt-cli grunt-init
+npm install -g grunt-cli yo
 ```
 
-Now we can obtain the LaxarJS templates which we will instantiate using `grunt-init` to get started with our application and artifacts:
+Now we can obtain the LaxarJS templates which we will instantiate using `yo`, to get started with our application and artifacts:
 
 ```shell
-git clone https://github.com/LaxarJS/grunt-init-laxar-application.git ~/.grunt-init/laxar-application
-git clone https://github.com/LaxarJS/grunt-init-laxar-widget.git ~/.grunt-init/laxar-widget
-git clone https://github.com/LaxarJS/grunt-init-laxar-activity.git ~/.grunt-init/laxar-activity
+npm install -g generator-laxarjs
 ```
-
-**Note for Windows users:** Instead of the `~`, you have to use `%USERPROFILE%` to reference your home directory.
 
 
 ## Creating a LaxarJS Application from the Template
@@ -32,7 +28,7 @@ git clone https://github.com/LaxarJS/grunt-init-laxar-activity.git ~/.grunt-init
 ```shell
 mkdir shop-demo
 cd shop-demo
-grunt-init laxar-application
+yo laxarjs
 ```
 
 The script will ask for some details about the application and offer suggestions for possible answers to these questions.
@@ -42,21 +38,19 @@ Otherwise, we need to make sure to remember to port we choose, and use it to acc
 
 ```
 Please answer the following:
-[?] Application name (shop-demo)
-[?] Application title (ShopDemo) LaxarJS ShopDemo
-[?] Description (My new LaxarJS application) A demo application to learn how LaxarJS works.
-[?] Licenses (none) MIT
-[?] Project homepage (none) http://www.laxarjs.org
-[?] Author name (author) LaxarJS
-[?] Version (0.1.0-pre)
-[?] Development server port (8000)
-[?] Should a set of example widgets be generated? (Y/n) no
-[?] Do you need to make any changes to the above before continuing? (y/N)
+? Application name (shop-demo): shop-demo
+? Description (optional): A demo application to learn how LaxarJS works
+? Licenses (none) MIT
+? Project homepage (none) http://www.laxarjs.org
+? Author name (author) LaxarJS
+? Development server port (8000)
+? Should a set of example widgets be generated? (Y/n) no
+? Create a README.md? (y/N) no
 ```
 
-The script creates the application _ShopDemo_ with the necessary dependencies to LaxarJS.
+The script creates the application _shop-demo_ with the necessary dependencies to LaxarJS.
 
-First, we set up the development server and fetch the dependencies:
+First, we install the grunt-tools for LaxarJS, including the development server and its dependencies:
 ```shell
 npm install
 ```
