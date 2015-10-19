@@ -14,7 +14,7 @@ It is recommended to have a look at the manual about [events and publish-subscri
 This dummy activity has _one job:_ publish a resource that contains a list of _articles_.
 Each article in the list has title, price, and description as well as a URL to a teaser image.
 
-Because activities have no visual appearance, all we need to do is to create the activity using `grunt-init laxar-activity`, allow configuration of an event bus topic, and implement the activity controller.
+Because activities have no visual appearance, all we need to do is to create the activity using `yo laxarjs:activity`, allow configuration of an event bus topic, and implement the activity controller.
 
 First, let us add the feature configuration option to the activity's [descriptor](../../includes/widgets/shop-demo/dummy-articles-activity/widget.json#L16-26):
 

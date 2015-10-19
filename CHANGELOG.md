@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#29](https://github.com/LaxarJS/shop-demo/issues/29): documentation: use yeoman rather than grunt-init
 - [#30](https://github.com/LaxarJS/shop-demo/issues/30): article-teaser-widget: small fixes
 - [#27](https://github.com/LaxarJS/shop-demo/issues/27): project: re-implemented article-teaser-widget using React
 - [#28](https://github.com/LaxarJS/shop-demo/issues/28): project: updated to laxar#1.1.0-beta.1, laxar-mocks#0.5.0
