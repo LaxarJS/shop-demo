@@ -22,21 +22,45 @@ This is what the finished article-teaser-widget will look like:
 The widget has a headline, a picture of the article, a table containing details and the *add to cart* button.
 
 
+
+## Using a Custom Integration Technology
+
+This widget showcases an advances use case, as it is implemented using [React](https://facebook.github.io/react/) via the [laxar-react-adapter](https://github.com/LaxarJS/laxar-react-adapter).
+When looking at the [widget controller](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.jsx#L11-86), you can see that it is implemented as an EcmaScript 6 module, using JSX inline to generate HTML rather than an external template file.
+
+To recompile the `.jsx` controller to a version that can be accessed by LaxarJS running in your browser, make sure to recompile it using `babel -m amd`.
+In order to actually instantiate the React-based widget, we need to install the `laxar-react-adapter` into our application.
+The [installation documentation](https://github.com/LaxarJS/laxar-react-adapter#installation) of the laxar-react-adapter should contain all information that you will need for this.
+To recompile the `.jsx` file, you will also need to `npm install -g babel` if you have not already. 
+
+There also is a [previous version](https://github.com/LaxarJS/shop-demo/blob/v1.9.0/includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js) of the widget which is implemented in AngularJS with an [external HTML template](https://github.com/LaxarJS/shop-demo/blob/v1.9.0/includes/widgets/shop-demo/article-teaser-widget/default.theme/article-teaser-widget.html).
+If your not interested in learning how to create a React-based widget right now, you can simply have a look at that previous version.
+All relevant concepts have already been introduced in the previous chapters.
+
+The following explanation is based on the more recent React-based version.
+
+
 ## Displaying an Article
 
 First, it must be possible to configure a resource representing the *article* to showcase.
 In our ShopDemo application it will contain the article currently selected by the user.
 
-The [implementation](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js#L17-20) of this feature does not differ much from the *articles* feature of the article-browser-widget:
+The [implementation](https://github.com/LaxarJS/shop-demo/blob/master/includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.jsx#L17-21) of this feature does not differ much from the *articles* feature of the article-browser-widget:
 
-```javascript
-var articleResource = $scope.features.article.resource;
-eventBus.subscribe( 'didReplace.' + articleResource, function( event ) {
-   $scope.resources.article = event.data;
+```jsx
+const articleResource = features.article.resource;
+eventBus.subscribe( 'didReplace.' + articleResource, event => {
+   resources.article = event.data;
+   render();
 } );
 ```
 
-For everything to work, we add the required configuration for the feature `article` to the [widget descriptor](../../includes/widgets/shop-demo/article-teaser-widget/widget.json#L16-26), adjust the [template](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/article-teaser-widget.html) by adding the headline and a list for the article details, and again add some [styling](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/css/article-teaser-widget.css).
+Note that the form of the React-module is slightly different to that of the AngularJS module.
+Instead of the `$scope`-injection that you get with AngularJS widgets, you are provided with an `axReactRender` injection, which is a function.
+This rendering function is used to create and refresh the HTML-representation of the widget, since in contrast to AngularJS, React does not automatically try to do this.
+The HTML template itself lives right here in the JavaScript file, as is customary for React applications. 
+
+For everything to work, we add the required configuration for the feature `article` to the [widget descriptor](../../includes/widgets/shop-demo/article-teaser-widget/widget.json#L16-26), and again add some [styling](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/css/article-teaser-widget.css).
 
 
 ## Let the User Add an Article to the Cart
@@ -46,24 +70,23 @@ For this we add a button that triggers a `takeActionRequest` event on the event 
 Like the resource pattern, the [action pattern](https://github.com/LaxarJS/laxar-patterns/blob/master/docs/patterns/actions.md#action-patterns) is also described in the [LaxarJS Patterns documentation](https://github.com/LaxarJS/laxar-patterns/blob/master/docs/index.md#laxarjs-patterns).
 The name of the action is configured under the [*confirmation*](../../includes/widgets/shop-demo/article-teaser-widget/widget.json#L28-38) feature.
 
-To implement the feature *button* we add the method [`$scope.addToCart`](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js#L24-29) to the controller which causes a request for the configured action to be published:
+To implement the feature *button* we implement the event handler [`addToCart`](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.jsx#L23-L28) to the controller which causes a request for the configured action to be published:
 
 ```javascript
-$scope.addToCart = function() {
-   var actionName = $scope.features.button.action;
-   $scope.eventBus.publish( 'takeActionRequest.' + actionName, {
+function addToCart() {
+   const actionName = features.confirmation.action;
+   eventBus.publish( 'takeActionRequest.' + actionName, {
       action: actionName
    } );
-};
+}
 ```
 
-A simple button in the [HTML template](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/article-teaser-widget.html#L38-41) triggers this method on click by using the `ngClick` directive from AngularJS:
+A simple button in the [generated HTML](../../includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.jsx#L31-L39) triggers this method on click:
 
-```html
-   <button class="btn btn-default btn-info pull-right"
-           type="button"
-           data-ng-class="{ 'ax-disabled': !resources.article }"
-           data-ng-click="addToCart()"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+```jsx
+<button type='button'
+        className={ `btn pull-right ${resources.article ? 'btn-info' : 'ax-disabled'}` }
+        onClick={addToCart}><i className='fa fa-shopping-cart'></i> Add to Cart</button>
 ```
 
 
