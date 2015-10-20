@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v1.10.0
+
 - [#32](https://github.com/LaxarJS/shop-demo/issues/32): documentation: explain React-based widget in tutorial
 - [#31](https://github.com/LaxarJS/shop-demo/issues/31): project: use release versions of laxarjs artifacts
 - [#29](https://github.com/LaxarJS/shop-demo/issues/29): documentation: use yeoman rather than grunt-init
