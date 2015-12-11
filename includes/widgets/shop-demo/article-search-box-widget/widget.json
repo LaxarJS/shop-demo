@@ -19,8 +19,9 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "ID of the resource for the unfiltered list of articles to subscribe to.",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet",
+                  "description": "ID of the resource for the unfiltered list of articles to subscribe to."
                }
             }
          },
@@ -31,8 +32,9 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "ID of the resource under which the filtered list of articles is published.",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "outlet",
+                  "description": "ID of the resource under which the filtered list of articles is published."
                }
             }
          }

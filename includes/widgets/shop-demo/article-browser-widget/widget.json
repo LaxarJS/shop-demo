@@ -20,8 +20,9 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "Name of the data resource with articles.",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet",
+                  "description": "Name of the data resource with articles."
                }
             }
          },
@@ -33,8 +34,9 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "Name of the resource for the user selection",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "outlet",
+                  "description": "Name of the resource for the user selection"
                }
             }
          }

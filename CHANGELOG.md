@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#33](https://github.com/LaxarJS/shop-demo/issues/33): widgets: expanded the widget definition for page visualization
+
 
 ## v1.10.0
 
