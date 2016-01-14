@@ -38,6 +38,18 @@
                   "resource": "selectedArticle"
                }
             }
+         },
+         {
+            "widget": "amd:laxar-developer-tools-widget",
+            "features": {
+               "button": {
+                  "enabled": false
+               },
+               "open": {
+                  "onActions": [ "showDevTools" ],
+                  "onGlobalMethod": "goDevelop"
+               }
+            }
          }
       ],
       "contentB": [
@@ -49,32 +61,6 @@
                },
                "confirmation": {
                   "action": "addArticle"
-               }
-            }
-         }
-      ],
-      "contentC": [
-         {
-            "widget": "shop-demo/shopping-cart-widget",
-            "features": {
-               "article": {
-                  "resource": "selectedArticle",
-                  "onActions": [ "addArticle" ]
-               },
-               "order": {
-                  "target": "finishOrder"
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-developer-tools-widget",
-            "features": {
-               "button": {
-                  "enabled": false
-               },
-               "open": {
-                  "onActions": [ "showDevTools" ],
-                  "onGlobalMethod": "goDevelop"
                }
             }
          }

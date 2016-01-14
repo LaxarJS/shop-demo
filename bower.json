@@ -10,20 +10,23 @@
   "dependencies": {
     "requirejs": "2.1.x",
     "requirejs-plugins": "1.0.x",
-    "laxar": "~1.1.0",
+    "laxar": "~1.2.0",
     "laxar-uikit": "~1.1.0",
+    "laxar-patterns": "~1.2.0",
     "bootswatch-scss": "3.2.x",
     "angular": "~1.4.3",
     "angular-mocks": "~1.4.3",
     "angular-route": "~1.4.3",
     "angular-sanitize": "~1.4.3",
-    "laxar-react-adapter": "~0.2.0"
+    "laxar-react-adapter": "~0.2.0",
+    "laxar-developer-tools-widget": "2.0.0-alpha.3"
   },
   "devDependencies": {
     "jasmine2": "jasmine#2.3.x",
     "laxar-mocks": "~0.6.0"
   },
   "resolutions": {
-    "bootstrap-sass-official": "3.3.x"
+    "bootstrap-sass-official": "3.3.x",
+    "laxar": "~1.2.0"
   }
 }

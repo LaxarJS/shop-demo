@@ -8,12 +8,16 @@ var require = {
 
       'laxar': 'laxar/dist/laxar.with-deps',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
+      'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
       'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
 
       // LaxarJS Testing:
       'laxar-mocks': 'laxar-mocks/dist/laxar-mocks',
       jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
       'promise-polyfill': 'promise-polyfill/Promise',
+
+      // LaxarJS Patterns:
+      'json-patch': 'fast-json-patch/src/json-patch-duplex',
 
       // App Parts:
       'laxar-path-root': '..',
@@ -64,6 +68,9 @@ var require = {
             'use strict';
             return angular;
          }
+      },
+      'json-patch': {
+         exports: 'jsonpatch'
       }
    }
 };

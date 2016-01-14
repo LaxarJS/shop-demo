@@ -10,6 +10,18 @@
 
       "finishOrder": {
          "page":  "finish_order"
+      },
+
+      "step3": {
+         "page": "step3"
+      },
+
+      "step5": {
+         "page": "step5"
+      },
+
+      "step6": {
+         "page": "step6"
       }
    }
 }
