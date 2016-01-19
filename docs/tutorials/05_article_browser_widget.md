@@ -1,21 +1,21 @@
-# The ArticleBrowserWidget
+# The article-browser-widget
 
-In this step we are going to implement the _ArticleBrowserWidget_ which displays a list of articles to the user and allows to select an individual article.
+In this step we are going to implement the _article-browser-widget_ which displays a list of articles to the user and allows to select an individual article.
 Another widget (to be implemented in the next step) will show details on the currently selected article.
 This part of the tutorial will allow you to learn how widgets safely share resources through the event bus, and how resources can be displayed to the user.
 
 
-## Creating the ArticleBrowserWidget
+## Creating the article-browser-widget
 
-This is what the final ArticleBrowserWidget will look like:
+This is what the final article-browser-widget will look like:
 
-![ArticleBrowserWidget](img/article_browser_widget.png)
+![article-browser-widget](img/article_browser_widget.png)
 
 It has a heading and a table containing the list of articles.
 In the image, the sixth row represents the currently selected article.
 
 
-### The Features of the ArticleBrowserWidget
+### The Features of the article-browser-widget
 
 The widget configuration has two features: display a list of *articles* and allow *selection* of an article.
 
@@ -59,7 +59,7 @@ Basic widget styles are implemented using a [CSS stylesheet](../../includes/widg
 
 ### Allowing the User to Select an Article
 
-Now we'll cover the second feature of the ArticleBrowserWidget, called [*selection*](../../includes/widgets/shop-demo/article-browser-widget/widget.json#L29-40):
+Now we'll cover the second feature of the article-browser-widget, called [*selection*](../../includes/widgets/shop-demo/article-browser-widget/widget.json#L29-40):
 
 ```json
 "selection": {
@@ -77,7 +77,7 @@ Now we'll cover the second feature of the ArticleBrowserWidget, called [*selecti
 ```
 
 This feature requires the configuration of a resource name under which the selected article will be published on the event bus.
-In our application the ArticleTeaserWidget and the ShoppingCartWidget (implemented in the next steps) will listen for changes to this resource.
+In our application the article-teaser-widget and the shopping-cart-widget (implemented in the next steps) will listen for changes to this resource.
 
 In our [HTML template](../../includes/widgets/shop-demo/article-browser-widget/default.theme/article-browser-widget.html#L25) we use the directive `ngClick` to detect the selection of an article by the user:
 
@@ -106,9 +106,9 @@ $scope.selectArticle = function( article ) {
 ```
 
 
-### Adding the ArticleBrowserWidget to our Application
+### Adding the article-browser-widget to our Application
 
-We update the [*shop_demo* page](../../application/pages/shop_demo.json#L30-42) and add the ArticleBrowserWidget to the area `contentA`:
+We update the [*shop_demo* page](../../application/pages/shop_demo.json#L30-42) and add the article-browser-widget to the area `contentA`:
 
 ```json
 "contentA": [
@@ -126,7 +126,7 @@ We update the [*shop_demo* page](../../application/pages/shop_demo.json#L30-42) 
 ]
 ```
 
-Because the ArticleSearchBoxWidget is configured to publish the filtered list of articles under the name [*filteredArticles*](../../application/pages/shop_demo.json#L24), we configure the ArticleBrowserWidget accordingly.
+Because the article-search-box-widget is configured to publish the filtered list of articles under the name [*filteredArticles*](../../application/pages/shop_demo.json#L24), we configure the article-browser-widget accordingly.
 The selection resource will be used in the next step of this tutorial.
 Now we have the following setup:
 
@@ -134,7 +134,7 @@ Now we have the following setup:
 
 Note that since the resource topics are configurable on all participating widgets, we could change the way that we obtain or display our articles anytime.
 For example, we could add a new activity to read articles from a web service, without having to touch any of the existing widgets.
-Alternatively, we could simply cut out the middle-man by removing the ArticlesSearchBoxWidget completely:
+Alternatively, we could simply cut out the middle-man by removing the article-search-box-widget completely:
 Then, we would simply rewire the dummy articles and feed them into our browser widget directly, just by editing the page configuration.
 This _resource pattern_ is one of several collaboration patterns that are commonly used with LaxarJS, and is described in more detail in the [resource manual](https://github.com/LaxarJS/laxar-patterns/blob/master/docs/patterns/resources.md#resource-patterns) of the [LaxarJS Patterns](https://github.com/LaxarJS/laxar-patterns) documentation.
 
@@ -144,6 +144,6 @@ The application should allow to select among ten articles now, and display a sea
 
 ## The Next Step
 
-The next step is to add the [ArticleTeaserWidget](06_article_teaser_widget.md) in order to display details on the selected article.
+The next step is to add the [article-teaser-widget](06_article_teaser_widget.md) in order to display details on the selected article.
 
-[« The ArticleSearchBoxWidget](04_article_search_box_widget.md) | The ArticleBrowserWidget | [The ArticleTeaserWidget »](06_article_teaser_widget.md)
+[« The article-search-box-widget](04_article_search_box_widget.md) | The article-browser-widget | [The article-teaser-widget »](06_article_teaser_widget.md)

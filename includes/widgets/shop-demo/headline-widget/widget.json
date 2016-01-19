@@ -1,5 +1,5 @@
 {
-   "name": "HeadlineWidget",
+   "name": "headline-widget",
    "description": "Displays a simple headline and an intro html text.",
 
    "integration": {

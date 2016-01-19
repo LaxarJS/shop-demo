@@ -5,9 +5,11 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'DummyArticlesActivity Specification',
+      title: 'dummy-articles-activity Specification',
       tests: [
          'dummy-articles-activity.spec'
-      ]
+      ],
+      testRunner: 'laxar-mocks',
+      jasmineMajorVersion: 2
    };
 } )( this );

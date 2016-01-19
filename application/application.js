@@ -9,18 +9,8 @@ window.laxar = ( function() {
       name: 'LaxarJS ShopDemo',
       description: 'A DemoApp to learn how LaxarJS works.',
       theme: 'cube',
-      useMergedCss: mode === 'RELEASE',
-      useEmbeddedFileListings: mode === 'RELEASE',
-      fileListings: {
-         'application': 'var/listing/application_resources.json',
-         'bower_components': 'var/listing/bower_components_resources.json',
-         'includes': 'var/listing/includes_resources.json'
-      },
-      i18n: {
-         locales: {
-            'default': 'en'
-         }
-      }
+      useMergedCss: mode === 'PRODUCTION',
+      useEmbeddedFileListings: mode === 'PRODUCTION'
    };
 
 } )();

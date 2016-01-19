@@ -1,13 +1,13 @@
-# LaxarJS ShopDemo
+# LaxarJS ShopDemo [![Build Status](https://travis-ci.org/LaxarJS/shop-demo.svg?branch=master)](https://travis-ci.org/LaxarJS/shop-demo)
 
 The LaxarJS ShopDemo shows a simple web shop application (for ordering LaxarJS merchandise) implemented using the [LaxarJS](http://laxarjs.org) web application framework.
 
 It consists of a small set of LaxarJS widgets implemented in AngularJS.
 Storage is realised using PouchDB.
 
-* [Show the live demo](http://laxarjs.github.io/shop_demo/)
+* [Show the live demo](http://laxarjs.github.io/shop-demo/)
 
-* [Read the tutorial](https://github.com/LaxarJS/shop_demo/blob/master/docs/tutorials/01_getting_started.md#getting-started)
+* [Read the tutorial](https://github.com/LaxarJS/shop-demo/blob/master/docs/tutorials/01_getting_started.md#getting-started)
 
 * [LaxarJS Homepage](http://laxarjs.org)
 
@@ -21,8 +21,8 @@ To fetch the required tools and libraries, make sure that you have `npm` (comes 
 Use a shell to issue the following commands:
 
 ```sh
-git clone --single-branch --recursive https://github.com/LaxarJS/shop_demo.git
-cd shop_demo
+git clone --single-branch --recursive https://github.com/LaxarJS/shop-demo.git
+cd shop-demo
 npm install
 npm start
 ```
@@ -34,14 +34,14 @@ Afterwards, open the demo at [http://localhost:8000/debug.html](http://localhost
 
 For an optimized version more suitable for production, stop the server (using `Ctrl-C`) and run:
 ```sh
-npm run-script dist
+npm run optimize
 npm start
 ```
 
 Now you can browse the optimized demo at [http://localhost:8000/index.html](http://localhost:8000/index.html).
 
-Instead of using `grunt start`, you can use any web server on your machine by having it serve the `shop_demo` directory.
+Instead of using `grunt start`, you can use any web server on your machine by having it serve the `shop-demo` directory.
 
-Try modifying the widgets under `includes/widgets/shop_demo` to get a feel for how a LaxarJS application works.
+Try modifying the widgets under `includes/widgets/shop-demo` to get a feel for how a LaxarJS application works.
 
-Read the [tutorial](https://github.com/LaxarJS/shop_demo/blob/master/docs/tutorials/01_getting_started.md#getting-started) to get further information about the LaxarJS techniques.
+Read the [tutorial](https://github.com/LaxarJS/shop-demo/blob/master/docs/tutorials/01_getting_started.md#getting-started) to get further information about the LaxarJS techniques.

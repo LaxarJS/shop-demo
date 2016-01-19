@@ -1,0 +1,513 @@
+{
+   "flows": [
+      {
+         "path": "application/flow/flow.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "local": {
+               "self": "application/flow/flow.json"
+            }
+         }
+      }
+   ],
+   "themes": [
+      {
+         "path": "bower_components/laxar-uikit/dist/themes/default.theme",
+         "name": "default.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "default.theme"
+            }
+         }
+      },
+      {
+         "path": "includes/themes/cube.theme",
+         "name": "cube.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "cube.theme"
+            }
+         }
+      },
+      {
+         "path": "includes/themes/darkly.theme",
+         "name": "darkly.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "darkly.theme"
+            }
+         }
+      },
+      {
+         "path": "includes/themes/darkly_scss.theme",
+         "name": "darkly_scss.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "darkly_scss.theme"
+            }
+         }
+      }
+   ],
+   "pages": [
+      {
+         "path": "application/pages/finish_order.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "local": {
+               "self": "finish_order"
+            }
+         },
+         "pages": [],
+         "widgets": [
+            "shop-demo/headline-widget",
+            "amd:laxar-developer-tools-widget"
+         ]
+      },
+      {
+         "path": "application/pages/shop_demo.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "local": {
+               "self": "shop_demo"
+            }
+         },
+         "pages": [],
+         "widgets": [
+            "shop-demo/dummy-articles-activity",
+            "shop-demo/article-search-box-widget",
+            "shop-demo/article-browser-widget",
+            "shop-demo/article-teaser-widget",
+            "shop-demo/shopping-cart-widget",
+            "amd:laxar-developer-tools-widget"
+         ]
+      }
+   ],
+   "layouts": [
+      {
+         "resources": {
+            "list": [
+               "/includes/themes/darkly_scss.theme/layouts/application/css/application.css",
+               "/includes/themes/darkly.theme/layouts/application/css/application.css",
+               "/includes/themes/cube.theme/layouts/application/css/application.css",
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/darkly.theme/css/application.css",
+               "/application/layouts/application/darkly_scss.theme/css/application.css",
+               "/application/layouts/application/default.theme/css/application.css"
+            ],
+            "watch": [
+               "/includes/themes/darkly_scss.theme/layouts/application/css/application.css",
+               "/includes/themes/darkly.theme/layouts/application/css/application.css",
+               "/includes/themes/cube.theme/layouts/application/css/application.css",
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/darkly.theme/css/application.css",
+               "/application/layouts/application/darkly_scss.theme/css/application.css",
+               "/application/layouts/application/default.theme/css/application.css",
+               "/includes/themes/darkly_scss.theme/layouts/application/application.html",
+               "/includes/themes/darkly.theme/layouts/application/application.html",
+               "/includes/themes/cube.theme/layouts/application/application.html",
+               "/application/layouts/application/cube.theme/application.html",
+               "/application/layouts/application/darkly.theme/application.html",
+               "/application/layouts/application/darkly_scss.theme/application.html",
+               "/application/layouts/application/default.theme/application.html"
+            ],
+            "embed": [
+               "/includes/themes/darkly_scss.theme/layouts/application/application.html",
+               "/includes/themes/darkly.theme/layouts/application/application.html",
+               "/includes/themes/cube.theme/layouts/application/application.html",
+               "/application/layouts/application/cube.theme/application.html",
+               "/application/layouts/application/darkly.theme/application.html",
+               "/application/layouts/application/darkly_scss.theme/application.html",
+               "/application/layouts/application/default.theme/application.html"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "application"
+            }
+         }
+      }
+   ],
+   "widgets": [
+      {
+         "path": "bower_components/laxar-developer-tools-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "/includes/themes/darkly_scss.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "/includes/themes/darkly_scss.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "/includes/themes/darkly.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "/includes/themes/darkly.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "widget.json",
+               "*.theme/ax-developer-tools-widget.html",
+               "*.theme/css/ax-developer-tools-widget.css",
+               "ax-developer-tools-widget.js"
+            ],
+            "embed": [
+               "/includes/themes/darkly_scss.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "/includes/themes/darkly.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "widget.json",
+               "*.theme/ax-developer-tools-widget.html"
+            ],
+            "list": [
+               "/includes/themes/darkly_scss.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "/includes/themes/darkly.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "/includes/themes/cube.theme/widgets/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "*.theme/css/ax-developer-tools-widget.css"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "../../bower_components/laxar-developer-tools-widget"
+            },
+            "amd": {
+               "self": "laxar-developer-tools-widget",
+               "module": "laxar-developer-tools-widget/ax-developer-tools-widget"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "amd:laxar-developer-tools-widget",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-developer-tools-widget"
+         }
+      },
+      {
+         "path": "includes/widgets/shop-demo/article-browser-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-browser-widget/article-browser-widget.html",
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-browser-widget/css/article-browser-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-browser-widget/article-browser-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-browser-widget/css/article-browser-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-browser-widget/article-browser-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-browser-widget/css/article-browser-widget.css",
+               "widget.json",
+               "*.theme/article-browser-widget.html",
+               "*.theme/css/article-browser-widget.css",
+               "article-browser-widget.js"
+            ],
+            "embed": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-browser-widget/article-browser-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-browser-widget/article-browser-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-browser-widget/article-browser-widget.html",
+               "widget.json",
+               "*.theme/article-browser-widget.html"
+            ],
+            "list": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-browser-widget/css/article-browser-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-browser-widget/css/article-browser-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-browser-widget/css/article-browser-widget.css",
+               "*.theme/css/article-browser-widget.css"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "shop-demo/article-browser-widget"
+            },
+            "amd": {
+               "self": "../includes/widgets/shop-demo/article-browser-widget",
+               "module": "laxar-application/includes/widgets/shop-demo/article-browser-widget/article-browser-widget"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "shop-demo/article-browser-widget",
+            "derivedReference": "shop-demo/article-browser-widget"
+         }
+      },
+      {
+         "path": "includes/widgets/shop-demo/article-search-box-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-search-box-widget/article-search-box-widget.html",
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-search-box-widget/css/article-search-box-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-search-box-widget/article-search-box-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-search-box-widget/css/article-search-box-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-search-box-widget/article-search-box-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-search-box-widget/css/article-search-box-widget.css",
+               "widget.json",
+               "*.theme/article-search-box-widget.html",
+               "*.theme/css/article-search-box-widget.css",
+               "article-search-box-widget.js"
+            ],
+            "embed": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-search-box-widget/article-search-box-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-search-box-widget/article-search-box-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-search-box-widget/article-search-box-widget.html",
+               "widget.json",
+               "*.theme/article-search-box-widget.html"
+            ],
+            "list": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-search-box-widget/css/article-search-box-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-search-box-widget/css/article-search-box-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-search-box-widget/css/article-search-box-widget.css",
+               "*.theme/css/article-search-box-widget.css"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "shop-demo/article-search-box-widget"
+            },
+            "amd": {
+               "self": "../includes/widgets/shop-demo/article-search-box-widget",
+               "module": "laxar-application/includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "shop-demo/article-search-box-widget",
+            "derivedReference": "shop-demo/article-search-box-widget"
+         }
+      },
+      {
+         "path": "includes/widgets/shop-demo/article-teaser-widget",
+         "integration": {
+            "technology": "react",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-teaser-widget/article-teaser-widget.html",
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-teaser-widget/css/article-teaser-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-teaser-widget/article-teaser-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-teaser-widget/css/article-teaser-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-teaser-widget/article-teaser-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-teaser-widget/css/article-teaser-widget.css",
+               "widget.json",
+               "*.theme/article-teaser-widget.html",
+               "*.theme/css/article-teaser-widget.css",
+               "article-teaser-widget.js"
+            ],
+            "embed": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-teaser-widget/article-teaser-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-teaser-widget/article-teaser-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-teaser-widget/article-teaser-widget.html",
+               "widget.json",
+               "*.theme/article-teaser-widget.html"
+            ],
+            "list": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/article-teaser-widget/css/article-teaser-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/article-teaser-widget/css/article-teaser-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/article-teaser-widget/css/article-teaser-widget.css",
+               "*.theme/css/article-teaser-widget.css"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "shop-demo/article-teaser-widget"
+            },
+            "amd": {
+               "self": "../includes/widgets/shop-demo/article-teaser-widget",
+               "module": "laxar-application/includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "shop-demo/article-teaser-widget",
+            "derivedReference": "shop-demo/article-teaser-widget"
+         }
+      },
+      {
+         "path": "includes/widgets/shop-demo/dummy-articles-activity",
+         "integration": {
+            "technology": "angular",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "dummy-articles-activity.js"
+            ],
+            "embed": [
+               "widget.json"
+            ],
+            "list": []
+         },
+         "references": {
+            "local": {
+               "self": "shop-demo/dummy-articles-activity"
+            },
+            "amd": {
+               "self": "../includes/widgets/shop-demo/dummy-articles-activity",
+               "module": "laxar-application/includes/widgets/shop-demo/dummy-articles-activity/dummy-articles-activity"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "shop-demo/dummy-articles-activity",
+            "derivedReference": "shop-demo/dummy-articles-activity"
+         }
+      },
+      {
+         "path": "includes/widgets/shop-demo/headline-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/headline-widget/headline-widget.html",
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/headline-widget/css/headline-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/headline-widget/headline-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/headline-widget/css/headline-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/headline-widget/headline-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/headline-widget/css/headline-widget.css",
+               "widget.json",
+               "*.theme/headline-widget.html",
+               "*.theme/css/headline-widget.css",
+               "headline-widget.js"
+            ],
+            "embed": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/headline-widget/headline-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/headline-widget/headline-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/headline-widget/headline-widget.html",
+               "widget.json",
+               "*.theme/headline-widget.html"
+            ],
+            "list": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/headline-widget/css/headline-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/headline-widget/css/headline-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/headline-widget/css/headline-widget.css",
+               "*.theme/css/headline-widget.css"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "shop-demo/headline-widget"
+            },
+            "amd": {
+               "self": "../includes/widgets/shop-demo/headline-widget",
+               "module": "laxar-application/includes/widgets/shop-demo/headline-widget/headline-widget"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "shop-demo/headline-widget",
+            "derivedReference": "shop-demo/headline-widget"
+         }
+      },
+      {
+         "path": "includes/widgets/shop-demo/shopping-cart-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.html",
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/shopping-cart-widget/css/shopping-cart-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/shopping-cart-widget/css/shopping-cart-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/shopping-cart-widget/css/shopping-cart-widget.css",
+               "widget.json",
+               "*.theme/shopping-cart-widget.html",
+               "*.theme/css/shopping-cart-widget.css",
+               "shopping-cart-widget.js"
+            ],
+            "embed": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.html",
+               "/includes/themes/darkly.theme/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.html",
+               "/includes/themes/cube.theme/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget.html",
+               "widget.json",
+               "*.theme/shopping-cart-widget.html"
+            ],
+            "list": [
+               "/includes/themes/darkly_scss.theme/widgets/shop-demo/shopping-cart-widget/css/shopping-cart-widget.css",
+               "/includes/themes/darkly.theme/widgets/shop-demo/shopping-cart-widget/css/shopping-cart-widget.css",
+               "/includes/themes/cube.theme/widgets/shop-demo/shopping-cart-widget/css/shopping-cart-widget.css",
+               "*.theme/css/shopping-cart-widget.css"
+            ]
+         },
+         "references": {
+            "local": {
+               "self": "shop-demo/shopping-cart-widget"
+            },
+            "amd": {
+               "self": "../includes/widgets/shop-demo/shopping-cart-widget",
+               "module": "laxar-application/includes/widgets/shop-demo/shopping-cart-widget/shopping-cart-widget"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "shop-demo/shopping-cart-widget",
+            "derivedReference": "shop-demo/shopping-cart-widget"
+         }
+      }
+   ],
+   "controls": []
+}

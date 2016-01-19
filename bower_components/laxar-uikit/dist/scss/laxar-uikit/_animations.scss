@@ -1,0 +1,16 @@
+//
+// Rotate
+// -----------------------------------------------------------------------------------------------------------
+
+@keyframes ax-spin-around {
+   from { transform: rotate( 0deg ); }
+   to { transform: rotate( 360deg ); }
+}
+
+@mixin ax-spin-animation {
+   animation-name: ax-spin-around;
+   animation-duration: 1s;
+   animation-iteration-count: infinite;
+   animation-timing-function: linear;
+   animation-delay: 0s;
+}

@@ -6,12 +6,11 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'ArticleSearchBoxWidget Specification',
+      title: 'article-search-box-widget Specification',
       tests: [
          'article-search-box-widget.spec'
       ],
-      requireConfig: {
-         paths: { }
-      }
+      testRunner: 'laxar-mocks',
+      jasmineMajorVersion: 2
    };
 } )( this );

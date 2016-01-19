@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+
+//
+// Import variables and overwrite default ones
+// -----------------------------------------------------------------------------------------------------------
+
+@import "font-awesome/scss/variables";
+@import "bootstrap/variables";
+@import "variables";
+
+// Third party modules
+@import "laxar-uikit/modules/font_awesome";
+@import "laxar-uikit/modules/bootstrap";
+
+//
+// Laxar UiKit
+// -----------------------------------------------------------------------------------------------------------
+
+@import "laxar-uikit";
+
+//
+// Theme Specific Styles
+// -----------------------------------------------------------------------------------------------------------

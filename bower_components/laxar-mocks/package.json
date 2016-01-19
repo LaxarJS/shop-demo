@@ -1,0 +1,29 @@
+{
+   "name": "laxar-mocks",
+   "version": "1.0.0",
+   "description": "The companion testing framework for LaxarJS widgets.",
+   "homepage": "http://laxarjs.org",
+   "main": "dist/laxar-mocks.js",
+   "author": "LaxarJS Team <info@laxarjs.org>",
+   "license": "MIT",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/LaxarJS/dist-laxar-mocks.git"
+   },
+   "scripts": {
+      "prepublish": "bower install"
+   },
+   "devDependencies": {
+      "bower": "~1.3.3",
+      "grunt": "~0.4.4",
+      "grunt-cli": "~0.1.13",
+      "grunt-contrib-copy": "~0.8.0",
+      "grunt-contrib-requirejs": "~0.4.4",
+      "grunt-contrib-uglify": "~0.9.1",
+      "grunt-laxar": "~1.1.2"
+   },
+   "bugs": {
+      "url": "https://github.com/LaxarJS/laxar-uikit/issues",
+      "email": "info@laxarjs.org"
+   }
+}

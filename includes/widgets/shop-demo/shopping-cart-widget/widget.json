@@ -1,5 +1,5 @@
 {
-   "name": "ShoppingCartWidget",
+   "name": "shopping-cart-widget",
    "description": "A shopping cart with a list of articles, lets the user add articles and change their quantity.",
 
    "integration": {
@@ -19,15 +19,17 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "ID of the article resource to add to the cart.",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "inlet",
+                  "description": "ID of the article resource to add to the cart."
                },
                "onActions": {
                   "type": "array",
                   "description": "Adds the article to the cart.",
                   "items": {
                      "type": "string",
-                     "format": "topic"
+                     "format": "topic",
+                     "axRole": "inlet"
                   }
                }
             }

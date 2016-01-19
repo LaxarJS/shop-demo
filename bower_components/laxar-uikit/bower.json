@@ -1,6 +1,6 @@
 {
    "name": "laxar-uikit",
-   "version": "1.0.0",
+   "version": "1.1.0",
    "description": "Bootstrap-compatible base styles for LaxarJS widgets, plus a few basic controls.",
    "main": "dist/laxar-uikit.js",
    "authors": [],
@@ -13,13 +13,13 @@
    ],
    "dependencies": {
       "bootstrap-sass-official": "3.3.x",
-      "font-awesome": "4.3.x",
+      "font-awesome": "4.4.x",
       "moment": "2.9.x",
-      "requirejs": "2.1.x",
-      "requirejs-plugins": "1.0.x"
+      "requirejs": "jrburke/requirejs#2.1.x",
+      "requirejs-plugins": "millermedeiros/requirejs-plugins#1.0.x"
    },
    "devDependencies": {
-      "laxar-uikit": "LaxarJS/laxar-uikit#^1.0.0",
+      "laxar-uikit": "LaxarJS/laxar-uikit#1.1.0",
       "laxar": "LaxarJS/laxar#^1.0.0"
    }
 }

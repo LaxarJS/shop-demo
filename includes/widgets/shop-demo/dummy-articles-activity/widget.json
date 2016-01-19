@@ -1,5 +1,5 @@
 {
-   "name": "DummyArticlesActivity",
+   "name": "dummy-articles-activity",
    "description": "Provides shopping articles from a JSON file",
 
    "integration": {
@@ -18,9 +18,10 @@
             "type": "object",
             "properties": {
                "resource": {
-                  "description": "The event bus topic under which to publish the list of articles",
                   "type": "string",
-                  "format": "topic"
+                  "format": "topic",
+                  "axRole": "outlet",
+                  "description": "The event bus topic under which to publish the list of articles"
                }
             }
          }

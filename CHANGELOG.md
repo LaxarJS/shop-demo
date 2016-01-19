@@ -2,6 +2,30 @@
 
 ## Last Changes
 
+## v1.11.0
+
+- [#34](https://github.com/LaxarJS/shop-demo/issues/34): documentation: using screenshots of page visualization for tutorial
+- [#33](https://github.com/LaxarJS/shop-demo/issues/33): widgets: expanded the widget definition for page visualization
+
+
+## v1.10.0
+
+- [#32](https://github.com/LaxarJS/shop-demo/issues/32): documentation: explain React-based widget in tutorial
+- [#31](https://github.com/LaxarJS/shop-demo/issues/31): project: use release versions of laxarjs artifacts
+- [#29](https://github.com/LaxarJS/shop-demo/issues/29): documentation: use yeoman rather than grunt-init
+- [#30](https://github.com/LaxarJS/shop-demo/issues/30): article-teaser-widget: small fixes
+- [#27](https://github.com/LaxarJS/shop-demo/issues/27): project: re-implemented article-teaser-widget using React
+- [#28](https://github.com/LaxarJS/shop-demo/issues/28): project: updated to laxar#1.1.0-beta.1, laxar-mocks#0.5.0
+- [#25](https://github.com/LaxarJS/shop-demo/issues/25): documentation: fixed the grunt-init-laxar-activity URL
+- [#26](https://github.com/LaxarJS/shop-demo/issues/26): documentation: fixed grunt-init instructions for windows
+- [#24](https://github.com/LaxarJS/shop-demo/issues/24): tests: use latest HTML spec-runner
+- [#23](https://github.com/LaxarJS/shop-demo/issues/23): project: simplified the RequireJS configuration
+- [#21](https://github.com/LaxarJS/shop-demo/issues/21): use laxar-testing instead of laxar/laxar_testing
+    + NEW FEATURE: see ticket for details
+- [#22](https://github.com/LaxarJS/shop-demo/issues/22): project: switched to flow-based grunt tasks
+- [#20](https://github.com/LaxarJS/shop-demo/issues/20): added Travis-CI build integration
+    + NEW FEATURE: see ticket for details
+
 
 ## v1.9.0
 

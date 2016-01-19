@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -95,7 +95,7 @@ define( 'laxar/lib/logging/console_channel',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -302,7 +302,7 @@ define( 'laxar/lib/utilities/assert',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -624,7 +624,7 @@ define( 'laxar/lib/utilities/object',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -686,7 +686,7 @@ define( 'laxar/lib/utilities/configuration',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1100,7 +1100,7 @@ define( 'laxar/lib/logging/log',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1185,7 +1185,7 @@ define( 'laxar/lib/directives/id/id',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1241,7 +1241,7 @@ define( 'laxar/lib/directives/layout/layout',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1568,7 +1568,7 @@ define( 'laxar/lib/utilities/string',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1651,7 +1651,7 @@ define( 'laxar/lib/directives/widget_area/widget_area',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -1672,806 +1672,7 @@ define( 'laxar/lib/directives/directives',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-/**
- * Utilities for dealing with internationalization (i18n).
- *
- * When requiring `laxar`, it is available as `laxar.i18n`.
- *
- * @module i18n
- */
-define( 'laxar/lib/i18n/i18n',[
-   '../utilities/string',
-   '../utilities/assert',
-   '../utilities/configuration'
-], function( string, assert, configuration ) {
-   'use strict';
-
-   var localize = localizeRelaxed;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   var primitives = {
-      string: true,
-      number: true,
-      boolean: true
-   };
-
-   var fallbackTag;
-
-   var normalize = memoize( function( languageTag ) {
-      return languageTag.toLowerCase().replace( /[-]/g, '_' );
-   } );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Shortcuts: it is assumed that this module is used heavily (or not at all).
-   var format = string.format;
-   var keys = Object.keys;
-
-   return {
-      localize: localize,
-      localizeStrict: localizeStrict,
-      localizeRelaxed: localizeRelaxed,
-      localizer: localizer,
-      languageTagFromI18n: languageTagFromI18n
-   };
-
-   /**
-    * Shortcut to {@link localizeRelaxed}.
-    *
-    * @name localize
-    * @type {Function}
-    */
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Localize the given internationalized object using the given languageTag.
-    *
-    * @param {String} languageTag
-    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
-    *    not use i18n)
-    * @param {*} i18nValue
-    *    a possibly internationalized value:
-    *    - when passing a primitive value, it is returned as-is
-    *    - when passing an object, the languageTag is used as a key within that object
-    * @param {*} [optionalFallback]
-    *    a value to use if no localization is available for the given language tag
-    *
-    * @return {*}
-    *    the localized value if found, `undefined` otherwise
-    */
-   function localizeStrict( languageTag, i18nValue, optionalFallback ) {
-      assert( languageTag ).hasType( String );
-      if( !i18nValue || primitives[ typeof i18nValue ] ) {
-         // Value is not i18n
-         return i18nValue;
-      }
-      assert( languageTag ).isNotNull();
-
-      // Try one direct lookup before scanning the input keys,
-      // assuming that language-tags are written in consistent style.
-      var value = i18nValue[ languageTag ];
-      if( value !== undefined ) {
-         return value;
-      }
-
-      var lookupKey = normalize( languageTag );
-      var availableTags = keys( i18nValue );
-      var n = availableTags.length;
-      for( var i = 0; i < n; ++i ) {
-         var t = availableTags[ i ];
-         if( normalize( t ) === lookupKey ) {
-            return i18nValue[ t ];
-         }
-      }
-
-      return optionalFallback;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * For controls (such as a date-picker), we cannot anticipate all required language tags, as they may be
-    * app-specific. The relaxed localize behaves like localize if an exact localization is available. If not,
-    * the language tag is successively generalized by stripping off the rightmost sub-tags until a
-    * localization is found. Eventually, a fallback ('en') is used.
-    *
-    * @param {String} languageTag
-    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
-    *    not use i18n)
-    * @param {*} i18nValue
-    *    a possibly internationalized value:
-    *    - when passing a primitive value, it is returned as-is
-    *    - when passing an object, the `languageTag` is used to look up a localization within that object
-    * @param {*} [optionalFallback]
-    *    a value to use if no localization is available for the given language tag
-    *
-    * @return {*}
-    *    the localized value if found, the fallback `undefined` otherwise
-    */
-   function localizeRelaxed( languageTag, i18nValue, optionalFallback ) {
-      assert( languageTag ).hasType( String );
-      if( !i18nValue || primitives[ typeof i18nValue ] ) {
-         // Value is not i18n (app does not use it)
-         return i18nValue;
-      }
-
-      var tagParts = languageTag ? languageTag.replace( /-/g, '_' ).split( '_' ) : [];
-      while( tagParts.length > 0 ) {
-         var currentLocaleTag = tagParts.join( '-' );
-         var value = localizeStrict( currentLocaleTag, i18nValue );
-         if( value !== undefined ) {
-            return value;
-         }
-         tagParts.pop();
-      }
-
-      if( fallbackTag === undefined ) {
-         fallbackTag = configuration.get( 'i18n.fallback', 'en' );
-      }
-
-      return ( fallbackTag && localizeStrict( fallbackTag, i18nValue ) ) || optionalFallback;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Encapsulate a given languageTag in a partially applied localize function.
-    *
-    * @param {String} languageTag
-    *    the languageTag to lookup localizations with
-    * @param {*} [optionalFallback]
-    *    a value to use by the localizer function whenever no localization is available for the language tag
-    *
-    * @return {Localizer}
-    *    A single-arg localize-Function, which always uses the given language-tag. It also has a `.format`
-    *    -method, which can be used as a shortcut to `string.format( localize( x ), args )`
-    */
-   function localizer( languageTag, optionalFallback ) {
-
-      /**
-       * @name Localizer
-       * @private
-       */
-      function partial( i18nValue ) {
-         return localize( languageTag, i18nValue, optionalFallback );
-      }
-
-      /**
-       * Shortcut to string.format, for simple chaining to the localizer.
-       *
-       * These are equal:
-       * - `string.format( i18n.localizer( tag )( i18nValue ), numericArgs, namedArgs )`
-       * - `i18n.localizer( tag ).format( i18nValue, numericArgs, namedArgs )`.
-       *
-       * @param {String} i18nValue
-       *    the value to localize and then format
-       * @param {Array} [optionalIndexedReplacements]
-       *    replacements for any numeric placeholders in the localized value
-       * @param {Object} [optionalNamedReplacements]
-       *    replacements for any named placeholders in the localized value
-       *
-       * @return {String}
-       *    the formatted string, taking i18n into account
-       *
-       * @memberOf Localizer
-       */
-      partial.format = function( i18nValue, optionalIndexedReplacements, optionalNamedReplacements ) {
-         var formatString = localize( languageTag, i18nValue );
-         if( formatString === undefined ) {
-            return optionalFallback;
-         }
-         return format( formatString, optionalIndexedReplacements, optionalNamedReplacements );
-      };
-
-      return partial;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Retrieve the language tag of the current locale from an i18n model object, such as used on the scope.
-    *
-    * @param {{locale: String, tags: Object<String, String>}} i18n
-    *    an internationalization model, with reference to the currently active locale and a map from locales
-    *    to language tags
-    * @param {*} [optionalFallbackLanguageTag]
-    *    a language tag to use if no tags are found on the given object
-    *
-    * @return {String}
-    *    the localized value if found, `undefined` otherwise
-    */
-   function languageTagFromI18n( i18n, optionalFallbackLanguageTag ) {
-      if( !i18n || !i18n.hasOwnProperty( 'tags' ) ) {
-         return optionalFallbackLanguageTag;
-      }
-      return i18n.tags[ i18n.locale ] || optionalFallbackLanguageTag;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function memoize( f ) {
-      var cache = {};
-      return function( key ) {
-         var value = cache[ key ];
-         if( value === undefined ) {
-            value = f( key );
-            cache[ key ] = value;
-         }
-         return value;
-      };
-   }
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-/**
- * Utilities for dealing with functions.
- *
- * When requiring `laxar`, it is available as `laxar.fn`.
- *
- * @module fn
- */
-define( 'laxar/lib/utilities/fn',[], function() {
-   'use strict';
-
-   return {
-
-      /**
-       * [Underscore `debounce`](http://underscorejs.org/#debounce), but with LaxarJS offering mocking in
-       * tests. See [http://underscorejs.org/#debounce](http://underscorejs.org/#debounce) for detailed
-       * documentation.
-       *
-       * @param {Function} f
-       *    the function to return a debounced version of
-       * @param {Number} waitMs
-       *    milliseconds to debounce before invoking `f`
-       * @param {Boolean} immediate
-       *    if `true` `f` is invoked prior to start waiting `waitMs` milliseconds. Otherwise `f` is invoked
-       *    after the given debounce duration has passed. Default is `false`
-       *
-       * @return {Function}
-       *    the debounced function
-       */
-      debounce: function( f, waitMs, immediate ) {
-         var timeout, args, context, timestamp, result;
-         return function() {
-            context = this;
-            args = arguments;
-            timestamp = new Date();
-            var later = function() {
-               var last = (new Date()) - timestamp;
-               if( last < waitMs ) {
-                  timeout = setTimeout(later, waitMs - last);
-               }
-               else {
-                  timeout = null;
-                  if( !immediate ) {
-                     result = f.apply(context, args);
-                  }
-               }
-            };
-            var callNow = immediate && !timeout;
-            if( !timeout ) { timeout = setTimeout(later, waitMs); }
-            if( callNow ) { result = f.apply(context, args); }
-            return result;
-         };
-      }
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-/**
- * Provides a convenient api over the browser's `window.localStorage` and `window.sessionStorage` objects. If
- * a browser doesn't support [web storage](http://www.w3.org/TR/webstorage/), a warning is logged to the
- * `console` (if available) and a non-persistent in-memory store will be used instead. Note that this can for
- * example also happen when using Mozilla Firefox with cookies disabled and as such isn't limited to older
- * browsers.
- *
- * Additionally, in contrast to plain *web storage* access, non-string values will be automatically passed
- * through JSON (de-) serialization on storage or retrieval. All keys will be prepended with a combination of
- * an arbitrary and a configured namespace to prevent naming clashes with other web applications running on
- * the same host and port. All {@link StorageApi} accessor methods should then be called without any namespace
- * since adding and removing it, is done automatically.
- *
- * When requiring `laxar`, it is available as `laxar.storage`.
- *
- * @module storage
- */
-define( 'laxar/lib/utilities/storage',[
-   './assert',
-   './configuration'
-], function( assert, configuration ) {
-   'use strict';
-
-   var SESSION = 'sessionStorage';
-   var LOCAL = 'localStorage';
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * @param {Object} backend
-    *    the K/V store, probably only accepting string values
-    * @param {String} namespace
-    *    prefix for all keys for namespacing purposes
-    *
-    * @return {StorageApi}
-    *    a storage wrapper to the given backend with `getItem`, `setItem` and `removeItem` methods
-    *
-    * @private
-    */
-   function createStorage( backend, namespace ) {
-
-      /**
-       * The api returned by one of the `get*Storage` functions of the *storage* module.
-       *
-       * @name StorageApi
-       * @constructor
-       */
-      return {
-         getItem: getItem,
-         setItem: setItem,
-         removeItem: removeItem
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Retrieves a `value` by `key` from the store. JSON deserialization will automatically be applied.
-       *
-       * @param {String} key
-       *    the key of the item to retrieve (without namespace prefix)
-       *
-       * @return {*}
-       *    the value or `null` if it doesn't exist in the store
-       *
-       * @memberOf StorageApi
-       */
-      function getItem( key ) {
-         var item = backend.getItem( namespace + '.' + key );
-         return item ? JSON.parse( item ) : item;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Sets a `value` for a `key`. The value should be JSON serializable. An existing value will be
-       * overwritten.
-       *
-       * @param {String} key
-       *    the key of the item to set (without namespace prefix)
-       * @param {*} value
-       *    the new value to set
-       *
-       * @memberOf StorageApi
-       */
-      function setItem( key, value ) {
-         var nsKey = namespace + '.' + key;
-         if( value === undefined ) {
-            backend.removeItem( nsKey );
-         }
-         else {
-            backend.setItem( nsKey, JSON.stringify( value ) );
-         }
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Removes the value associated with `key` from the store.
-       *
-       * @param {String} key
-       *    the key of the item to remove (without namespace prefix)
-       *
-       * @memberOf StorageApi
-       */
-      function removeItem( key ) {
-         backend.removeItem( namespace + '.' + key );
-      }
-
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function getOrFakeBackend( webStorageName ) {
-      var store = window[ webStorageName ];
-      if( store.setItem && store.getItem && store.removeItem ) {
-         try {
-            var testKey = 'ax.storage.testItem';
-            // In iOS Safari Private Browsing, this will fail:
-            store.setItem( testKey, 1 );
-            store.removeItem( testKey );
-            return store;
-         }
-         catch( e ) {
-            // setItem failed: must use fake storage
-         }
-      }
-
-      if( window.console ) {
-         var method = 'warn' in window.console ? 'warn' : 'log';
-         window.console[ method ](
-            'window.' + webStorageName + ' not available: Using non-persistent polyfill. \n' +
-            'Try disabling private browsing or enabling cookies.'
-         );
-      }
-
-      var backend = {};
-      return {
-         getItem: function( key ) {
-            return backend[ key ] || null;
-         },
-         setItem: function( key, val ) {
-            backend[ key ] = val;
-         },
-         removeItem: function( key ) {
-            if( key in backend ) {
-               delete backend[ key ];
-            }
-         }
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function generateUniquePrefix() {
-      var prefix = configuration.get( 'storagePrefix' );
-      if( prefix ) {
-         return prefix;
-      }
-
-      var str = configuration.get( 'name', '' );
-      var res = 0;
-      /* jshint bitwise:false */
-      for( var i = str.length - 1; i > 0; --i ) {
-         res = ((res << 5) - res) + str.charCodeAt( i );
-         res |= 0;
-      }
-      return Math.abs( res );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Creates a new storage module. In most cases this module will be called without arguments,
-    * but having the ability to provide them is useful e.g. for mocking purposes within tests.
-    * If the arguments are omitted, an attempt is made to access the native browser WebStorage api.
-    * If that fails, storage is only mocked by an in memory map (thus actually unavailable).
-    *
-    * Developers are free to use polyfills to support cases where local- or session-storage may not be
-    * available. Just make sure to initialize the polyfills before this module.
-    *
-    * @param {Object} [localStorageBackend]
-    *    the backend for local storage, Default is `window.localStorage`
-    * @param {Object} [sessionStorageBackend]
-    *    the backend for session storage, Default is `window.sessionStorage`
-    *
-    * @return {Object}
-    *    a new storage module
-    */
-   function create( localStorageBackend, sessionStorageBackend ) {
-
-      var localBackend = localStorageBackend || getOrFakeBackend( LOCAL );
-      var sessionBackend = sessionStorageBackend || getOrFakeBackend( SESSION );
-      var prefix = 'ax.' + generateUniquePrefix() + '.';
-
-      return {
-
-         /**
-          * Returns a local storage object for a specific local namespace.
-          *
-          * @param {String} namespace
-          *    the namespace to prepend to keys
-          *
-          * @return {StorageApi}
-          *    the local storage object
-          */
-         getLocalStorage: function( namespace ) {
-            assert( namespace ).hasType( String ).isNotNull();
-
-            return createStorage( localBackend, prefix + namespace );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /**
-          * Returns a session storage object for a specific local namespace.
-          *
-          * @param {String} namespace
-          *    the namespace to prepend to keys
-          *
-          * @return {StorageApi}
-          *    the session storage object
-          */
-         getSessionStorage: function( namespace ) {
-            assert( namespace ).hasType( String ).isNotNull();
-
-            return createStorage( sessionBackend, prefix + namespace );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /**
-          * Returns the local storage object for application scoped keys. This is equivalent to
-          * `storage.getLocalStorage( 'app' )`.
-          *
-          * @return {StorageApi}
-          *    the application local storage object
-          */
-         getApplicationLocalStorage: function() {
-            return createStorage( localBackend, prefix + 'app' );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /**
-          * Returns the session storage object for application scoped keys. This is equivalent to
-          * `storage.getSessionStorage( 'app' )`.
-          *
-          * @return {StorageApi}
-          *    the application session storage object
-          */
-         getApplicationSessionStorage: function() {
-            return createStorage( sessionBackend, prefix + 'app' );
-         },
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         create: create
-
-      };
-
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return create();
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/utilities/path',[
-   './assert'
-], function( assert ) {
-   'use strict';
-
-   var PATH_SEPARATOR = '/';
-   var PARENT = '..';
-   var ABSOLUTE = /^([a-z0-9]+:\/\/[^\/]+\/|\/)(.*)$/;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Joins multiple path fragments into one normalized path. Absolute paths (paths starting with a `/`)
-    * and URLs will "override" any preceding paths. I.e. joining a URL or an absolute path to _anything_
-    * will give the URL or absolute path.
-    *
-    * @param {...String} fragments
-    *    the path fragments to join
-    *
-    * @return {String}
-    *    the joined path
-    */
-   function join( /* firstFragment, secondFragment, ... */ ) {
-      var fragments = Array.prototype.slice.call( arguments, 0 );
-      if( fragments.length === 0 ) {
-         return '';
-      }
-
-      var prefix = '';
-
-      fragments = fragments.reduce( function( fragments, fragment ) {
-         assert( fragment ).hasType( String ).isNotNull();
-
-         var matchAbsolute = ABSOLUTE.exec( fragment );
-
-         if( matchAbsolute ) {
-            prefix = matchAbsolute[1];
-            fragment = matchAbsolute[2];
-            return fragment.split( PATH_SEPARATOR );
-         }
-
-         return fragments.concat( fragment.split( PATH_SEPARATOR ) );
-      }, [] );
-
-      var pathStack = normalizeFragments( fragments );
-
-      return prefix + pathStack.join( PATH_SEPARATOR );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Normalizes a path. Removes multiple consecutive slashes, strips trailing slashes, removes `.`
-    * references and resolves `..` references (unless there are no preceding directories).
-    *
-    * @param {String} path
-    *    the path to normalize
-    *
-    * @return {String}
-    *    the normalized path
-    */
-   function normalize( path ) {
-      var prefix = '';
-      var matchAbsolute = ABSOLUTE.exec( path );
-
-      if( matchAbsolute ) {
-         prefix = matchAbsolute[1];
-         path = matchAbsolute[2];
-      }
-
-      var pathStack = normalizeFragments( path.split( PATH_SEPARATOR ) );
-
-      return prefix + pathStack.join( PATH_SEPARATOR );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Compute a relative path. Takes two absolute paths and returns a normalized path, relative to
-    * the first path.
-    * Note that if both paths are URLs they are threated as if they were on the same host. I.e. this function
-    * does not complain when called with `http://localhost/path` and `http://example.com/another/path`.
-    *
-    * @param {String} from
-    *    the starting point from which to determine the relative path
-    *
-    * @param {String} path
-    *    the target path
-    *
-    * @return {String}
-    *    the relative path from `from` to `to`
-    */
-   function relative( from, path ) {
-      var matchAbsoluteFrom = ABSOLUTE.exec( from );
-      var matchAbsolutePath = ABSOLUTE.exec( path );
-
-      assert( matchAbsoluteFrom ).isNotNull();
-      assert( matchAbsolutePath ).isNotNull();
-
-      var fromStack = normalizeFragments( matchAbsoluteFrom[2].split( PATH_SEPARATOR ) );
-      var pathStack = normalizeFragments( matchAbsolutePath[2].split( PATH_SEPARATOR ) );
-
-      return fromStack.reduce( function( path, fragment ) {
-         if( path[0] === fragment ) {
-            path.shift();
-         } else {
-            path.unshift( '..' );
-         }
-         return path;
-      }, pathStack ).join( PATH_SEPARATOR ) || '.';
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function normalizeFragments( fragments ) {
-      return fragments.reduce( function( pathStack, fragment ) {
-         fragment = fragment.replace( /^\/+|\/+$/g, '' );
-
-         if( fragment === '' || fragment === '.' ) {
-            return pathStack;
-         }
-
-         if( pathStack.length === 0 ) {
-            return [ fragment ];
-         }
-
-         if( fragment === PARENT && pathStack.length > 0 && pathStack[ pathStack.length - 1 ] !== PARENT ) {
-            pathStack.pop();
-            return pathStack;
-         }
-         pathStack.push( fragment );
-
-         return pathStack;
-      }, [] );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      join: join,
-      normalize: normalize,
-      relative: relative
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/loaders/paths',[
-   'require'
-], function( require ) {
-   'use strict';
-
-   return {
-      PRODUCT: require.toUrl( 'laxar-path-root' ),
-      THEMES: require.toUrl( 'laxar-path-themes' ),
-      LAYOUTS: require.toUrl( 'laxar-path-layouts' ),
-      WIDGETS: require.toUrl( 'laxar-path-widgets' ),
-      PAGES: require.toUrl( 'laxar-path-pages' ),
-      FLOW_JSON: require.toUrl( 'laxar-path-flow' ),
-      DEFAULT_THEME: require.toUrl( 'laxar-path-default-theme' )
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/runtime/runtime',[
-   'angular',
-   '../utilities/path',
-   '../loaders/paths'
-], function( ng, path, paths ) {
-   'use strict';
-
-   var module = ng.module( 'axRuntime', [] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Patching AngularJS with more aggressive scope destruction and memory leak prevention
-   module.run( [ '$rootScope', '$window', function( $rootScope, $window ) {
-      ng.element( $window ).one( 'unload', function() {
-         while( $rootScope.$$childHead ) {
-            $rootScope.$$childHead.$destroy();
-         }
-         $rootScope.$destroy();
-      } );
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Initialize the theme manager
-   module.run( [ 'axCssLoader', 'axThemeManager', function( CssLoader, themeManager ) {
-      themeManager
-         .urlProvider( path.join( paths.THEMES, '[theme]' ), null, paths.DEFAULT_THEME )
-         .provide( [ 'css/theme.css' ] )
-         .then( function( files ) {
-            CssLoader.load( files[0] );
-         } );
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   // Initialize i18n for i18n controls in non-i18n widgets
-   module.run( [ '$rootScope', 'axConfiguration', function( $rootScope, configuration ) {
-      $rootScope.i18n = {
-         locale: 'default',
-         tags: configuration.get( 'i18n.locales', { 'default': 'en' } )
-      };
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return module;
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3199,7 +2400,190 @@ define( 'laxar/lib/event_bus/event_bus',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/utilities/path',[
+   'require',
+   './assert'
+], function( require, assert ) {
+   'use strict';
+
+   var PATH_SEPARATOR = '/';
+   var PARENT = '..';
+   var ABSOLUTE = /^([a-z0-9]+:\/\/[^\/]+\/|\/)(.*)$/;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Joins multiple path fragments into one normalized path. Absolute paths (paths starting with a `/`)
+    * and URLs will "override" any preceding paths. I.e. joining a URL or an absolute path to _anything_
+    * will give the URL or absolute path.
+    *
+    * @param {...String} fragments
+    *    the path fragments to join
+    *
+    * @return {String}
+    *    the joined path
+    */
+   function join( /* firstFragment, secondFragment, ... */ ) {
+      var fragments = Array.prototype.slice.call( arguments, 0 );
+      if( fragments.length === 0 ) {
+         return '';
+      }
+
+      var prefix = '';
+
+      fragments = fragments.reduce( function( fragments, fragment ) {
+         assert( fragment ).hasType( String ).isNotNull();
+
+         var matchAbsolute = ABSOLUTE.exec( fragment );
+
+         if( matchAbsolute ) {
+            prefix = matchAbsolute[1];
+            fragment = matchAbsolute[2];
+            return fragment.split( PATH_SEPARATOR );
+         }
+
+         return fragments.concat( fragment.split( PATH_SEPARATOR ) );
+      }, [] );
+
+      var pathStack = normalizeFragments( fragments );
+
+      return prefix + pathStack.join( PATH_SEPARATOR );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Normalizes a path. Removes multiple consecutive slashes, strips trailing slashes, removes `.`
+    * references and resolves `..` references (unless there are no preceding directories).
+    *
+    * @param {String} path
+    *    the path to normalize
+    *
+    * @return {String}
+    *    the normalized path
+    */
+   function normalize( path ) {
+      var prefix = '';
+      var matchAbsolute = ABSOLUTE.exec( path );
+
+      if( matchAbsolute ) {
+         prefix = matchAbsolute[1];
+         path = matchAbsolute[2];
+      }
+
+      var pathStack = normalizeFragments( path.split( PATH_SEPARATOR ) );
+
+      return prefix + pathStack.join( PATH_SEPARATOR );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Compute a relative path. Takes two absolute paths and returns a normalized path, relative to
+    * the first path.
+    * Note that if both paths are URLs they are threated as if they were on the same host. I.e. this function
+    * does not complain when called with `http://localhost/path` and `http://example.com/another/path`.
+    *
+    * @param {String} from
+    *    the starting point from which to determine the relative path
+    *
+    * @param {String} path
+    *    the target path
+    *
+    * @return {String}
+    *    the relative path from `from` to `to`
+    */
+   function relative( from, path ) {
+      var matchAbsoluteFrom = ABSOLUTE.exec( from );
+      var matchAbsolutePath = ABSOLUTE.exec( path );
+
+      assert( matchAbsoluteFrom ).isNotNull();
+      assert( matchAbsolutePath ).isNotNull();
+
+      var fromStack = normalizeFragments( matchAbsoluteFrom[2].split( PATH_SEPARATOR ) );
+      var pathStack = normalizeFragments( matchAbsolutePath[2].split( PATH_SEPARATOR ) );
+
+      return fromStack.reduce( function( path, fragment ) {
+         if( path[0] === fragment ) {
+            path.shift();
+         } else {
+            path.unshift( '..' );
+         }
+         return path;
+      }, pathStack ).join( PATH_SEPARATOR ) || '.';
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function resolveAssetPath( refWithScheme, defaultAssetDirectory, optionalDefaultScheme ) {
+      var info = extractScheme( refWithScheme, optionalDefaultScheme || 'amd' );
+      if( typeof schemeLoaders[ info.scheme ] !== 'function' ) {
+         throw new Error( 'Unknown schema type "' + info.scheme + '" in reference "' + refWithScheme + '".' );
+      }
+      return normalize( schemeLoaders[ info.scheme ]( info.ref, defaultAssetDirectory ) );
+   }
+
+   var schemeLoaders = {
+      local: function( ref, defaultAssetDirectory ) {
+         return join( defaultAssetDirectory, ref );
+      },
+      amd: function( ref ) {
+         return require.toUrl( ref );
+      }
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function extractScheme( ref, defaultScheme ) {
+      var parts = ref.split( ':' );
+      return {
+         scheme: parts.length === 2 ? parts[ 0 ] : defaultScheme,
+         ref: parts.length === 2 ? parts[ 1 ]: parts[ 0 ]
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function normalizeFragments( fragments ) {
+      return fragments.reduce( function( pathStack, fragment ) {
+         fragment = fragment.replace( /^\/+|\/+$/g, '' );
+
+         if( fragment === '' || fragment === '.' ) {
+            return pathStack;
+         }
+
+         if( pathStack.length === 0 ) {
+            return [ fragment ];
+         }
+
+         if( fragment === PARENT && pathStack.length > 0 && pathStack[ pathStack.length - 1 ] !== PARENT ) {
+            pathStack.pop();
+            return pathStack;
+         }
+         pathStack.push( fragment );
+
+         return pathStack;
+      }, [] );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      resolveAssetPath: resolveAssetPath,
+      extractScheme: extractScheme,
+      join: join,
+      normalize: normalize,
+      relative: relative
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -3516,965 +2900,263 @@ define( 'laxar/lib/file_resource_provider/file_resource_provider',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( 'laxar/lib/loaders/layout_loader',[
-   '../utilities/path'
-], function( path ) {
+/**
+ * Utilities for dealing with internationalization (i18n).
+ *
+ * When requiring `laxar`, it is available as `laxar.i18n`.
+ *
+ * @module i18n
+ */
+define( 'laxar/lib/i18n/i18n',[
+   '../utilities/string',
+   '../utilities/assert',
+   '../utilities/configuration'
+], function( string, assert, configuration ) {
    'use strict';
 
-   function create( layoutsRoot, themesRoot, cssLoader, themeManager, fileResourceProvider, cache ) {
-      return {
-         load: function( layout ) {
-            return resolveLayout( layout ).then(
-               function( layoutInfo ) {
-                  if( layoutInfo.css ) {
-                     cssLoader.load( layoutInfo.css );
-                  }
-                  if( layoutInfo.html ) {
-                     return fileResourceProvider.provide( layoutInfo.html ).then( function( htmlContent ) {
-                        layoutInfo.htmlContent = htmlContent;
-                        if( cache ) {
-                           cache.put( layoutInfo.html, htmlContent );
-                        }
-                        return layoutInfo;
-                     } );
-                  }
-                  return layoutInfo;
-               }
-            );
-         }
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function resolveLayout( layout ) {
-         var layoutPath = path.join( layoutsRoot, layout );
-         var layoutName = layoutPath.substr( layoutPath.lastIndexOf( '/' ) + 1 );
-         var layoutFile = layoutName + '.html';
-         var cssFile    = 'css/' + layoutName + '.css';
-
-         return themeManager.urlProvider(
-            path.join( layoutPath, '[theme]' ),
-            path.join( themesRoot, '[theme]', 'layouts', layout )
-         ).provide( [ layoutFile, cssFile ] ).then(
-            function( results ) {
-               return {
-                  html: results[ 0 ],
-                  css: results[ 1 ],
-                  className: layoutName.replace( /\//g, '' ).replace( /_/g, '-' ) + '-layout'
-               };
-            }
-         );
-      }
-   }
+   var localize = localizeRelaxed;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return {
-
-      create: create
-
+   var primitives = {
+      string: true,
+      number: true,
+      boolean: true
    };
 
-} );
+   var fallbackTag;
 
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-/**
- * The theme manager simplifies lookup of theme specific assets. It should be used via AngularJS DI as
- * *axThemeManager* service.
- *
- * @module theme_manager
- */
-define( 'laxar/lib/runtime/theme_manager',[
-   '../utilities/assert',
-   '../utilities/path'
-], function( assert, path ) {
-   'use strict';
+   var normalize = memoize( function( languageTag ) {
+      return languageTag.toLowerCase().replace( /[-]/g, '_' );
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Shortcuts: it is assumed that this module is used heavily (or not at all).
+   var format = string.format;
+   var keys = Object.keys;
+
+   return {
+      localize: localize,
+      localizeStrict: localizeStrict,
+      localizeRelaxed: localizeRelaxed,
+      localizer: localizer,
+      languageTagFromI18n: languageTagFromI18n
+   };
 
    /**
-    * @param {FileResourceProvider} fileResourceProvider
-    *    the file resource provider used for theme file lookups
-    * @param {$q} q
-    *    a `$q` like promise library
-    * @param {String} theme
-    *    the theme to use
+    * Shortcut to {@link localizeRelaxed}.
     *
-    * @constructor
+    * @name localize
+    * @type {Function}
     */
-   function ThemeManager( fileResourceProvider, q, theme ) {
-      this.q_ = q;
-      this.fileResourceProvider_ = fileResourceProvider;
-      this.theme_ = theme;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Localize the given internationalized object using the given languageTag.
+    *
+    * @param {String} languageTag
+    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
+    *    not use i18n)
+    * @param {*} i18nValue
+    *    a possibly internationalized value:
+    *    - when passing a primitive value, it is returned as-is
+    *    - when passing an object, the languageTag is used as a key within that object
+    * @param {*} [optionalFallback]
+    *    a value to use if no localization is available for the given language tag
+    *
+    * @return {*}
+    *    the localized value if found, `undefined` otherwise
+    */
+   function localizeStrict( languageTag, i18nValue, optionalFallback ) {
+      assert( languageTag ).hasType( String );
+      if( !i18nValue || primitives[ typeof i18nValue ] ) {
+         // Value is not i18n
+         return i18nValue;
+      }
+      assert( languageTag ).isNotNull();
+
+      // Try one direct lookup before scanning the input keys,
+      // assuming that language-tags are written in consistent style.
+      var value = i18nValue[ languageTag ];
+      if( value !== undefined ) {
+         return value;
+      }
+
+      var lookupKey = normalize( languageTag );
+      var availableTags = keys( i18nValue );
+      var n = availableTags.length;
+      for( var i = 0; i < n; ++i ) {
+         var t = availableTags[ i ];
+         if( normalize( t ) === lookupKey ) {
+            return i18nValue[ t ];
+         }
+      }
+
+      return optionalFallback;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * Returns the currently used theme.
+    * For controls (such as a date-picker), we cannot anticipate all required language tags, as they may be
+    * app-specific. The relaxed localize behaves like localize if an exact localization is available. If not,
+    * the language tag is successively generalized by stripping off the rightmost sub-tags until a
+    * localization is found. Eventually, a fallback ('en') is used.
+    *
+    * @param {String} languageTag
+    *    the languageTag to lookup a localization with. Maybe `undefined`, if the value is not i18n (app does
+    *    not use i18n)
+    * @param {*} i18nValue
+    *    a possibly internationalized value:
+    *    - when passing a primitive value, it is returned as-is
+    *    - when passing an object, the `languageTag` is used to look up a localization within that object
+    * @param {*} [optionalFallback]
+    *    a value to use if no localization is available for the given language tag
+    *
+    * @return {*}
+    *    the localized value if found, the fallback `undefined` otherwise
+    */
+   function localizeRelaxed( languageTag, i18nValue, optionalFallback ) {
+      assert( languageTag ).hasType( String );
+      if( !i18nValue || primitives[ typeof i18nValue ] ) {
+         // Value is not i18n (app does not use it)
+         return i18nValue;
+      }
+
+      var tagParts = languageTag ? languageTag.replace( /-/g, '_' ).split( '_' ) : [];
+      while( tagParts.length > 0 ) {
+         var currentLocaleTag = tagParts.join( '-' );
+         var value = localizeStrict( currentLocaleTag, i18nValue );
+         if( value !== undefined ) {
+            return value;
+         }
+         tagParts.pop();
+      }
+
+      if( fallbackTag === undefined ) {
+         fallbackTag = configuration.get( 'i18n.fallback', 'en' );
+      }
+
+      return ( fallbackTag && localizeStrict( fallbackTag, i18nValue ) ) || optionalFallback;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Encapsulate a given languageTag in a partially applied localize function.
+    *
+    * @param {String} languageTag
+    *    the languageTag to lookup localizations with
+    * @param {*} [optionalFallback]
+    *    a value to use by the localizer function whenever no localization is available for the language tag
+    *
+    * @return {Localizer}
+    *    A single-arg localize-Function, which always uses the given language-tag. It also has a `.format`
+    *    -method, which can be used as a shortcut to `string.format( localize( x ), args )`
+    */
+   function localizer( languageTag, optionalFallback ) {
+
+      /**
+       * @name Localizer
+       * @private
+       */
+      function partial( i18nValue ) {
+         return localize( languageTag, i18nValue, optionalFallback );
+      }
+
+      /**
+       * Shortcut to string.format, for simple chaining to the localizer.
+       *
+       * These are equal:
+       * - `string.format( i18n.localizer( tag )( i18nValue ), numericArgs, namedArgs )`
+       * - `i18n.localizer( tag ).format( i18nValue, numericArgs, namedArgs )`.
+       *
+       * @param {String} i18nValue
+       *    the value to localize and then format
+       * @param {Array} [optionalIndexedReplacements]
+       *    replacements for any numeric placeholders in the localized value
+       * @param {Object} [optionalNamedReplacements]
+       *    replacements for any named placeholders in the localized value
+       *
+       * @return {String}
+       *    the formatted string, taking i18n into account
+       *
+       * @memberOf Localizer
+       */
+      partial.format = function( i18nValue, optionalIndexedReplacements, optionalNamedReplacements ) {
+         var formatString = localize( languageTag, i18nValue );
+         if( formatString === undefined ) {
+            return optionalFallback;
+         }
+         return format( formatString, optionalIndexedReplacements, optionalNamedReplacements );
+      };
+
+      return partial;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Retrieve the language tag of the current locale from an i18n model object, such as used on the scope.
+    *
+    * @param {{locale: String, tags: Object<String, String>}} i18n
+    *    an internationalization model, with reference to the currently active locale and a map from locales
+    *    to language tags
+    * @param {*} [optionalFallbackLanguageTag]
+    *    a language tag to use if no tags are found on the given object
     *
     * @return {String}
-    *    the currently active theme
+    *    the localized value if found, `undefined` otherwise
     */
-   ThemeManager.prototype.getTheme = function() {
-      return this.theme_;
-   };
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Returns a URL provider for specific path patterns that are used to lookup themed artifacts. The token
-    * `[theme]` will be replaced by the name of the currently active theme (plus `.theme` suffix) or by
-    * `default.theme` as a fallback. The `provide` method of the returned object can be called with a list of
-    * files for which a themed version should be found. The most specific location is searched first and the
-    * default theme last.
-    *
-    * @param {String} artifactPathPattern
-    *    a path pattern for search within the artifact directory itself, based on the current theme
-    * @param {String} [themePathPattern]
-    *    a path pattern for search within the current theme
-    * @param {String} [fallbackPathPattern]
-    *    a fallback path, used if all else fails.
-    *    Usually without placeholders, e.g. for loading the default theme itself.
-    *
-    * @returns {{provide: Function}}
-    *    an object with a provide method
-    */
-   ThemeManager.prototype.urlProvider = function( artifactPathPattern, themePathPattern, fallbackPathPattern ) {
-      var self = this;
-
-      return {
-         provide: function( fileNames ) {
-            var searchPrefixes = [];
-
-            if( self.theme_ && self.theme_ !== 'default' ) {
-               var themeDirectory = self.theme_ + '.theme';
-               if( artifactPathPattern ) {
-                  // highest precedence: artifacts with (multiple) embedded theme styles:
-                  searchPrefixes.push( artifactPathPattern.replace( '[theme]', themeDirectory ) );
-               }
-               if( themePathPattern ) {
-                  // second-highest precedence: themes with embedded artifact styles:
-                  searchPrefixes.push( themePathPattern.replace( '[theme]', themeDirectory ) );
-               }
-            }
-
-            if( artifactPathPattern ) {
-               // fall back to default theme provided by the artifact
-               searchPrefixes.push( artifactPathPattern.replace( '[theme]', 'default.theme' ) );
-            }
-
-            if( fallbackPathPattern ) {
-               // mostly to load the default-theme itself from any location
-               searchPrefixes.push( fallbackPathPattern );
-            }
-
-            var promises = [];
-            for( var i = 0; i < fileNames.length; ++i ) {
-               promises.push( findExistingPath( self, searchPrefixes, fileNames[ i ] ) );
-            }
-
-            return self.q_.all( promises )
-               .then( function( results ) {
-                  return results.map( function( result, i ) {
-                     return result !== null ? path.join( result, fileNames[ i ] ) : null;
-                  } );
-               } );
-         }
-      };
-   };
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function findExistingPath( self, searchPrefixes, fileName ) {
-      if( searchPrefixes.length === 0 ) {
-         return self.q_.when( null );
+   function languageTagFromI18n( i18n, optionalFallbackLanguageTag ) {
+      if( !i18n || !i18n.hasOwnProperty( 'tags' ) ) {
+         return optionalFallbackLanguageTag;
       }
-
-      return self.fileResourceProvider_.isAvailable( path.join( searchPrefixes[0], fileName ) )
-         .then( function( available ) {
-            if( available ) {
-               return self.q_.when( searchPrefixes[0] );
-            }
-
-            return findExistingPath( self, searchPrefixes.slice( 1 ), fileName );
-         } );
+      return i18n.tags[ i18n.locale ] || optionalFallbackLanguageTag;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return {
-
-      /**
-       * Creates and returns a new theme manager instance.
-       *
-       * @param {FileResourceProvider} fileResourceProvider
-       *    the file resource provider used for theme file lookup
-       * @param {$q} q
-       *    a `$q` like promise library
-       * @param {String} theme
-       *    the theme to use
-       *
-       * @returns {ThemeManager}
-       */
-      create: function( fileResourceProvider, q, theme ) {
-         return new ThemeManager( fileResourceProvider, q, theme );
-      }
-
-   };
+   function memoize( f ) {
+      var cache = {};
+      return function( key ) {
+         var value = cache[ key ];
+         if( value === undefined ) {
+            value = f( key );
+            cache[ key ] = value;
+         }
+         return value;
+      };
+   }
 
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-/**
- * This module provides some services for AngularJS DI. Although it is fine to use these services in widgets,
- * most of them are primarily intended to be used internally by LaxarJS. Documentation is nevertheless of use
- * when e.g. they need to be mocked during tests.
- *
- * @module axRuntimeServices
- */
-define( 'laxar/lib/runtime/runtime_services',[
-   'angular',
-   '../event_bus/event_bus',
-   '../i18n/i18n',
-   '../file_resource_provider/file_resource_provider',
-   '../logging/log',
-   '../utilities/object',
-   '../utilities/path',
-   '../loaders/layout_loader',
-   '../loaders/paths',
-   '../utilities/configuration',
-   './theme_manager'
-], function(
-   ng,
-   eventBus,
-   i18n,
-   fileResourceProvider,
-   log,
-   object,
-   path,
-   layoutLoader,
-   paths,
-   configuration,
-   themeManager
-) {
+define( 'laxar/lib/loaders/paths',[
+   'require'
+], function( require ) {
    'use strict';
 
-   var module = ng.module( 'axRuntimeServices', [] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   var $qProvider_;
-   module.config( [ '$qProvider', '$httpProvider', function( $qProvider, $httpProvider ) {
-      $qProvider_ = $qProvider;
-      if( configuration.get( CONFIG_KEY_HTTP_LOGGING_HEADER ) ) {
-         $httpProvider.interceptors.push( 'axLogHttpInterceptor' );
-      }
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * This is a scheduler for asynchronous tasks (like nodejs' `process.nextTick`)  trimmed for performance.
-    * It is intended for use cases where many tasks are scheduled in succession within one JavaScript event
-    * loop. It integrates into the AngularJS *$digest* cycle, while trying to minimize the amount of full
-    * *$digest* cycles.
-    *
-    * For example in LaxarJS the global event bus instance ({@link axGlobalEventBus}) uses this service.
-    *
-    * @name axHeartbeat
-    * @injection
-    */
-   module.factory( 'axHeartbeat', [ '$window', '$rootScope', function( $window, $rootScope ) {
-      var nextQueue = [];
-      var beatRequested = false;
-
-      /**
-       * Schedules a function for the next heartbeat. If no heartbeat was triggered yet, it will be requested
-       * now.
-       *
-       * @param {Function} func
-       *    a function to schedule for the next tick
-       *
-       * @memberOf axHeartbeat
-       */
-      function onNext( func ) {
-         if( !beatRequested ) {
-            beatRequested = true;
-            $window.setTimeout( function() {
-               while( beforeQueue.length ) { beforeQueue.shift()(); }
-               // The outer loop handles events published from apply-callbacks (watchers, promises).
-               do {
-                  while( nextQueue.length ) { nextQueue.shift()(); }
-                  $rootScope.$apply();
-               }
-               while( nextQueue.length );
-               while( afterQueue.length ) { afterQueue.shift()(); }
-               beatRequested = false;
-            }, 0 );
-         }
-         nextQueue.push( func );
-      }
-
-      var beforeQueue = [];
-
-      /**
-       * Schedules a function to be called before the next heartbeat occurs. Note that `func` may never be
-       * called, if there is no next heartbeat.
-       *
-       * @param {Function} func
-       *    a function to call before the next heartbeat
-       *
-       * @memberOf axHeartbeat
-       */
-      function onBeforeNext( func ) {
-         beforeQueue.push( func );
-      }
-
-      var afterQueue = [];
-
-      /**
-       * Schedules a function to be called after the next heartbeat occured. Note that `func` may never be
-       * called, if there is no next heartbeat.
-       *
-       * @param {Function} func
-       *    a function to call after the next heartbeat
-       *
-       * @memberOf axHeartbeat
-       */
-      function onAfterNext( func ) {
-         afterQueue.push( func );
-      }
-
-      return {
-         onBeforeNext: onBeforeNext,
-         onNext: onNext,
-         onAfterNext: onAfterNext
-      };
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * A timestamp function, provided as a service to support the jasmine mock clock during testing. The
-    * mock-free implementation simply uses `new Date().getTime()`. Whenever a simple timestamp is needed in a
-    * widget, this service can be used to allow for hassle-free testing.
-    *
-    * Example:
-    * ```js
-    * Controller.$inject = [ 'axTimestamp' ];
-    * function Controller( axTimestamp ) {
-    *    var currentTimestamp = axTimestamp();
-    * };
-    * ```
-    *
-    * @name axTimestamp
-    * @injection
-    */
-   module.factory( 'axTimestamp', function() {
-      return function() {
-         return new Date().getTime();
-      };
-   } );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * The global event bus instance provided by the LaxarJS runtime. Widgets **should never** use this, as
-    * subscriptions won't be removed when a widget is destroyed. Instead widgets should always either use the
-    * `eventBus` property on their local `$scope` object or the service `axEventBus`. These take care of all
-    * subscriptions on widget destructions and thus prevent from leaking memory and other side effects.
-    *
-    * This service instead can be used by other services, that live throughout the whole lifetime of an
-    * application or take care of unsubscribing from events themselves. Further documentation on the api can
-    * be found at the *event_bus* module api doc.
-    *
-    * @name axGlobalEventBus
-    * @injection
-    */
-   module.factory( 'axGlobalEventBus', [
-      '$injector', '$window', 'axHeartbeat', 'axConfiguration',
-      function( $injector, $window, heartbeat, configuration ) {
-         // LaxarJS/laxar#48: Use event bus ticks instead of $apply to run promise callbacks
-         var $q = $injector.invoke( $qProvider_.$get, $qProvider_, {
-            $rootScope: {
-               $evalAsync: heartbeat.onNext
-            }
-         } );
-
-         eventBus.init( $q, heartbeat.onNext, function( f, t ) {
-            // MSIE Bug, we have to wrap set timeout to pass assertion
-            $window.setTimeout( f, t );
-         } );
-
-         var bus = eventBus.create( {
-            pendingDidTimeout: configuration.get( 'eventBusTimeoutMs', 120*1000 )
-         } );
-         bus.setErrorHandler( eventBusErrorHandler );
-
-         return bus;
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Provides access to the global configuration, otherwise accessible via the *configuration* module.
-    * Further documentation can be found there.
-    *
-    * @name axConfiguration
-    * @injection
-    */
-   module.factory( 'axConfiguration', [ function() {
-      return configuration;
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Provides access to the i18n api, otherwise accessible via the *i18n* module. Further documentation can
-    * be found there.
-    *
-    * @name axI18n
-    * @injection
-    */
-   module.factory( 'axI18n', [ function() {
-      return i18n;
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * A global, pre-configured file resource provider instance. Further documentation on the api can
-    * be found at the *file_resource_provider* module api doc.
-    *
-    * This service has already all the file listings configured under `window.laxar.fileListings`. These can
-    * either be uris to listing JSON files or already embedded JSON objects of the directory tree.
-    *
-    * @name axFileResourceProvider
-    * @injection
-    */
-   module.factory( 'axFileResourceProvider', [
-      '$q', '$http', 'axConfiguration',
-      function( $q, $http, configuration ) {
-         fileResourceProvider.init( $q, $http );
-
-         var provider = fileResourceProvider.create( paths.PRODUCT );
-         var listings = configuration.get( 'fileListings' );
-         if( listings ) {
-            ng.forEach( listings, function( value, key ) {
-               if( typeof value === 'string' ) {
-                  provider.setFileListingUri( key, value );
-               }
-               else {
-                  provider.setFileListingContents( key, value );
-               }
-            } );
-         }
-
-         return provider;
-      }
-   ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Provides access to the configured theme and theme relevant assets via a theme manager instance. Further
-    * documentation on the api can be found at the *theme_manager* module api doc.
-    *
-    * @name axThemeManager
-    * @injection
-    */
-   module.factory( 'axThemeManager', [
-      '$q', 'axConfiguration', 'axFileResourceProvider',
-      function( $q, configuration, fileResourceProvider ) {
-         var theme = configuration.get( 'theme' );
-         var manager = themeManager.create( fileResourceProvider, $q, theme );
-
-         return {
-            getTheme: manager.getTheme.bind( manager ),
-            urlProvider: manager.urlProvider.bind( manager )
-         };
-      }
-   ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Loads a layout relative to the path `laxar-path-root` configured via RequireJS (by default
-    * `/application/layouts`), taking the configured theme into account. If a CSS file is found, it will
-    * directly be loaded into the page. A HTML template will instead get returned for manual insertion at the
-    * correct DOM location. For this service there is also the companion directive *axLayout* available.
-    *
-    * Example:
-    * ```js
-    * myNgModule.directive( [ 'axLayoutLoader', function( axLayoutLoader ) {
-    *    return {
-    *       link: function( scope, element, attrs ) {
-    *          axLayoutLoader.load( 'myLayout' )
-    *             .then( function( layoutInfo ) {
-    *                element.html( layoutInfo.html );
-    *             } );
-    *       }
-    *    };
-    * } ] );
-    * ```
-    *
-    * @name axLayoutLoader
-    * @injection
-    */
-   module.factory( 'axLayoutLoader', [
-      '$templateCache', 'axCssLoader', 'axThemeManager', 'axFileResourceProvider',
-      function( $templateCache, cssLoader, themeManager, fileResourceProvider ) {
-         return layoutLoader.create(
-            paths.LAYOUTS, paths.THEMES, cssLoader, themeManager, fileResourceProvider, $templateCache
-         );
-      }
-   ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * A service to load css files on demand during development. If a merged release css file has already been
-    * loaded (marked with a `data-ax-merged-css` html attribute at the according `link` tag) or `useMergedCss`
-    * is configured as `true`, the `load` method will simply be a noop. In the latter case the merged css file
-    * will be loaded once by this service.
-    *
-    * @name axCssLoader
-    * @injection
-    */
-   module.factory( 'axCssLoader', [ 'axConfiguration', 'axThemeManager', function( configuration, themeManager ) {
-      var mergedCssFileLoaded = [].some.call( document.getElementsByTagName( 'link' ), function( link ) {
-         return link.hasAttribute( 'data-ax-merged-css' );
-      } );
-
-      if( mergedCssFileLoaded ) {
-         return { load: function() {} };
-      }
-
-      var loadedFiles = [];
-      var loader = {
-         /**
-          * If not already loaded, loads the given file into the current page by appending a `link` element to
-          * the document's `head` element.
-          *
-          * Additionally it works around a
-          * [style sheet limit](http://support.microsoft.com/kb/262161) in older Internet Explorers
-          * (version < 10). The workaround is based on
-          * [this test](http://john.albin.net/ie-css-limits/993-style-test.html).
-          *
-          * @param {String} url
-          *    the url of the css file to load
-          *
-          * @memberOf axCssLoader
-          */
-         load: function( url ) {
-
-            if( loadedFiles.indexOf( url ) === -1 ) {
-               if( hasStyleSheetLimit() ) {
-                  // Here we most probably have an Internet Explorer having the limit of at most 31 stylesheets
-                  // per page. As a workaround we use style tags with import statements. Each style tag may
-                  // have 31 import statement. This gives us 31 * 31 = 961 possible stylesheets to include ...
-                  // Link to the problem on microsoft.com: http://support.microsoft.com/kb/262161
-                  // Solution based on ideas found here: http://john.albin.net/css/ie-stylesheets-not-loading
-
-                  var styleManagerId = 'cssLoaderStyleSheet' + Math.floor( loadedFiles.length / 30 );
-                  if( !document.getElementById( styleManagerId ) ) {
-                     addHeadElement( 'style', {
-                        type: 'text/css',
-                        id: styleManagerId
-                     } );
-                  }
-
-                  document.getElementById( styleManagerId ).styleSheet.addImport( url );
-               }
-               else {
-                  addHeadElement( 'link', {
-                     type: 'text/css',
-                     id: 'cssLoaderStyleSheet' + loadedFiles.length,
-                     rel: 'stylesheet',
-                     href: url
-                  } );
-               }
-
-               loadedFiles.push( url );
-            }
-         }
-      };
-
-      if( configuration.get( 'useMergedCss', false ) ) {
-         loader.load( path.join( paths.PRODUCT, 'var/static/css', themeManager.getTheme() + '.theme.css' ) );
-         return { load: function() {} };
-      }
-
-      return loader;
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function hasStyleSheetLimit() {
-         if( typeof hasStyleSheetLimit.result !== 'boolean' ) {
-            hasStyleSheetLimit.result = false;
-            if( document.createStyleSheet ) {
-               var uaMatch = navigator.userAgent.match( /MSIE ?(\d+(\.\d+)?)[^\d]/i );
-               if( !uaMatch || parseFloat( uaMatch[1] ) < 10 ) {
-                  // There is no feature test for this problem without running into it. We therefore test
-                  // for a browser knowing document.createStyleSheet (should only be IE) and afterwards check,
-                  // if it is a version prior to 10 as the problem is fixed since that version. In any other
-                  // case we assume the worst case and trigger the hack for limited browsers.
-                  hasStyleSheetLimit.result = true;
-               }
-            }
-         }
-         return hasStyleSheetLimit.result;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function addHeadElement( elementName, attributes ) {
-         var element = document.createElement( elementName );
-         ng.forEach( attributes, function( val, key ) {
-            element[ key ] = val;
-         } );
-         document.getElementsByTagName( 'head' )[0].appendChild( element );
-      }
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Directives should use this service to stay informed about visibility changes to their widget.
-    * They should not attempt to determine their visibility from the event bus (no DOM information),
-    * nor poll it from the browser (too expensive).
-    *
-    * In contrast to the visibility events received over the event bus, these handlers will fire _after_ the
-    * visibility change has been implemented in the DOM, at which point in time the actual browser rendering
-    * state should correspond to the information conveyed in the event.
-    *
-    * The visibility service allows to register for onShow/onHide/onChange. When cleared, all handlers for
-    * the given scope will be cleared. Handlers are automatically cleared as soon as the given scope is
-    * destroyed. Handlers will be called whenever the given scope's visibility changes due to the widget
-    * becoming visible/invisible. Handlers will _not_ be called on state changes originating _from within_ the
-    * widget such as those caused by `ngShow`.
-    *
-    * If a widget becomes visible at all, the corresponding handlers for onChange and onShow are guaranteed
-    * to be called at least once.
-    *
-    * @name axVisibilityService
-    * @injection
-    */
-   module.factory( 'axVisibilityService', [ 'axHeartbeat', '$rootScope', function( heartbeat, $rootScope ) {
-
-      /**
-       * Create a DOM visibility handler for the given scope.
-       *
-       * @param {Object} scope
-       *    the scope from which to infer visibility. Must be a widget scope or nested in a widget scope
-       *
-       * @return {axVisibilityServiceHandler}
-       *    a visibility handler for the given scope
-       *
-       * @memberOf axVisibilityService
-       */
-      function handlerFor( scope ) {
-         var handlerId = scope.$id;
-         scope.$on( '$destroy', clear );
-
-         // Find the widget scope among the ancestors:
-         var widgetScope = scope;
-         while( widgetScope !== $rootScope && !(widgetScope.widget && widgetScope.widget.area) ) {
-            widgetScope = widgetScope.$parent;
-         }
-
-         var areaName = widgetScope.widget && widgetScope.widget.area;
-         if( !areaName ) {
-            throw new Error( 'axVisibilityService: could not determine widget area for scope: ' + handlerId );
-         }
-
-         /**
-          * A scope bound visibility handler.
-          *
-          * @name axVisibilityServiceHandler
-          */
-         var api = {
-
-            /**
-             * Determine if the governing widget scope's DOM is visible right now.
-             *
-             * @return {Boolean}
-             *    `true` if the widget associated with this handler is visible right now, else `false`
-             *
-             * @memberOf axVisibilityServiceHandler
-             */
-            isVisible: function() {
-               return isVisible( areaName );
-            },
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            /**
-             * Schedule a handler to be called with the new DOM visibility on any DOM visibility change.
-             *
-             * @param {Function<Boolean>} handler
-             *    the callback to process visibility changes
-             *
-             * @return {axVisibilityServiceHandler}
-             *    this visibility handler (for chaining)
-             *
-             * @memberOf axVisibilityServiceHandler
-             */
-            onChange: function( handler ) {
-               addHandler( handlerId, areaName, handler, true );
-               addHandler( handlerId, areaName, handler, false );
-               return api;
-            },
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            /**
-             * Schedule a handler to be called with the new DOM visibility when it has changed to `true`.
-             *
-             * @param {Function<Boolean>} handler
-             *    the callback to process visibility changes
-             *
-             * @return {axVisibilityServiceHandler}
-             *    this visibility handler (for chaining)
-             *
-             * @memberOf axVisibilityServiceHandler
-             */
-            onShow: function( handler ) {
-               addHandler( handlerId, areaName, handler, true );
-               return api;
-            },
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            /**
-             * Schedule a handler to be called with the new DOM visibility when it has changed to `false`.
-             *
-             * @param {Function<Boolean>} handler
-             *    the callback to process visibility changes
-             *
-             * @return {axVisibilityServiceHandler}
-             *    this visibility handler (for chaining)
-             *
-             * @memberOf axVisibilityServiceHandler
-             */
-            onHide: function( handler ) {
-               addHandler( handlerId, areaName, handler, false );
-               return api;
-            },
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            /**
-             * Removes all visibility handlers.
-             *
-             * @return {axVisibilityServiceHandler}
-             *    this visibility handler (for chaining)
-             *
-             * @memberOf axVisibilityServiceHandler
-             */
-            clear: clear
-
-         };
-
-         return api;
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function clear() {
-            clearHandlers( handlerId );
-            return api;
-         }
-
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      // track state to inform handlers that register after visibility for a given area was initialized
-      var knownState;
-
-      // store the registered show/hide-handlers by governing widget area
-      var showHandlers;
-      var hideHandlers;
-
-      // secondary lookup-table to track removal, avoiding O(n^2) cost for deleting n handlers in a row
-      var handlersById;
-
-      return {
-         isVisible: isVisible,
-         handlerFor: handlerFor,
-         // runtime-internal api for use by the page controller
-         _updateState: updateState,
-         _reset: reset
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function reset() {
-         knownState = {};
-         showHandlers = {};
-         hideHandlers = {};
-         handlersById = {};
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Determine if the given area's content DOM is visible right now.
-       * @param {String} area
-       *    the full name of the widget area to query
-       *
-       * @return {Boolean}
-       *    `true` if the area is visible right now, else `false`.
-       *
-       * @memberOf axVisibilityService
-       */
-      function isVisible( area ) {
-         return knownState[ area ] || false;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Run all handlers registered for the given area and target state after the next heartbeat.
-       * Also remove any handlers that have been cleared since the last run.
-       * @private
-       */
-      function updateState( area, targetState ) {
-         if( knownState[ area ] === targetState ) {
-            return;
-         }
-         knownState[ area ] = targetState;
-         heartbeat.onAfterNext( function() {
-            var areaHandlers = ( targetState ? showHandlers : hideHandlers )[ area ];
-            if( !areaHandlers ) { return; }
-            for( var i = areaHandlers.length - 1; i >= 0; --i ) {
-               var handlerRef = areaHandlers[ i ];
-               if( handlerRef.handler === null ) {
-                  areaHandlers.splice( i, 1 );
-               }
-               else {
-                  handlerRef.handler( targetState );
-               }
-            }
-         } );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Add a show/hide-handler for a given area and visibility state. Execute the handler right away if the
-       * state is already known.
-       * @private
-       */
-      function addHandler( id, area, handler, targetState ) {
-         var handlerRef = { handler: handler };
-         handlersById[ id ] = handlersById[ id ] || [];
-         handlersById[ id ].push( handlerRef );
-
-         var areaHandlers = targetState ? showHandlers : hideHandlers;
-         areaHandlers[ area ] = areaHandlers[ area ] || [];
-         areaHandlers[ area ].push( handlerRef );
-
-         // State already known? In that case, initialize:
-         if( area in knownState && knownState[ area ] === targetState ) {
-            handler( targetState );
-         }
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function clearHandlers( id ) {
-         if( handlersById[ id ] ) {
-            handlersById[ id ].forEach( function( matchingHandlerRef ) {
-               matchingHandlerRef.handler = null;
-            } );
-         }
-      }
-
-   } ] );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   module.factory( 'axLogHttpInterceptor', [ 'axConfiguration', function( configuration ) {
-      var headerKey = configuration.get( CONFIG_KEY_HTTP_LOGGING_HEADER, null );
-      return headerKey ? {
-         request: function( config ) {
-            var headerValue = '';
-            ng.forEach( log.gatherTags(), function( tagValue, tagName ) {
-               headerValue += '[' + tagName + ':' + tagValue + ']';
-            } );
-
-            if( headerValue ) {
-               if( config.headers[ headerKey ] ) {
-                  log.warn( 'axLogHttpInterceptor: Overwriting existing header "[0]"', headerKey );
-               }
-               config.headers[ headerKey ] = headerValue;
-            }
-            return config;
-         }
-      } : {};
-   } ] );
-
-   var CONFIG_KEY_HTTP_LOGGING_HEADER = 'logging.http.header';
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Overrides the default `$exceptionHandler` service of AngularJS, using the LaxarJS logger for output.
-    *
-    * @name $exceptionHandler
-    * @injection
-    * @private
-    */
-   module.provider( '$exceptionHandler', function() {
-      var handler = function( exception, cause ) {
-         var msg = exception.message || exception;
-         log.error( 'There was an exception: ' + msg + ', \nstack: ' );
-         log.error( exception.stack + ', \n' );
-         log.error( '  Cause: ' + cause );
-      };
-
-      this.$get = [ function() {
-         return handler;
-      } ];
-   } );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   var sensitiveData = [ 'Published event' ];
-   function eventBusErrorHandler( message, optionalErrorInformation ) {
-      log.error( 'EventBus: ' + message );
-
-      if( optionalErrorInformation ) {
-         ng.forEach( optionalErrorInformation, function( info, title ) {
-            var formatString = '   - [0]: [1:%o]';
-            if( sensitiveData.indexOf( title ) !== -1 ) {
-               formatString = '   - [0]: [1:%o:anonymize]';
-            }
-
-            log.error( formatString, title, info );
-
-            if( info instanceof Error && info.stack ) {
-               log.error( '   - Stacktrace: ' + info.stack );
-            }
-         } );
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return module;
+   return {
+      PRODUCT: require.toUrl( 'laxar-path-root' ),
+      THEMES: require.toUrl( 'laxar-path-themes' ),
+      LAYOUTS: require.toUrl( 'laxar-path-layouts' ),
+      CONTROLS: require.toUrl( 'laxar-path-controls' ),
+      WIDGETS: require.toUrl( 'laxar-path-widgets' ),
+      PAGES: require.toUrl( 'laxar-path-pages' ),
+      FLOW_JSON: require.toUrl( 'laxar-path-flow' ),
+      DEFAULT_THEME: require.toUrl( 'laxar-path-default-theme' )
+   };
 
 } );
 
@@ -5430,6 +4112,8 @@ define( 'laxar/lib/runtime/runtime_services',[
             o.schema = o.env.resolveRef(null, o.schema);
             if (o.schema) o.schema = o.schema[0];
           }
+
+          if (!o.schema.type) o.schema.type = 'object';
         }
 
         if (o.schema && o.schema.type) {
@@ -5571,7 +4255,7 @@ define( 'laxar/lib/runtime/runtime_services',[
 }).call(this);
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5714,7 +4398,7 @@ define( 'laxar/lib/json/schema',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -5829,7 +4513,2606 @@ define( 'laxar/lib/json/validator',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/loaders/features_provider',[
+   '../json/validator',
+   '../utilities/object',
+   '../utilities/string'
+], function( jsonValidator, object, string ) {
+   'use strict';
+
+   // JSON schema formats:
+   var TOPIC_IDENTIFIER = '([a-z][+a-zA-Z0-9]*|[A-Z][+A-Z0-9]*)';
+   var SUB_TOPIC_FORMAT = new RegExp( '^' + TOPIC_IDENTIFIER + '$' );
+   var TOPIC_FORMAT = new RegExp( '^(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
+   var FLAG_TOPIC_FORMAT = new RegExp( '^[!]?(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
+   // simplified RFC-5646 language-tag matcher with underscore/dash relaxation:
+   // the parts are: language *("-"|"_" script|region|variant) *("-"|"_" extension|privateuse)
+   var LANGUAGE_TAG_FORMAT = /^[a-z]{2,8}([-_][a-z0-9]{2,8})*([-_][a-z0-9][-_][a-z0-9]{2,8})*$/i;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function featuresForWidget( widgetSpecification, widgetConfiguration, throwError ) {
+      if( !widgetSpecification.features ) {
+         return {};
+      }
+
+      var featureConfiguration = widgetConfiguration.features || {};
+      var featuresSpec = widgetSpecification.features;
+      if( !( '$schema' in featuresSpec ) ) {
+         // we assume an "old style" feature specification (i.e. first level type specification is omitted)
+         // if no schema version was defined.
+         featuresSpec = {
+            $schema: 'http://json-schema.org/draft-03/schema#',
+            type: 'object',
+            properties: widgetSpecification.features
+         };
+      }
+
+      object.forEach( featuresSpec.properties, function( feature, name ) {
+         // ensure that simple object/array features are at least defined
+         if( name in featureConfiguration ) {
+            return;
+         }
+
+         if( feature.type === 'object' ) {
+            featureConfiguration[ name ] = {};
+         }
+         else if( feature.type === 'array' ) {
+            featureConfiguration[ name ] = [];
+         }
+      } );
+
+      var validator = createFeaturesValidator( featuresSpec );
+      var report = validator.validate( featureConfiguration );
+
+      if( report.errors.length > 0 ) {
+         var message = 'Validation for widget features failed. Errors: ';
+
+         report.errors.forEach( function( error ) {
+            message += '\n - ' + error.message.replace( /\[/g, '\\[' );
+         } );
+
+         throwError( message );
+      }
+
+      return featureConfiguration;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createFeaturesValidator( featuresSpec ) {
+      var validator = jsonValidator.create( featuresSpec, {
+         prohibitAdditionalProperties: true,
+         useDefault: true
+      } );
+
+      // allows 'mySubTopic0815', 'MY_SUB_TOPIC+OK' and variations:
+      validator.addFormat( 'sub-topic', function( subTopic ) {
+         return ( typeof subTopic !== 'string' ) || SUB_TOPIC_FORMAT.test( subTopic );
+      } );
+
+      // allows 'myTopic', 'myTopic-mySubTopic-SUB_0815+OK' and variations:
+      validator.addFormat( 'topic', function( topic ) {
+         return ( typeof topic !== 'string' ) || TOPIC_FORMAT.test( topic );
+      } );
+
+      // allows 'myTopic', '!myTopic-mySubTopic-SUB_0815+OK' and variations:
+      validator.addFormat( 'flag-topic', function( flagTopic ) {
+         return ( typeof flagTopic !== 'string' ) || FLAG_TOPIC_FORMAT.test( flagTopic );
+      } );
+
+      // allows 'de_DE', 'en-x-laxarJS' and such:
+      validator.addFormat( 'language-tag', function( languageTag ) {
+         return ( typeof languageTag !== 'string' ) || LANGUAGE_TAG_FORMAT.test( languageTag );
+      } );
+
+      // checks that object keys have the 'topic' format
+      validator.addFormat( 'topic-map', function( topicMap ) {
+         return ( typeof topicMap !== 'object' ) || Object.keys( topicMap ).every( function( topic ) {
+            return TOPIC_FORMAT.test( topic );
+         } );
+      } );
+
+      // checks that object keys have the 'language-tag' format
+      validator.addFormat( 'localization', function( localization ) {
+         return ( typeof localization !== 'object' ) || Object.keys( localization ).every( function( tag ) {
+            return LANGUAGE_TAG_FORMAT.test( tag );
+         } );
+      } );
+
+      return validator;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      featuresForWidget: featuresForWidget
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
+   'use strict';
+
+   var widgetModules = {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function bootstrap( modules ) {
+      modules.forEach( function( module ) {
+         widgetModules[ module.name ] = module;
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    *
+    * @param {Object}      environment
+    * @param {HTMLElement} environment.anchorElement
+    * @param {Object}      environment.context
+    * @param {EventBus}    environment.context.eventBus
+    * @param {Object}      environment.context.features
+    * @param {Function}    environment.context.id
+    * @param {Object}      environment.context.widget
+    * @param {String}      environment.context.widget.area
+    * @param {String}      environment.context.widget.id
+    * @param {String}      environment.context.widget.path
+    * @param {Object}      environment.specification
+    * @param {Object}      services
+    *
+    * @return {Object}
+    */
+   function create( environment, services ) {
+
+      var exports = {
+         createController: createController,
+         domAttachTo: domAttachTo,
+         domDetach: domDetach,
+         destroy: function() {}
+      };
+
+      var widgetName = environment.specification.name;
+      var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
+      var context = environment.context;
+      var controller = null;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function createController( config ) {
+         var module = widgetModules[ moduleName ];
+         var injector = createInjector();
+         var injections = ( module.injections || [] ).map( function( injection ) {
+            return injector.get( injection );
+         } );
+
+         config.onBeforeControllerCreation( environment, injector.get() );
+         controller = module.create.apply( module, injections );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domAttachTo( areaElement, htmlTemplate ) {
+         if( htmlTemplate === null ) {
+            return;
+         }
+         environment.anchorElement.innerHTML = htmlTemplate;
+         areaElement.appendChild( environment.anchorElement );
+         controller.renderTo( environment.anchorElement );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domDetach() {
+         var parent = environment.anchorElement.parentNode;
+         if( parent ) {
+            parent.removeChild( environment.anchorElement );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function createInjector() {
+         var map = {
+            axContext: context,
+            axEventBus: context.eventBus,
+            axFeatures: context.features || {}
+         };
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         return {
+            get: function( name ) {
+               if( arguments.length === 0 ) {
+                  return map;
+               }
+
+               if( name in map ) {
+                  return map[ name ];
+               }
+
+               if( name in services ) {
+                  return services[ name ];
+               }
+
+               throw new Error( 'Unknown dependency "' + name + '".' );
+            }
+         };
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      return exports;
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      applyViewChanges: function() {},
+      technology: 'plain',
+      bootstrap: bootstrap,
+      create: create
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/widget_adapters/angular_adapter',[
+   'angular',
+   'require',
+   '../utilities/assert',
+   '../logging/log'
+], function( ng, require, assert, log ) {
+   'use strict';
+
+   var $compile;
+   var $controller;
+   var $rootScope;
+
+   var controllerNames = {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function bootstrap( widgetModules ) {
+      var dependencies = ( widgetModules || [] ).map( function( module ) {
+         // for lookup, use a normalized module name that can also be derived from the widget.json name:
+         var moduleKey = normalize( module.name );
+         controllerNames[ moduleKey ] = capitalize( module.name ) + 'Controller';
+
+         // add an additional lookup entry for deprecated "my.category.MyWidget" style module names:
+         supportPreviousNaming( module.name );
+
+         return module.name;
+      } );
+
+      return ng.module( 'axAngularWidgetAdapter', dependencies )
+         .run( [ '$compile', '$controller', '$rootScope', function( _$compile_, _$controller_, _$rootScope_ ) {
+            $controller = _$controller_;
+            $compile = _$compile_;
+            $rootScope = _$rootScope_;
+         } ] );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    *
+    * @param {Object}      environment
+    * @param {HTMLElement} environment.anchorElement
+    * @param {Object}      environment.context
+    * @param {EventBus}    environment.context.eventBus
+    * @param {Object}      environment.context.features
+    * @param {Function}    environment.context.id
+    * @param {Object}      environment.context.widget
+    * @param {String}      environment.context.widget.area
+    * @param {String}      environment.context.widget.id
+    * @param {String}      environment.context.widget.path
+    * @param {Object}      environment.specification
+    * @param {Object}      services
+    *
+    * @return {Object}
+    */
+   function create( environment, services ) {
+
+      // services are not relevant for now, since all LaxarJS services are already available via AngularJS DI.
+
+      var exports = {
+         createController: createController,
+         domAttachTo: domAttachTo,
+         domDetach: domDetach,
+         destroy: destroy
+      };
+
+      var context = environment.context;
+      var scope_;
+      var injections_;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function createController( config ) {
+         var moduleKey = normalize( environment.specification.name );
+         var controllerName = controllerNames[ moduleKey ];
+
+         injections_ = {
+            axContext: context,
+            axEventBus: context.eventBus,
+            axFeatures: context.features || {}
+         };
+         Object.defineProperty( injections_, '$scope', {
+            enumerable: true,
+            get: function() {
+               if( !scope_ ) {
+                  scope_ = $rootScope.$new();
+                  ng.extend( scope_, context );
+               }
+               return scope_;
+            }
+         } );
+
+         config.onBeforeControllerCreation( environment, injections_ );
+         $controller( controllerName, injections_ );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Synchronously attach the widget DOM to the given area.
+       *
+       * @param {HTMLElement} areaElement
+       *    The widget area to attach this widget to.
+       * @param {String} templateHtml
+       *
+       */
+      function domAttachTo( areaElement, templateHtml ) {
+         if( templateHtml === null ) {
+            return;
+         }
+
+         var element = ng.element( environment.anchorElement );
+         element.html( templateHtml );
+         areaElement.appendChild( environment.anchorElement );
+         $compile( environment.anchorElement )( injections_.$scope );
+         templateHtml = null;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function domDetach() {
+         var parent = environment.anchorElement.parentNode;
+         if( parent ) {
+            parent.removeChild( environment.anchorElement );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function destroy() {
+         if( scope_ ) {
+            scope_.$destroy();
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      return exports;
+
+   }
+
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function capitalize( _ ) {
+      return _.replace( /^./, function( _ ) { return _.toUpperCase(); } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function normalize( moduleName ) {
+      return moduleName.replace( /([a-zA-Z0-9])[-_]([a-zA-Z0-9])/g, function( $_, $1, $2 ) {
+         return $1 + $2.toUpperCase();
+      } ).replace( /^[A-Z]/, function( $_ ) {
+         return $_.toLowerCase();
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function supportPreviousNaming( moduleName ) {
+      if( moduleName.indexOf( '.' ) === -1 ) {
+         return;
+      }
+
+      var lookupName = moduleName.replace( /^.*\.([^.]+)$/, function( $_, $1 ) {
+         return $1.replace( /_(.)/g, function( $_, $1 ) { return $1.toUpperCase(); } );
+      } );
+      controllerNames[ lookupName ] = controllerNames[ moduleName ] = moduleName + '.Controller';
+
+      log.warn( 'Deprecation: AngularJS widget module name "' + moduleName + '" violates naming rules! ' +
+                'Module should be named "' + lookupName + '". ' +
+                'Controller should be named "' + capitalize( lookupName ) + 'Controller".' );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function applyViewChanges() {
+      $rootScope.$apply();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      applyViewChanges: applyViewChanges,
+      technology: 'angular',
+      bootstrap: bootstrap,
+      create: create
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/widget_adapters/adapters',[
+   './plain_adapter',
+   './angular_adapter'
+], function( plainAdapter, angularAdapter ) {
+   'use strict';
+
+   var adapters = {};
+   adapters[ plainAdapter.technology ] = plainAdapter;
+   adapters[ angularAdapter.technology ] = angularAdapter;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+
+      getFor: function( technology ) {
+         return adapters[ technology ];
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      getSupportedTechnologies: function() {
+         return Object.keys( adapters );
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      addAdapters: function( additionalAdapters ) {
+         additionalAdapters.forEach( function( adapter ) {
+            adapters[ adapter.technology ] = adapter;
+         } );
+      }
+
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/tooling/pages',[
+   '../utilities/object',
+   '../logging/log'
+], function( object, log ) {
+   'use strict';
+
+   var enabled = false;
+
+   var currentPageInfo = {
+      pageReference: null,
+      pageDefinitions: {},
+      compositionDefinitions: {},
+      widgetDescriptors: {}
+   };
+
+   var listeners = [];
+
+   return {
+      /** Use to access the flattened page model, where compositions have been expanded. */
+      FLAT: 'FLAT',
+      /** Use to access the compact page/composition model, where compositions have not been expanded. */
+      COMPACT: 'COMPACT',
+
+      /** Start collecting page/composition data. */
+      enable: function() {
+         enabled = true;
+      },
+
+      /** Stop collecting page/composition data and clean up. */
+      disable: function() {
+         enabled = false;
+         currentPageInfo.pageReference = null;
+         currentPageInfo.widgetDescriptors = {};
+         cleanup();
+      },
+
+      /**
+       * Access the current page information.
+       * Everything is returned as a copy, sothis object cannot be used to modify the host application.
+       *
+       * @return {Object}
+       *   the current page information, with the following properties:
+       *    - `pageDefinitions` {Object}
+       *       both the original as well as the expanded/flattened page model for each available page
+       *    - `compositionDefinitions` {Object}
+       *       both the original as well as the expanded/flattened composition model for each composition of
+       *       any available page
+       *    - `widgetDescriptors` {Object}
+       *       the widget descriptor for each widget that was referenced
+       *    - `pageReference` {String}
+       *       the reference for the current page, to lookup page/composition definitions
+       */
+      current: function() {
+         if( !enabled ) {
+            log.warn( 'laxar page tooling: trying to access data, but collecting it was never enabled' );
+         }
+         return object.deepClone( currentPageInfo );
+      },
+
+      /**
+       * Add a listener function to be notified whenever the page information changes.
+       * As a side-effect, this also automatically enables collecting page/composition data.
+       *
+       * @param {Function}
+       *   The listener to add. Will be called with the current page information whenever that changes.
+       */
+      addListener: function( listener ) {
+         enabled = true;
+         listeners.push( listener );
+      },
+
+      /**
+       * Remove a page information listener function.
+       *
+       * @param {Function}
+       *   The listener to remove
+       */
+      removeListener: function( listener ) {
+         listeners = listeners.filter( function( _ ) {
+            return _ !== listener;
+         } );
+      },
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /** @private */
+      setWidgetDescriptor: function( ref, descriptor ) {
+         if( !enabled ) { return; }
+         currentPageInfo.widgetDescriptors[ ref ] = descriptor;
+      },
+
+      /** @private */
+      setPageDefinition: function( ref, page, type ) {
+         if( !enabled ) { return; }
+         var definitions = currentPageInfo.pageDefinitions;
+         definitions[ ref ] = definitions[ ref ] || {
+            FLAT: null,
+            COMPACT: null
+         };
+         definitions[ ref ][ type ] = object.deepClone( page );
+      },
+
+      /** @private */
+      setCompositionDefinition: function( pageRef, compositionInstanceId, composition, type ) {
+         if( !enabled ) { return; }
+         var definitions = currentPageInfo.compositionDefinitions;
+         var definitionsByInstance = definitions[ pageRef ] = definitions[ pageRef ] || {};
+         definitionsByInstance[ compositionInstanceId ] = definitionsByInstance[ compositionInstanceId ] || {
+            FLAT: null,
+            COMPACT: null
+         };
+         definitionsByInstance[ compositionInstanceId ][ type ] = object.deepClone( composition );
+      },
+
+      /** @private */
+      setCurrentPage: function( ref ) {
+         if( !enabled ) { return; }
+         currentPageInfo.pageReference = ref;
+         listeners.forEach( function( listener ) {
+            listener( object.deepClone( currentPageInfo ) );
+         } );
+         cleanup();
+      }
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function cleanup() {
+      var currentRef = currentPageInfo.pageReference;
+      [ 'pageDefinitions', 'compositionDefinitions' ]
+         .forEach( function( collection ) {
+            Object.keys( currentPageInfo[ collection ] )
+               .filter( function( ref ) { return ref !== currentRef; } )
+               .forEach( function( ref ) { delete currentPageInfo[ collection ][ ref ]; } );
+         } );
+   }
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/loaders/widget_loader',[
+   '../logging/log',
+   '../utilities/path',
+   '../utilities/assert',
+   '../utilities/object',
+   '../utilities/string',
+   './paths',
+   './features_provider',
+   '../widget_adapters/adapters',
+   '../tooling/pages'
+], function( log, path, assert, object, string, paths, featuresProvider, adapters, pageTooling ) {
+   'use strict';
+
+   var TYPE_WIDGET = 'widget';
+   var TYPE_ACTIVITY = 'activity';
+   var TECHNOLOGY_ANGULAR = 'angular';
+
+   var DEFAULT_INTEGRATION = { type: TYPE_WIDGET, technology: TECHNOLOGY_ANGULAR };
+
+   var ID_SEPARATOR = '-';
+   var INVALID_ID_MATCHER = /[^A-Za-z0-9_\.-]/g;
+
+   /**
+    * @param {Q} q
+    *    a promise library
+    * @param {Object} services
+    *    all services available to the loader an widgets
+    *
+    * @returns {{load: Function}}
+    */
+   function create( q, services ) {
+
+      var controlsService = services.axControls;
+      var fileResourceProvider = services.axFileResourceProvider;
+      var themeManager = services.axThemeManager;
+      var cssLoader = services.axCssLoader;
+      var eventBus = services.axGlobalEventBus;
+
+      return {
+         load: load
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Load a widget using an appropriate adapter
+       *
+       * First, get the given widget's specification to validate and instantiate the widget features.
+       * Then, instantiate a widget adapter matching the widget's technology. Using the adapter, create the
+       * widget controller. The adapter is returned and can be used to attach the widget to the DOM, or to
+       * destroy it.
+       *
+       * @param {Object} widgetConfiguration
+       *    a widget instance configuration (as used in page definitions) to instantiate the widget from
+       * @param {Object} [optionalOptions]
+       *    map of additonal options
+       * @param {Function} optionalOptions.onBeforeControllerCreation
+       *    a function to call just before the controller is set up. It receives environment and adapter
+       *    specific injections as arguments
+       *
+       * @return {Promise} a promise for a widget adapter, with an already instantiated controller
+       */
+      function load( widgetConfiguration, optionalOptions ) {
+         var resolvedWidgetPath = path.resolveAssetPath( widgetConfiguration.widget, paths.WIDGETS, 'local' );
+         var widgetJsonPath = path.join( resolvedWidgetPath, 'widget.json' );
+
+         var options = object.options( optionalOptions, {
+            onBeforeControllerCreation: function() {}
+         } );
+
+         return fileResourceProvider
+            .provide( widgetJsonPath )
+            .then( function( specification ) {
+               // The control-descriptors must be loaded prior to controller creation.
+               // This allows the widget controller to synchronously instantiate controls.
+               return q.all( ( specification.controls || [] ).map( controlsService.load ) )
+                  .then( function( descriptors ) {
+                     descriptors.forEach( checkTechnologyCompatibility( specification ) );
+                     return specification;
+                  } );
+            } )
+            .then( function( specification ) {
+               pageTooling.setWidgetDescriptor( widgetConfiguration.widget, specification );
+
+               var integration = object.options( specification.integration, DEFAULT_INTEGRATION );
+               var type = integration.type;
+               var technology = integration.technology;
+               // Handle legacy widget code:
+               if( type === TECHNOLOGY_ANGULAR ) {
+                  type = TYPE_WIDGET;
+               }
+               if( type !== TYPE_WIDGET && type !== TYPE_ACTIVITY ) {
+                  throwError( widgetConfiguration, 'unknown integration type ' + type );
+               }
+
+               var throwWidgetError = throwError.bind( null, widgetConfiguration );
+               var features =
+                  featuresProvider.featuresForWidget( specification, widgetConfiguration, throwWidgetError );
+               var anchorElement = document.createElement( 'DIV' );
+               anchorElement.className = normalizeClassName( specification.name );
+               anchorElement.id = 'ax' + ID_SEPARATOR + widgetConfiguration.id;
+               var widgetEventBus = createEventBusForWidget( eventBus, specification, widgetConfiguration );
+
+               var adapterFactory = adapters.getFor( technology );
+               var adapter = adapterFactory.create( {
+                  anchorElement: anchorElement,
+                  context: {
+                     eventBus: widgetEventBus,
+                     features: features,
+                     id: createIdGeneratorForWidget( widgetConfiguration.id ),
+                     widget: {
+                        area: widgetConfiguration.area,
+                        id: widgetConfiguration.id,
+                        path: widgetConfiguration.widget
+                     }
+                  },
+                  specification: specification
+               }, services );
+               adapter.createController( options );
+
+               return {
+                  id: widgetConfiguration.id,
+                  adapter: adapter,
+                  destroy: function() {
+                     widgetEventBus.release();
+                     adapter.destroy();
+                  },
+                  applyViewChanges: adapterFactory.applyViewChanges || null,
+                  templatePromise: loadAssets(
+                     resolvedWidgetPath,
+                     integration,
+                     specification,
+                     widgetConfiguration
+                  )
+               };
+
+            }, function( err ) {
+               var message = 'Could not load spec for widget [0] from [1]: [2]';
+               log.error( message, widgetConfiguration.widget, widgetJsonPath, err );
+            } );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Locates and loads the widget HTML template for this widget (if any) as well as any CSS stylesheets
+       * used by this widget or its controls.
+       *
+       * @param widgetPath
+       *    The path suffix used to look up the widget, as given in the instance configuration.
+       * @param integration
+       *    Details on the integration type and technology: Activities do not require assets.
+       * @param widgetSpecification
+       *    The widget specification, used to find out if any controls need to be loaded.
+       * @param widgetConfiguration
+       *    The widget instance configuration
+       *
+       * @return {Promise<String>}
+       *    A promise that will be resolved with the contents of any HTML template for this widget, or with
+       *    `null` if there is no template (for example, if this is an activity).
+       */
+      function loadAssets( widgetPath, integration, widgetSpecification, widgetConfiguration ) {
+         return integration.type === TYPE_ACTIVITY ? q.when( null ) : resolve().then( function( urls ) {
+            urls.cssFileUrls.forEach( function( url ) { cssLoader.load( url ); } );
+            return urls.templateUrl ? fileResourceProvider.provide( urls.templateUrl ) : null;
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function resolve() {
+            // the name from the widget.json
+            var specifiedName = widgetSpecification.name;
+            var specifiedHtmlFile = specifiedName + '.html';
+            var specifiedCssFile = path.join( 'css/', specifiedName + '.css' );
+            // for backward compatibility: the name inferred from the reference
+            var technicalName = widgetPath.split( '/' ).pop();
+            var technicalHtmlFile = technicalName + '.html';
+            var technicalCssFile = path.join( 'css/', technicalName + '.css' );
+
+            var refPath = path.extractScheme( widgetConfiguration.widget ).ref;
+            var promises = [];
+            promises.push( themeManager.urlProvider(
+               path.join( widgetPath, '[theme]' ),
+               path.join( paths.THEMES, '[theme]', 'widgets', specifiedName ),
+               [ path.join( paths.THEMES, '[theme]', 'widgets', refPath ) ]
+            ).provide( [
+               specifiedHtmlFile,
+               specifiedCssFile,
+               technicalHtmlFile,
+               technicalCssFile
+            ] ) );
+
+            promises = promises.concat( loadControlAssets() );
+            return q.all( promises )
+               .then( function( results ) {
+                  var widgetUrls = results[ 0 ];
+                  var cssUrls = results.slice( 1 )
+                     .map( function( urls ) { return urls[ 0 ]; } )
+                     .concat( ( widgetUrls[ 1 ] || widgetUrls[ 3 ] ) )
+                     .filter( function( url ) { return !!url; } );
+
+                  return {
+                     templateUrl: widgetUrls[ 0 ] || widgetUrls[ 2 ] || '',
+                     cssFileUrls: cssUrls
+                  };
+               } );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function loadControlAssets() {
+            return ( widgetSpecification.controls || [] )
+               .map( function( controlRef ) {
+                  var descriptor = controlsService.descriptor( controlRef );
+                  var resolvedPath = controlsService.resolve( controlRef );
+                  var name = descriptor.name;
+
+                  var cssPathInControl = path.join( resolvedPath, '[theme]' );
+                  var cssPathInTheme = path.join( paths.THEMES, '[theme]', 'controls', name );
+                  if( descriptor._compatibility_0x ) {
+                     // LaxarJS v0.x compatibility: use compatibility paths to load CSS.
+                     log.warn( 'Deprecation: Control is missing control.json descriptor: [0]', controlRef );
+                     cssPathInTheme = path.join( paths.THEMES, '[theme]', controlRef );
+                  }
+                  return themeManager
+                     .urlProvider( cssPathInControl, cssPathInTheme )
+                     .provide( [ path.join( 'css/',  name + '.css' ) ] );
+               } );
+         }
+
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function checkTechnologyCompatibility( widgetDescriptor ) {
+      return function( controlDescriptor ) {
+         var controlTechnology = ( controlDescriptor.integration || DEFAULT_INTEGRATION ).technology;
+         if( controlTechnology === 'plain' ) {
+            // plain is always compatible
+            return;
+         }
+
+         var widgetTechnology = ( widgetDescriptor.integration || DEFAULT_INTEGRATION ).technology;
+         if( widgetTechnology === controlTechnology ) {
+            return;
+         }
+
+         log.warn(
+            'Incompatible integration technologies: widget [0] ([1]) cannot use control [2] ([3])',
+            widgetDescriptor.name, widgetTechnology, controlDescriptor.name, controlTechnology
+         );
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function normalizeClassName( str ) {
+      return str
+         .replace( /([a-z0-9])([A-Z])/g, function( $_, $0, $1 ) {
+            return $0 + '-' + $1;
+         } )
+         .replace( /_/g, '-' )
+         .toLowerCase();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function throwError( widgetConfiguration, message ) {
+      throw new Error( string.format(
+         'Error loading widget "[widget]" (id: "[id]"): [0]', [ message ], widgetConfiguration
+      ) );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createIdGeneratorForWidget( widgetId ) {
+      var charCodeOfA = 'a'.charCodeAt( 0 );
+      function fixLetter( l ) {
+         // We map invalid characters deterministically to valid lower case letters. Thereby a collision of
+         // two ids with different invalid characters at the same positions is less likely to occur.
+         return String.fromCharCode( charCodeOfA + l.charCodeAt( 0 ) % 26 );
+      }
+
+      var prefix = 'ax' + ID_SEPARATOR + widgetId.replace( INVALID_ID_MATCHER, fixLetter ) + ID_SEPARATOR;
+      return function( localId ) {
+         return prefix + ( '' + localId ).replace( INVALID_ID_MATCHER, fixLetter );
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createEventBusForWidget( eventBus, widgetSpecification, widgetConfiguration ) {
+
+      var collaboratorId = 'widget.' + widgetSpecification.name + '#' + widgetConfiguration.id;
+
+      function forward( to ) {
+         return function() {
+            return eventBus[ to ].apply( eventBus, arguments );
+         };
+      }
+
+      function augmentOptions( optionalOptions ) {
+         return object.options( optionalOptions, { sender: collaboratorId } );
+      }
+
+      var subscriptions = [];
+      function unsubscribe( subscriber ) {
+         eventBus.unsubscribe( subscriber );
+      }
+
+      return {
+         addInspector: forward( 'addInspector' ),
+         setErrorHandler: forward( 'setErrorHandler' ),
+         setMediator: forward( 'setMediator' ),
+         unsubscribe: unsubscribe,
+         subscribe: function( eventName, subscriber, optionalOptions ) {
+            subscriptions.push( subscriber );
+
+            var options = object.options( optionalOptions, { subscriber: collaboratorId } );
+
+            eventBus.subscribe( eventName, subscriber, options );
+         },
+         publish: function( eventName, optionalEvent, optionalOptions ) {
+            return eventBus.publish( eventName, optionalEvent, augmentOptions( optionalOptions ) );
+         },
+         publishAndGatherReplies: function( eventName, optionalEvent, optionalOptions ) {
+            return eventBus.publishAndGatherReplies( eventName, optionalEvent, augmentOptions( optionalOptions ) );
+         },
+         release: function() {
+            subscriptions.forEach( unsubscribe );
+         }
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      create: create
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * Utilities for dealing with functions.
+ *
+ * When requiring `laxar`, it is available as `laxar.fn`.
+ *
+ * @module fn
+ */
+define( 'laxar/lib/utilities/fn',[], function() {
+   'use strict';
+
+   var api = {
+      debounce: debounce,
+      _nowMilliseconds: _nowMilliseconds,
+      _setTimeout: _setTimeout
+   };
+
+   return api;
+
+   /**
+    * [Underscore `debounce`](http://underscorejs.org/#debounce) with the following modifications:
+    *  - automatically mocked when accessed through `laxar/laxar_testing`
+    *  - the generated function provides a `cancel()` method
+    *
+    * See [http://underscorejs.org/#debounce](http://underscorejs.org/#debounce) for detailed
+    * documentation on the original version.
+    *
+    * ### Note on testing:
+    *
+    * You can set `laxar.fn._nowMilliseconds` and `laxar.fn._setTimout` to mock-functions in order to
+    * help testing components that use `laxar.fn` or to test `laxar.fn` itself.
+    *
+    *
+    * @param {Function} f
+    *    the function to return a debounced version of
+    * @param {Number} waitMs
+    *    milliseconds to debounce before invoking `f`
+    * @param {Boolean} immediate
+    *    if `true` `f` is invoked prior to start waiting `waitMs` milliseconds. Otherwise `f` is invoked
+    *    after the given debounce duration has passed. Default is `false`
+    *
+    * @return {Function}
+    *    a debounced wrapper around the argument function f, with an additional method `cancel()`:
+    *    After `cancel()` has been called, f will not be invoked anymore, no matter how often the wrapper\
+    *    is called.
+    */
+   function debounce( f, waitMs, immediate ) {
+      var MARK = {};
+      var timeout, timestamp, result;
+      var canceled = false;
+
+      var debounced = function() {
+         var context = this;
+         var args = [].slice.call( arguments );
+         timestamp = api._nowMilliseconds();
+         var callNow = immediate && !timeout;
+
+         if( !timeout ) {
+            timeout = api._setTimeout( later, waitMs );
+         }
+         if( callNow && !canceled ) {
+            result = f.apply( context, args );
+         }
+
+         return result;
+
+         /**
+          * Check if the debounced function is ready for execution, and do so if it is.
+          * @param {Boolean} _force
+          *    This is only relevant when mocking `fn._setTimeout` to implement a force/flush for tests.
+          *    If the parameter is passed as `true`, no timing checks are performed prior to execution.
+          */
+         function later( _force ) {
+            var sinceLast = api._nowMilliseconds() - timestamp;
+            if( _force || sinceLast >= waitMs  ) {
+               timeout = null;
+               if( !immediate && !canceled ) {
+                  result = f.apply( context, args );
+                  if( !timeout ) {
+                     context = args = null;
+                  }
+               }
+               return;
+            }
+            timeout = api._setTimeout( later, waitMs - sinceLast );
+         }
+      };
+
+      debounced.cancel = function() {
+         canceled = true;
+      };
+
+      return debounced;
+   }
+
+   /**
+    * Get the current time in milliseconds.
+    * This API is intended to be used from tests only.
+    *
+    * @return {Number}
+    *   the current time in milliseconds (`Date.now()`).
+    *   Ovewrride this from tests for reproducible results.
+    */
+   function _nowMilliseconds() {
+     return Date.now();
+   }
+
+   /**
+    * By default, invoke window.setTimeout with the given arguments.
+    */
+   function _setTimeout() {
+     return window.setTimeout.apply( window, arguments );
+   }
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * Provides a convenient api over the browser's `window.localStorage` and `window.sessionStorage` objects. If
+ * a browser doesn't support [web storage](http://www.w3.org/TR/webstorage/), a warning is logged to the
+ * `console` (if available) and a non-persistent in-memory store will be used instead. Note that this can for
+ * example also happen when using Mozilla Firefox with cookies disabled and as such isn't limited to older
+ * browsers.
+ *
+ * Additionally, in contrast to plain *web storage* access, non-string values will be automatically passed
+ * through JSON (de-) serialization on storage or retrieval. All keys will be prepended with a combination of
+ * an arbitrary and a configured namespace to prevent naming clashes with other web applications running on
+ * the same host and port. All {@link StorageApi} accessor methods should then be called without any namespace
+ * since adding and removing it, is done automatically.
+ *
+ * When requiring `laxar`, it is available as `laxar.storage`.
+ *
+ * @module storage
+ */
+define( 'laxar/lib/utilities/storage',[
+   './assert',
+   './configuration'
+], function( assert, configuration ) {
+   'use strict';
+
+   var SESSION = 'sessionStorage';
+   var LOCAL = 'localStorage';
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * @param {Object} backend
+    *    the K/V store, probably only accepting string values
+    * @param {String} namespace
+    *    prefix for all keys for namespacing purposes
+    *
+    * @return {StorageApi}
+    *    a storage wrapper to the given backend with `getItem`, `setItem` and `removeItem` methods
+    *
+    * @private
+    */
+   function createStorage( backend, namespace ) {
+
+      /**
+       * The api returned by one of the `get*Storage` functions of the *storage* module.
+       *
+       * @name StorageApi
+       * @constructor
+       */
+      return {
+         getItem: getItem,
+         setItem: setItem,
+         removeItem: removeItem
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Retrieves a `value` by `key` from the store. JSON deserialization will automatically be applied.
+       *
+       * @param {String} key
+       *    the key of the item to retrieve (without namespace prefix)
+       *
+       * @return {*}
+       *    the value or `null` if it doesn't exist in the store
+       *
+       * @memberOf StorageApi
+       */
+      function getItem( key ) {
+         var item = backend.getItem( namespace + '.' + key );
+         return item ? JSON.parse( item ) : item;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Sets a `value` for a `key`. The value should be JSON serializable. An existing value will be
+       * overwritten.
+       *
+       * @param {String} key
+       *    the key of the item to set (without namespace prefix)
+       * @param {*} value
+       *    the new value to set
+       *
+       * @memberOf StorageApi
+       */
+      function setItem( key, value ) {
+         var nsKey = namespace + '.' + key;
+         if( value === undefined ) {
+            backend.removeItem( nsKey );
+         }
+         else {
+            backend.setItem( nsKey, JSON.stringify( value ) );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Removes the value associated with `key` from the store.
+       *
+       * @param {String} key
+       *    the key of the item to remove (without namespace prefix)
+       *
+       * @memberOf StorageApi
+       */
+      function removeItem( key ) {
+         backend.removeItem( namespace + '.' + key );
+      }
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function getOrFakeBackend( webStorageName ) {
+      var store = window[ webStorageName ];
+      if( store.setItem && store.getItem && store.removeItem ) {
+         try {
+            var testKey = 'ax.storage.testItem';
+            // In iOS Safari Private Browsing, this will fail:
+            store.setItem( testKey, 1 );
+            store.removeItem( testKey );
+            return store;
+         }
+         catch( e ) {
+            // setItem failed: must use fake storage
+         }
+      }
+
+      if( window.console ) {
+         var method = 'warn' in window.console ? 'warn' : 'log';
+         window.console[ method ](
+            'window.' + webStorageName + ' not available: Using non-persistent polyfill. \n' +
+            'Try disabling private browsing or enabling cookies.'
+         );
+      }
+
+      var backend = {};
+      return {
+         getItem: function( key ) {
+            return backend[ key ] || null;
+         },
+         setItem: function( key, val ) {
+            backend[ key ] = val;
+         },
+         removeItem: function( key ) {
+            if( key in backend ) {
+               delete backend[ key ];
+            }
+         }
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function generateUniquePrefix() {
+      var prefix = configuration.get( 'storagePrefix' );
+      if( prefix ) {
+         return prefix;
+      }
+
+      var str = configuration.get( 'name', '' );
+      var res = 0;
+      /* jshint bitwise:false */
+      for( var i = str.length - 1; i > 0; --i ) {
+         res = ((res << 5) - res) + str.charCodeAt( i );
+         res |= 0;
+      }
+      return Math.abs( res );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Creates a new storage module. In most cases this module will be called without arguments,
+    * but having the ability to provide them is useful e.g. for mocking purposes within tests.
+    * If the arguments are omitted, an attempt is made to access the native browser WebStorage api.
+    * If that fails, storage is only mocked by an in memory map (thus actually unavailable).
+    *
+    * Developers are free to use polyfills to support cases where local- or session-storage may not be
+    * available. Just make sure to initialize the polyfills before this module.
+    *
+    * @param {Object} [localStorageBackend]
+    *    the backend for local storage, Default is `window.localStorage`
+    * @param {Object} [sessionStorageBackend]
+    *    the backend for session storage, Default is `window.sessionStorage`
+    *
+    * @return {Object}
+    *    a new storage module
+    */
+   function create( localStorageBackend, sessionStorageBackend ) {
+
+      var localBackend = localStorageBackend || getOrFakeBackend( LOCAL );
+      var sessionBackend = sessionStorageBackend || getOrFakeBackend( SESSION );
+      var prefix = 'ax.' + generateUniquePrefix() + '.';
+
+      return {
+
+         /**
+          * Returns a local storage object for a specific local namespace.
+          *
+          * @param {String} namespace
+          *    the namespace to prepend to keys
+          *
+          * @return {StorageApi}
+          *    the local storage object
+          */
+         getLocalStorage: function( namespace ) {
+            assert( namespace ).hasType( String ).isNotNull();
+
+            return createStorage( localBackend, prefix + namespace );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /**
+          * Returns a session storage object for a specific local namespace.
+          *
+          * @param {String} namespace
+          *    the namespace to prepend to keys
+          *
+          * @return {StorageApi}
+          *    the session storage object
+          */
+         getSessionStorage: function( namespace ) {
+            assert( namespace ).hasType( String ).isNotNull();
+
+            return createStorage( sessionBackend, prefix + namespace );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /**
+          * Returns the local storage object for application scoped keys. This is equivalent to
+          * `storage.getLocalStorage( 'app' )`.
+          *
+          * @return {StorageApi}
+          *    the application local storage object
+          */
+         getApplicationLocalStorage: function() {
+            return createStorage( localBackend, prefix + 'app' );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /**
+          * Returns the session storage object for application scoped keys. This is equivalent to
+          * `storage.getSessionStorage( 'app' )`.
+          *
+          * @return {StorageApi}
+          *    the application session storage object
+          */
+         getApplicationSessionStorage: function() {
+            return createStorage( sessionBackend, prefix + 'app' );
+         },
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         create: create
+
+      };
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return create();
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/runtime/runtime',[
+   'angular',
+   '../utilities/assert',
+   '../utilities/path',
+   '../loaders/paths'
+], function( ng, assert, path, paths ) {
+   'use strict';
+
+   var module = ng.module( 'axRuntime', [] );
+   var api = {
+      provideQ: function() {
+         assert.codeIsUnreachable( 'Cannot provide q before AngularJS modules have been set up.' );
+      }
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Patching AngularJS with more aggressive scope destruction and memory leak prevention
+   module.run( [ '$rootScope', '$window', function( $rootScope, $window ) {
+      ng.element( $window ).one( 'unload', function() {
+         while( $rootScope.$$childHead ) {
+            $rootScope.$$childHead.$destroy();
+         }
+         $rootScope.$destroy();
+      } );
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Initialize the theme manager
+   module.run( [ 'axCssLoader', 'axThemeManager', function( CssLoader, themeManager ) {
+      themeManager
+         .urlProvider( path.join( paths.THEMES, '[theme]' ), null, [ paths.DEFAULT_THEME ] )
+         .provide( [ 'css/theme.css' ] )
+         .then( function( files ) {
+            CssLoader.load( files[0] );
+         } );
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Initialize i18n for i18n controls in non-i18n widgets
+   module.run( [ '$rootScope', 'axConfiguration', function( $rootScope, configuration ) {
+      $rootScope.i18n = {
+         locale: 'default',
+         tags: configuration.get( 'i18n.locales', { 'default': 'en' } )
+      };
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   // Provide q as a tooling API to make sure all clients see the same mocked version during testing
+   module.run( [ '$q', function( $q ) {
+      api.provideQ = function() {
+         return $q;
+      };
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+      module: module,
+      api: api
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+define( 'laxar/lib/loaders/layout_loader',[
+   '../utilities/path'
+], function( path ) {
+   'use strict';
+
+   function create( layoutsRoot, themesRoot, cssLoader, themeManager, fileResourceProvider, cache ) {
+      return {
+         load: function( layout ) {
+            return resolveLayout( layout ).then(
+               function( layoutInfo ) {
+                  if( layoutInfo.css ) {
+                     cssLoader.load( layoutInfo.css );
+                  }
+                  if( layoutInfo.html ) {
+                     return fileResourceProvider.provide( layoutInfo.html ).then( function( htmlContent ) {
+                        layoutInfo.htmlContent = htmlContent;
+                        if( cache ) {
+                           cache.put( layoutInfo.html, htmlContent );
+                        }
+                        return layoutInfo;
+                     } );
+                  }
+                  return layoutInfo;
+               }
+            );
+         }
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function resolveLayout( layout ) {
+         var layoutPath = path.join( layoutsRoot, layout );
+         var layoutName = layoutPath.substr( layoutPath.lastIndexOf( '/' ) + 1 );
+         var layoutFile = layoutName + '.html';
+         var cssFile    = 'css/' + layoutName + '.css';
+
+         return themeManager.urlProvider(
+            path.join( layoutPath, '[theme]' ),
+            path.join( themesRoot, '[theme]', 'layouts', layout )
+         ).provide( [ layoutFile, cssFile ] ).then(
+            function( results ) {
+               return {
+                  html: results[ 0 ],
+                  css: results[ 1 ],
+                  className: layoutName.replace( /\//g, '' ).replace( /_/g, '-' ) + '-layout'
+               };
+            }
+         );
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+
+      create: create
+
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * The controls service helps to lookup control assets and implementations.
+ * It should be used via dependency injection as the *axControls* service.
+ *
+ * @module controls_service
+ */
+define( 'laxar/lib/runtime/controls_service',[
+   '../utilities/path',
+   '../utilities/string',
+   '../loaders/paths'
+], function( path, string, paths ) {
+   'use strict';
+
+   return {
+      create: create
+   };
+
+   function create( fileResourceProvider ) {
+
+      var notDeclaredMessage =
+         'Tried to load control reference [0] without declaration in widget.json.\nDetails: [1]';
+      var missingDescriptorMessage =
+         'Cannot use axControls service to load control [0] without descriptor.\nDetails: [1]';
+      var errorInfoLink =
+         'https://github.com/LaxarJS/laxar/blob/master/docs/manuals/providing_controls.md#compatibility';
+
+      var descriptors = {};
+      var descriptorPromises = {};
+
+      return {
+         load: load,
+         provide: provide,
+         resolve: resolve,
+         descriptor: descriptor
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Provides the implementation module of the given control, for manual instantiation by a widget.
+       *
+       * Because the method must return synchronously, it may only be called for controls that have been
+       * loaded before (using `load`)!
+       *
+       * @param {String} controlRef
+       *   a valid control reference as used in the `widget.json`
+       * @return {*}
+       *   the AMD module for the requested control reference
+       */
+      function provide( controlRef ) {
+         var resolvedControlPath = resolve( controlRef );
+         var descriptor = descriptors[ resolvedControlPath ];
+         if( !descriptor ) {
+            fail( notDeclaredMessage );
+         }
+         if( descriptor._compatibility_0x ) {
+            fail( missingDescriptorMessage );
+         }
+
+         var amdControlRef = path.extractScheme( controlRef ).ref;
+         return require( path.join( amdControlRef, descriptor.name ) );
+
+         function fail( reason ) {
+            var message = string.format( 'axControls: ' + reason, [ controlRef, errorInfoLink ] );
+            throw new Error( message );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Fetches the descriptor for a given control reference, and saves it as a side-effect.
+       * This is part of the internal API used by the widget loader.
+       *
+       * This process must be completed before the descriptor or the module for a control can be provided.
+       * For this reason, `load` is called by the widget-loader, using information from the `widet.json`.
+       *
+       * For backward-compatibility, missing descriptors are synthesized.
+       *
+       * @return {Promise}
+       *   A promise for the (fetched or synthesized) control descriptor.
+       *
+       * @private
+       */
+      function load( controlRef ) {
+         // By appending a path now and .json afterwards, 'help' RequireJS to generate the
+         // correct descriptor path when loading from a 'package'.
+         var resolvedPath = resolve( controlRef );
+         if( !descriptorPromises[ resolvedPath ] ) {
+            var descriptorUrl = path.join( resolvedPath, 'control.json' );
+            descriptorPromises[ resolvedPath ] = fileResourceProvider
+               .provide( descriptorUrl )
+               .catch( function() {
+                  // LaxarJS 0.x style (no control.json): generate descriptor
+                  return {
+                     _compatibility_0x: true,
+                     name: controlRef.split( '/' ).pop(),
+                     integration: { technology: 'angular' }
+                  };
+               } )
+               .then( function( descriptor ) {
+                  descriptors[ resolvedPath ] = descriptor;
+                  return descriptor;
+               } );
+         }
+         return descriptorPromises[ resolvedPath ];
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Takes a control reference and resolves it to a URL.
+       * This is part of the internal API used by the widget loader.
+       *
+       * @param {String} controlRef
+       *   a valid control reference as used in the `widget.json`
+       * @return {String}
+       *   the url under which the `control.json` should be found
+       *
+       * @private
+       */
+      function resolve( controlRef ) {
+         return path.resolveAssetPath( controlRef, paths.CONTROLS );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Gets the (previously loaded) descriptor for a widget reference.
+       * This is part of the internal API used by the widget loader.
+       *
+       * @param controlRef
+       *   a valid control referenceas used in the `widget.json`
+       * @return {Object}
+       *   The control descriptor.
+       *
+       * @private
+       */
+      function descriptor( controlRef ) {
+         var resolvedControlPath = resolve( controlRef );
+         return descriptors[ resolvedControlPath ];
+      }
+   }
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * The theme manager simplifies lookup of theme specific assets. It should be used via AngularJS DI as
+ * *axThemeManager* service.
+ *
+ * @module theme_manager
+ */
+define( 'laxar/lib/runtime/theme_manager',[
+   '../utilities/assert',
+   '../utilities/path'
+], function( assert, path ) {
+   'use strict';
+
+   /**
+    * @param {FileResourceProvider} fileResourceProvider
+    *    the file resource provider used for theme file lookups
+    * @param {$q} q
+    *    a `$q` like promise library
+    * @param {String} theme
+    *    the theme to use
+    *
+    * @constructor
+    */
+   function ThemeManager( fileResourceProvider, q, theme ) {
+      this.q_ = q;
+      this.fileResourceProvider_ = fileResourceProvider;
+      this.theme_ = theme;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Returns the currently used theme.
+    *
+    * @return {String}
+    *    the currently active theme
+    */
+   ThemeManager.prototype.getTheme = function() {
+      return this.theme_;
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Returns a URL provider for specific path patterns that are used to lookup themed artifacts. The token
+    * `[theme]` will be replaced by the name of the currently active theme (plus `.theme` suffix) or by
+    * `default.theme` as a fallback. The `provide` method of the returned object can be called with a list of
+    * files for which a themed version should be found. The most specific location is searched first and the
+    * default theme last.
+    *
+    * @param {String} artifactPathPattern
+    *    a path pattern for search within the artifact directory itself, based on the current theme
+    * @param {String} [themePathPattern]
+    *    a path pattern for search within the current theme
+    * @param {String[]} [fallbackPathPatterns]
+    *    fallback paths, used if all else fails.
+    *    Possibly without placeholders, e.g. for loading the default theme itself.
+    *
+    * @returns {{provide: Function}}
+    *    an object with a provide method
+    */
+   ThemeManager.prototype.urlProvider = function( artifactPathPattern, themePathPattern, fallbackPathPatterns ) {
+      var self = this;
+
+      return {
+         provide: function( fileNames ) {
+            var searchPrefixes = [];
+
+            var themeDirectory = self.theme_ + '.theme';
+            if( self.theme_ && self.theme_ !== 'default' ) {
+               if( artifactPathPattern ) {
+                  // highest precedence: artifacts with (multiple) embedded theme styles:
+                  searchPrefixes.push( artifactPathPattern.replace( '[theme]', themeDirectory ) );
+               }
+               if( themePathPattern ) {
+                  // second-highest precedence: themes with embedded artifact styles:
+                  searchPrefixes.push( themePathPattern.replace( '[theme]', themeDirectory ) );
+               }
+            }
+
+            ( fallbackPathPatterns || []  ).forEach( function( pattern ) {
+               // additional paths, usually for backward compatibility
+               if( self.theme_ !== 'default' || pattern.indexOf( '[theme]' ) === -1 ) {
+                  searchPrefixes.push( pattern.replace( '[theme]', themeDirectory ) );
+               }
+            } );
+
+            if( artifactPathPattern ) {
+               // fall back to default theme provided by the artifact
+               searchPrefixes.push( artifactPathPattern.replace( '[theme]', 'default.theme' ) );
+            }
+
+            var promises = [];
+            fileNames.forEach( function( fileName ) {
+               promises.push( findExistingPath( self, searchPrefixes, fileName ) );
+            } );
+
+            return self.q_.all( promises )
+               .then( function( results ) {
+                  return results.map( function( result, i ) {
+                     return result !== null ? path.join( result, fileNames[ i ] ) : null;
+                  } );
+               } );
+         }
+      };
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function findExistingPath( self, searchPrefixes, fileName ) {
+      if( searchPrefixes.length === 0 ) {
+         return self.q_.when( null );
+      }
+
+      return self.fileResourceProvider_.isAvailable( path.join( searchPrefixes[0], fileName ) )
+         .then( function( available ) {
+            if( available ) {
+               return self.q_.when( searchPrefixes[0] );
+            }
+            return findExistingPath( self, searchPrefixes.slice( 1 ), fileName );
+         } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return {
+
+      /**
+       * Creates and returns a new theme manager instance.
+       *
+       * @param {FileResourceProvider} fileResourceProvider
+       *    the file resource provider used for theme file lookup
+       * @param {$q} q
+       *    a `$q` like promise library
+       * @param {String} theme
+       *    the theme to use
+       *
+       * @returns {ThemeManager}
+       */
+      create: function( fileResourceProvider, q, theme ) {
+         return new ThemeManager( fileResourceProvider, q, theme );
+      }
+
+   };
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+/**
+ * This module provides some services for AngularJS DI. Although it is fine to use these services in widgets,
+ * most of them are primarily intended to be used internally by LaxarJS. Documentation is nevertheless of use
+ * when e.g. they need to be mocked during tests.
+ *
+ * @module axRuntimeServices
+ */
+define( 'laxar/lib/runtime/runtime_services',[
+   'angular',
+   '../event_bus/event_bus',
+   '../i18n/i18n',
+   '../file_resource_provider/file_resource_provider',
+   '../logging/log',
+   '../utilities/object',
+   '../utilities/path',
+   '../loaders/layout_loader',
+   '../loaders/paths',
+   '../utilities/configuration',
+   './controls_service',
+   './theme_manager'
+], function(
+   ng,
+   eventBus,
+   i18n,
+   fileResourceProvider,
+   log,
+   object,
+   path,
+   layoutLoader,
+   paths,
+   configuration,
+   controlsService,
+   themeManager
+) {
+   'use strict';
+
+   var module = ng.module( 'axRuntimeServices', [] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var $qProvider_;
+   module.config( [ '$qProvider', '$httpProvider', function( $qProvider, $httpProvider ) {
+      $qProvider_ = $qProvider;
+      if( configuration.get( CONFIG_KEY_HTTP_LOGGING_HEADER ) ) {
+         $httpProvider.interceptors.push( 'axLogHttpInterceptor' );
+      }
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * This is a scheduler for asynchronous tasks (like nodejs' `process.nextTick`)  trimmed for performance.
+    * It is intended for use cases where many tasks are scheduled in succession within one JavaScript event
+    * loop. It integrates into the AngularJS *$digest* cycle, while trying to minimize the amount of full
+    * *$digest* cycles.
+    *
+    * For example in LaxarJS the global event bus instance ({@link axGlobalEventBus}) uses this service.
+    *
+    * @name axHeartbeat
+    * @injection
+    */
+   module.factory( 'axHeartbeat', [
+      '$window', '$rootScope', 'axPageService',
+      function( $window, $rootScope, pageService ) {
+         var nextQueue = [];
+         var beatRequested = false;
+
+         var rootScopeDigested = false;
+         $rootScope.$watch( function() {
+            rootScopeDigested = true;
+         } );
+
+         /**
+          * Schedules a function for the next heartbeat. If no heartbeat was triggered yet, it will be
+          * requested now.
+          *
+          * @param {Function} func
+          *    a function to schedule for the next tick
+          *
+          * @memberOf axHeartbeat
+          */
+         function onNext( func ) {
+            if( !beatRequested ) {
+               beatRequested = true;
+               $window.setTimeout( function() {
+                  while( beforeQueue.length ) { beforeQueue.shift()(); }
+                  // The outer loop handles events published from apply-callbacks (watchers, promises).
+                  do {
+                     while( nextQueue.length ) { nextQueue.shift()(); }
+
+                     rootScopeDigested = false;
+                     var pageController = pageService.controller();
+                     if( pageController ) {
+                        pageController.applyViewChanges();
+                     }
+                     // Since LaxarJS itself still heavily depends on AngularJS and its digest cycle concept,
+                     // we need to make sure that a digest cycle is triggered, even if there is no widget
+                     // based on angular technology requesting it. This can be removed as soon as
+                     // https://github.com/LaxarJS/laxar/issues/216 is fixed
+                     if( !rootScopeDigested ) {
+                        $rootScope.$apply();
+                     }
+                  }
+                  while( nextQueue.length );
+                  while( afterQueue.length ) { afterQueue.shift()(); }
+                  beatRequested = false;
+               }, 0 );
+            }
+            nextQueue.push( func );
+         }
+
+         var beforeQueue = [];
+
+         /**
+          * Schedules a function to be called before the next heartbeat occurs. Note that `func` may never be
+          * called, if there is no next heartbeat.
+          *
+          * @param {Function} func
+          *    a function to call before the next heartbeat
+          *
+          * @memberOf axHeartbeat
+          */
+         function onBeforeNext( func ) {
+            beforeQueue.push( func );
+         }
+
+         var afterQueue = [];
+
+         /**
+          * Schedules a function to be called after the next heartbeat occured. Note that `func` may never be
+          * called, if there is no next heartbeat.
+          *
+          * @param {Function} func
+          *    a function to call after the next heartbeat
+          *
+          * @memberOf axHeartbeat
+          */
+         function onAfterNext( func ) {
+            afterQueue.push( func );
+         }
+
+         return {
+            onBeforeNext: onBeforeNext,
+            onNext: onNext,
+            onAfterNext: onAfterNext
+         };
+      }
+   ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * A timestamp function, provided as a service to support the jasmine mock clock during testing. The
+    * mock-free implementation simply uses `new Date().getTime()`. Whenever a simple timestamp is needed in a
+    * widget, this service can be used to allow for hassle-free testing.
+    *
+    * Example:
+    * ```js
+    * Controller.$inject = [ 'axTimestamp' ];
+    * function Controller( axTimestamp ) {
+    *    var currentTimestamp = axTimestamp();
+    * };
+    * ```
+    *
+    * @name axTimestamp
+    * @injection
+    */
+   module.factory( 'axTimestamp', function() {
+      return function() {
+         return new Date().getTime();
+      };
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Provides access to the control-implementation-modules used by a widget.
+    * Further documentation on the api can be found at the *controls_service* module api doc.
+    *
+    * @name axControls
+    * @injection
+    */
+   module.factory( 'axControls', [ 'axFileResourceProvider', function( fileResourceProvider ) {
+      return controlsService.create( fileResourceProvider );
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * The global event bus instance provided by the LaxarJS runtime. Widgets **should never** use this, as
+    * subscriptions won't be removed when a widget is destroyed. Instead widgets should always either use the
+    * `eventBus` property on their local `$scope` object or the service `axEventBus`. These take care of all
+    * subscriptions on widget destructions and thus prevent from leaking memory and other side effects.
+    *
+    * This service instead can be used by other services, that live throughout the whole lifetime of an
+    * application or take care of unsubscribing from events themselves. Further documentation on the api can
+    * be found at the *event_bus* module api doc.
+    *
+    * @name axGlobalEventBus
+    * @injection
+    */
+   module.factory( 'axGlobalEventBus', [
+      '$injector', '$window', 'axHeartbeat', 'axConfiguration',
+      function( $injector, $window, heartbeat, configuration ) {
+         // LaxarJS/laxar#48: Use event bus ticks instead of $apply to run promise callbacks
+         var $q = $injector.invoke( $qProvider_.$get, $qProvider_, {
+            $rootScope: {
+               $evalAsync: heartbeat.onNext
+            }
+         } );
+
+         eventBus.init( $q, heartbeat.onNext, function( f, t ) {
+            // MSIE Bug, we have to wrap set timeout to pass assertion
+            $window.setTimeout( f, t );
+         } );
+
+         var bus = eventBus.create( {
+            pendingDidTimeout: configuration.get( 'eventBusTimeoutMs', 120*1000 )
+         } );
+         bus.setErrorHandler( eventBusErrorHandler );
+
+         return bus;
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Provides access to the global configuration, otherwise accessible via the *configuration* module.
+    * Further documentation can be found there.
+    *
+    * @name axConfiguration
+    * @injection
+    */
+   module.factory( 'axConfiguration', [ function() {
+      return configuration;
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Provides access to the i18n api, otherwise accessible via the *i18n* module. Further documentation can
+    * be found there.
+    *
+    * @name axI18n
+    * @injection
+    */
+   module.factory( 'axI18n', [ function() {
+      return i18n;
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * A global, pre-configured file resource provider instance. Further documentation on the api can
+    * be found at the *file_resource_provider* module api doc.
+    *
+    * This service has already all the file listings configured under `window.laxar.fileListings`. These can
+    * either be uris to listing JSON files or already embedded JSON objects of the directory tree.
+    *
+    * @name axFileResourceProvider
+    * @injection
+    */
+   module.factory( 'axFileResourceProvider', [
+      '$q', '$http', 'axConfiguration',
+      function( $q, $http, configuration ) {
+         fileResourceProvider.init( $q, $http );
+
+         var provider = fileResourceProvider.create( paths.PRODUCT );
+         var listings = configuration.get( 'fileListings' );
+         if( listings ) {
+            ng.forEach( listings, function( value, key ) {
+               if( typeof value === 'string' ) {
+                  provider.setFileListingUri( key, value );
+               }
+               else {
+                  provider.setFileListingContents( key, value );
+               }
+            } );
+         }
+
+         return provider;
+      }
+   ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Provides access to the configured theme and theme relevant assets via a theme manager instance. Further
+    * documentation on the api can be found at the *theme_manager* module api doc.
+    *
+    * @name axThemeManager
+    * @injection
+    */
+   module.factory( 'axThemeManager', [
+      '$q', 'axConfiguration', 'axFileResourceProvider',
+      function( $q, configuration, fileResourceProvider ) {
+         var theme = configuration.get( 'theme' );
+         var manager = themeManager.create( fileResourceProvider, $q, theme );
+
+         return {
+            getTheme: manager.getTheme.bind( manager ),
+            urlProvider: manager.urlProvider.bind( manager )
+         };
+      }
+   ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Loads a layout relative to the path `laxar-path-root` configured via RequireJS (by default
+    * `/application/layouts`), taking the configured theme into account. If a CSS file is found, it will
+    * directly be loaded into the page. A HTML template will instead get returned for manual insertion at the
+    * correct DOM location. For this service there is also the companion directive *axLayout* available.
+    *
+    * Example:
+    * ```js
+    * myNgModule.directive( [ 'axLayoutLoader', function( axLayoutLoader ) {
+    *    return {
+    *       link: function( scope, element, attrs ) {
+    *          axLayoutLoader.load( 'myLayout' )
+    *             .then( function( layoutInfo ) {
+    *                element.html( layoutInfo.html );
+    *             } );
+    *       }
+    *    };
+    * } ] );
+    * ```
+    *
+    * @name axLayoutLoader
+    * @injection
+    */
+   module.factory( 'axLayoutLoader', [
+      '$templateCache', 'axCssLoader', 'axThemeManager', 'axFileResourceProvider',
+      function( $templateCache, cssLoader, themeManager, fileResourceProvider ) {
+         return layoutLoader.create(
+            paths.LAYOUTS, paths.THEMES, cssLoader, themeManager, fileResourceProvider, $templateCache
+         );
+      }
+   ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * A service to load css files on demand during development. If a merged release css file has already been
+    * loaded (marked with a `data-ax-merged-css` html attribute at the according `link` tag) or `useMergedCss`
+    * is configured as `true`, the `load` method will simply be a noop. In the latter case the merged css file
+    * will be loaded once by this service.
+    *
+    * @name axCssLoader
+    * @injection
+    */
+   module.factory( 'axCssLoader', [ 'axConfiguration', 'axThemeManager', function( configuration, themeManager ) {
+      var mergedCssFileLoaded = [].some.call( document.getElementsByTagName( 'link' ), function( link ) {
+         return link.hasAttribute( 'data-ax-merged-css' );
+      } );
+
+      if( mergedCssFileLoaded ) {
+         return { load: function() {} };
+      }
+
+      var loadedFiles = [];
+      var loader = {
+         /**
+          * If not already loaded, loads the given file into the current page by appending a `link` element to
+          * the document's `head` element.
+          *
+          * Additionally it works around a
+          * [style sheet limit](http://support.microsoft.com/kb/262161) in older Internet Explorers
+          * (version < 10). The workaround is based on
+          * [this test](http://john.albin.net/ie-css-limits/993-style-test.html).
+          *
+          * @param {String} url
+          *    the url of the css file to load
+          *
+          * @memberOf axCssLoader
+          */
+         load: function( url ) {
+
+            if( loadedFiles.indexOf( url ) === -1 ) {
+               if( hasStyleSheetLimit() ) {
+                  // Here we most probably have an Internet Explorer having the limit of at most 31 stylesheets
+                  // per page. As a workaround we use style tags with import statements. Each style tag may
+                  // have 31 import statement. This gives us 31 * 31 = 961 possible stylesheets to include ...
+                  // Link to the problem on microsoft.com: http://support.microsoft.com/kb/262161
+                  // Solution based on ideas found here: http://john.albin.net/css/ie-stylesheets-not-loading
+
+                  var styleManagerId = 'cssLoaderStyleSheet' + Math.floor( loadedFiles.length / 30 );
+                  if( !document.getElementById( styleManagerId ) ) {
+                     addHeadElement( 'style', {
+                        type: 'text/css',
+                        id: styleManagerId
+                     } );
+                  }
+
+                  document.getElementById( styleManagerId ).styleSheet.addImport( url );
+               }
+               else {
+                  addHeadElement( 'link', {
+                     type: 'text/css',
+                     id: 'cssLoaderStyleSheet' + loadedFiles.length,
+                     rel: 'stylesheet',
+                     href: url
+                  } );
+               }
+
+               loadedFiles.push( url );
+            }
+         }
+      };
+
+      if( configuration.get( 'useMergedCss', false ) ) {
+         loader.load( path.join( paths.PRODUCT, 'var/static/css', themeManager.getTheme() + '.theme.css' ) );
+         return { load: function() {} };
+      }
+
+      return loader;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function hasStyleSheetLimit() {
+         if( typeof hasStyleSheetLimit.result !== 'boolean' ) {
+            hasStyleSheetLimit.result = false;
+            if( document.createStyleSheet ) {
+               var uaMatch = navigator.userAgent.match( /MSIE ?(\d+(\.\d+)?)[^\d]/i );
+               if( !uaMatch || parseFloat( uaMatch[1] ) < 10 ) {
+                  // There is no feature test for this problem without running into it. We therefore test
+                  // for a browser knowing document.createStyleSheet (should only be IE) and afterwards check,
+                  // if it is a version prior to 10 as the problem is fixed since that version. In any other
+                  // case we assume the worst case and trigger the hack for limited browsers.
+                  hasStyleSheetLimit.result = true;
+               }
+            }
+         }
+         return hasStyleSheetLimit.result;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function addHeadElement( elementName, attributes ) {
+         var element = document.createElement( elementName );
+         ng.forEach( attributes, function( val, key ) {
+            element[ key ] = val;
+         } );
+         document.getElementsByTagName( 'head' )[0].appendChild( element );
+      }
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Directives should use this service to stay informed about visibility changes to their widget.
+    * They should not attempt to determine their visibility from the event bus (no DOM information),
+    * nor poll it from the browser (too expensive).
+    *
+    * In contrast to the visibility events received over the event bus, these handlers will fire _after_ the
+    * visibility change has been implemented in the DOM, at which point in time the actual browser rendering
+    * state should correspond to the information conveyed in the event.
+    *
+    * The visibility service allows to register for onShow/onHide/onChange. When cleared, all handlers for
+    * the given scope will be cleared. Handlers are automatically cleared as soon as the given scope is
+    * destroyed. Handlers will be called whenever the given scope's visibility changes due to the widget
+    * becoming visible/invisible. Handlers will _not_ be called on state changes originating _from within_ the
+    * widget such as those caused by `ngShow`.
+    *
+    * If a widget becomes visible at all, the corresponding handlers for onChange and onShow are guaranteed
+    * to be called at least once.
+    *
+    * @name axVisibilityService
+    * @injection
+    */
+   module.factory( 'axVisibilityService', [ 'axHeartbeat', '$rootScope', function( heartbeat, $rootScope ) {
+
+      /**
+       * Create a DOM visibility handler for the given scope.
+       *
+       * @param {Object} scope
+       *    the scope from which to infer visibility. Must be a widget scope or nested in a widget scope
+       *
+       * @return {axVisibilityServiceHandler}
+       *    a visibility handler for the given scope
+       *
+       * @memberOf axVisibilityService
+       */
+      function handlerFor( scope ) {
+         var handlerId = scope.$id;
+         scope.$on( '$destroy', clear );
+
+         // Find the widget scope among the ancestors:
+         var widgetScope = scope;
+         while( widgetScope !== $rootScope && !(widgetScope.widget && widgetScope.widget.area) ) {
+            widgetScope = widgetScope.$parent;
+         }
+
+         var areaName = widgetScope.widget && widgetScope.widget.area;
+         if( !areaName ) {
+            throw new Error( 'axVisibilityService: could not determine widget area for scope: ' + handlerId );
+         }
+
+         /**
+          * A scope bound visibility handler.
+          *
+          * @name axVisibilityServiceHandler
+          */
+         var api = {
+
+            /**
+             * Determine if the governing widget scope's DOM is visible right now.
+             *
+             * @return {Boolean}
+             *    `true` if the widget associated with this handler is visible right now, else `false`
+             *
+             * @memberOf axVisibilityServiceHandler
+             */
+            isVisible: function() {
+               return isVisible( areaName );
+            },
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /**
+             * Schedule a handler to be called with the new DOM visibility on any DOM visibility change.
+             *
+             * @param {Function<Boolean>} handler
+             *    the callback to process visibility changes
+             *
+             * @return {axVisibilityServiceHandler}
+             *    this visibility handler (for chaining)
+             *
+             * @memberOf axVisibilityServiceHandler
+             */
+            onChange: function( handler ) {
+               addHandler( handlerId, areaName, handler, true );
+               addHandler( handlerId, areaName, handler, false );
+               return api;
+            },
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /**
+             * Schedule a handler to be called with the new DOM visibility when it has changed to `true`.
+             *
+             * @param {Function<Boolean>} handler
+             *    the callback to process visibility changes
+             *
+             * @return {axVisibilityServiceHandler}
+             *    this visibility handler (for chaining)
+             *
+             * @memberOf axVisibilityServiceHandler
+             */
+            onShow: function( handler ) {
+               addHandler( handlerId, areaName, handler, true );
+               return api;
+            },
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /**
+             * Schedule a handler to be called with the new DOM visibility when it has changed to `false`.
+             *
+             * @param {Function<Boolean>} handler
+             *    the callback to process visibility changes
+             *
+             * @return {axVisibilityServiceHandler}
+             *    this visibility handler (for chaining)
+             *
+             * @memberOf axVisibilityServiceHandler
+             */
+            onHide: function( handler ) {
+               addHandler( handlerId, areaName, handler, false );
+               return api;
+            },
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /**
+             * Removes all visibility handlers.
+             *
+             * @return {axVisibilityServiceHandler}
+             *    this visibility handler (for chaining)
+             *
+             * @memberOf axVisibilityServiceHandler
+             */
+            clear: clear
+
+         };
+
+         return api;
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function clear() {
+            clearHandlers( handlerId );
+            return api;
+         }
+
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      // track state to inform handlers that register after visibility for a given area was initialized
+      var knownState;
+
+      // store the registered show/hide-handlers by governing widget area
+      var showHandlers;
+      var hideHandlers;
+
+      // secondary lookup-table to track removal, avoiding O(n^2) cost for deleting n handlers in a row
+      var handlersById;
+
+      return {
+         isVisible: isVisible,
+         handlerFor: handlerFor,
+         // runtime-internal api for use by the page controller
+         _updateState: updateState,
+         _reset: reset
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function reset() {
+         knownState = {};
+         showHandlers = {};
+         hideHandlers = {};
+         handlersById = {};
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Determine if the given area's content DOM is visible right now.
+       * @param {String} area
+       *    the full name of the widget area to query
+       *
+       * @return {Boolean}
+       *    `true` if the area is visible right now, else `false`.
+       *
+       * @memberOf axVisibilityService
+       */
+      function isVisible( area ) {
+         return knownState[ area ] || false;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Run all handlers registered for the given area and target state after the next heartbeat.
+       * Also remove any handlers that have been cleared since the last run.
+       * @private
+       */
+      function updateState( area, targetState ) {
+         if( knownState[ area ] === targetState ) {
+            return;
+         }
+         knownState[ area ] = targetState;
+         heartbeat.onAfterNext( function() {
+            var areaHandlers = ( targetState ? showHandlers : hideHandlers )[ area ];
+            if( !areaHandlers ) { return; }
+            for( var i = areaHandlers.length - 1; i >= 0; --i ) {
+               var handlerRef = areaHandlers[ i ];
+               if( handlerRef.handler === null ) {
+                  areaHandlers.splice( i, 1 );
+               }
+               else {
+                  handlerRef.handler( targetState );
+               }
+            }
+         } );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Add a show/hide-handler for a given area and visibility state. Execute the handler right away if the
+       * state is already known.
+       * @private
+       */
+      function addHandler( id, area, handler, targetState ) {
+         var handlerRef = { handler: handler };
+         handlersById[ id ] = handlersById[ id ] || [];
+         handlersById[ id ].push( handlerRef );
+
+         var areaHandlers = targetState ? showHandlers : hideHandlers;
+         areaHandlers[ area ] = areaHandlers[ area ] || [];
+         areaHandlers[ area ].push( handlerRef );
+
+         // State already known? In that case, initialize:
+         if( area in knownState && knownState[ area ] === targetState ) {
+            handler( targetState );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function clearHandlers( id ) {
+         if( handlersById[ id ] ) {
+            handlersById[ id ].forEach( function( matchingHandlerRef ) {
+               matchingHandlerRef.handler = null;
+            } );
+         }
+      }
+
+   } ] );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   module.factory( 'axLogHttpInterceptor', [ 'axConfiguration', function( configuration ) {
+      var headerKey = configuration.get( CONFIG_KEY_HTTP_LOGGING_HEADER, null );
+      return headerKey ? {
+         request: function( config ) {
+            var headerValue = '';
+            ng.forEach( log.gatherTags(), function( tagValue, tagName ) {
+               headerValue += '[' + tagName + ':' + tagValue + ']';
+            } );
+
+            if( headerValue ) {
+               if( config.headers[ headerKey ] ) {
+                  log.warn( 'axLogHttpInterceptor: Overwriting existing header "[0]"', headerKey );
+               }
+               config.headers[ headerKey ] = headerValue;
+            }
+            return config;
+         }
+      } : {};
+   } ] );
+
+   var CONFIG_KEY_HTTP_LOGGING_HEADER = 'logging.http.header';
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Overrides the default `$exceptionHandler` service of AngularJS, using the LaxarJS logger for output.
+    *
+    * @name $exceptionHandler
+    * @injection
+    * @private
+    */
+   module.provider( '$exceptionHandler', function() {
+      var handler = function( exception, cause ) {
+         var msg = exception.message || exception;
+         log.error( 'There was an exception: ' + msg + ', \nstack: ' );
+         log.error( exception.stack + ', \n' );
+         log.error( '  Cause: ' + cause );
+      };
+
+      this.$get = [ function() {
+         return handler;
+      } ];
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var sensitiveData = [ 'Published event' ];
+   function eventBusErrorHandler( message, optionalErrorInformation ) {
+      log.error( 'EventBus: ' + message );
+
+      if( optionalErrorInformation ) {
+         ng.forEach( optionalErrorInformation, function( info, title ) {
+            var formatString = '   - [0]: [1:%o]';
+            if( sensitiveData.indexOf( title ) !== -1 ) {
+               formatString = '   - [0]: [1:%o:anonymize]';
+            }
+
+            log.error( formatString, title, info );
+
+            if( info instanceof Error && info.stack ) {
+               log.error( '   - Stacktrace: ' + info.stack );
+            }
+         } );
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return module;
+
+} );
+
+/**
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -6041,7 +7324,7 @@ define("json!laxar/static/schemas/flow.json", function(){ return {
 ;});
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -6506,129 +7789,6 @@ define( 'laxar/lib/runtime/flow',[
 
 } );
 
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/loaders/features_provider',[
-   '../json/validator',
-   '../utilities/object',
-   '../utilities/string'
-], function( jsonValidator, object, string ) {
-   'use strict';
-
-   // JSON schema formats:
-   var TOPIC_IDENTIFIER = '([a-z][+a-zA-Z0-9]*|[A-Z][+A-Z0-9]*)';
-   var SUB_TOPIC_FORMAT = new RegExp( '^' + TOPIC_IDENTIFIER + '$' );
-   var TOPIC_FORMAT = new RegExp( '^(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
-   var FLAG_TOPIC_FORMAT = new RegExp( '^[!]?(' + TOPIC_IDENTIFIER + '(-' + TOPIC_IDENTIFIER + ')*)$' );
-   // simplified RFC-5646 language-tag matcher with underscore/dash relaxation:
-   // the parts are: language *("-"|"_" script|region|variant) *("-"|"_" extension|privateuse)
-   var LANGUAGE_TAG_FORMAT = /^[a-z]{2,8}([-_][a-z0-9]{2,8})*([-_][a-z0-9][-_][a-z0-9]{2,8})*$/i;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function featuresForWidget( widgetSpecification, widgetConfiguration, throwError ) {
-      if( !widgetSpecification.features ) {
-         return {};
-      }
-
-      var featureConfiguration = widgetConfiguration.features || {};
-      var featuresSpec = widgetSpecification.features;
-      if( !( '$schema' in featuresSpec ) ) {
-         // we assume an "old style" feature specification (i.e. first level type specification is omitted)
-         // if no schema version was defined.
-         featuresSpec = {
-            $schema: 'http://json-schema.org/draft-03/schema#',
-            type: 'object',
-            properties: widgetSpecification.features
-         };
-      }
-
-      object.forEach( featuresSpec.properties, function( feature, name ) {
-         // ensure that simple object/array features are at least defined
-         if( name in featureConfiguration ) {
-            return;
-         }
-
-         if( feature.type === 'object' ) {
-            featureConfiguration[ name ] = {};
-         }
-         else if( feature.type === 'array' ) {
-            featureConfiguration[ name ] = [];
-         }
-      } );
-
-      var validator = createFeaturesValidator( featuresSpec );
-      var report = validator.validate( featureConfiguration );
-
-      if( report.errors.length > 0 ) {
-         var message = 'Validation for widget features failed. Errors: ';
-
-         report.errors.forEach( function( error ) {
-            message += '\n - ' + error.message.replace( /\[/g, '\\[' );
-         } );
-
-         throwError( message );
-      }
-
-      return featureConfiguration;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function createFeaturesValidator( featuresSpec ) {
-      var validator = jsonValidator.create( featuresSpec, {
-         prohibitAdditionalProperties: true,
-         useDefault: true
-      } );
-
-      // allows 'mySubTopic0815', 'MY_SUB_TOPIC+OK' and variations:
-      validator.addFormat( 'sub-topic', function( subTopic ) {
-         return ( typeof subTopic !== 'string' ) || SUB_TOPIC_FORMAT.test( subTopic );
-      } );
-
-      // allows 'myTopic', 'myTopic-mySubTopic-SUB_0815+OK' and variations:
-      validator.addFormat( 'topic', function( topic ) {
-         return ( typeof topic !== 'string' ) || TOPIC_FORMAT.test( topic );
-      } );
-
-      // allows 'myTopic', '!myTopic-mySubTopic-SUB_0815+OK' and variations:
-      validator.addFormat( 'flag-topic', function( flagTopic ) {
-         return ( typeof flagTopic !== 'string' ) || FLAG_TOPIC_FORMAT.test( flagTopic );
-      } );
-
-      // allows 'de_DE', 'en-x-laxarJS' and such:
-      validator.addFormat( 'language-tag', function( languageTag ) {
-         return ( typeof languageTag !== 'string' ) || LANGUAGE_TAG_FORMAT.test( languageTag );
-      } );
-
-      // checks that object keys have the 'topic' format
-      validator.addFormat( 'topic-map', function( topicMap ) {
-         return ( typeof topicMap !== 'object' ) || Object.keys( topicMap ).every( function( topic ) {
-            return TOPIC_FORMAT.test( topic );
-         } );
-      } );
-
-      // checks that object keys have the 'language-tag' format
-      validator.addFormat( 'localization', function( localization ) {
-         return ( typeof localization !== 'object' ) || Object.keys( localization ).every( function( tag ) {
-            return LANGUAGE_TAG_FORMAT.test( tag );
-         } );
-      } );
-
-      return validator;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      featuresForWidget: featuresForWidget
-   };
-
-} );
-
 
 define("json!laxar/static/schemas/page.json", function(){ return {
    "$schema": "http://json-schema.org/draft-04/schema#",
@@ -6663,6 +7823,10 @@ define("json!laxar/static/schemas/page.json", function(){ return {
                         "type": "string",
                         "description": "Path to the composition that should be included."
                      },
+                     "layout": {
+                        "type": "string",
+                        "description": "Path to the layout that should be inserted."
+                     },
                      "id": {
                         "type": "string",
                         "pattern": "^[a-z][a-zA-Z0-9_]*$",
@@ -6696,7 +7860,7 @@ define("json!laxar/static/schemas/page.json", function(){ return {
 ;});
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -6707,8 +7871,9 @@ define( 'laxar/lib/loaders/page_loader',[
    '../utilities/path',
    '../json/validator',
    './features_provider',
-   'json!../../static/schemas/page.json'
-], function( assert, object, string, path, jsonValidator, featuresProvider, pageSchema ) {
+   'json!../../static/schemas/page.json',
+   '../tooling/pages'
+], function( assert, object, string, path, jsonValidator, featuresProvider, pageSchema, pageTooling ) {
    'use strict';
 
    var SEGMENTS_MATCHER = /[_/-]./g;
@@ -6783,12 +7948,13 @@ define( 'laxar/lib/loaders/page_loader',[
             return processExtends( self, page, extensionChain );
          } )
          .then( function() {
-            return processCompositions( self, page, [], page );
+            return processCompositions( self, page, pageName );
          } )
          .then( function() {
-            return postProcessWidgets( self, page );
+            return checkForDuplicateWidgetIds( self, page );
          } )
          .then( function() {
+            pageTooling.setPageDefinition( pageName, page, pageTooling.FLAT );
             return page;
          } );
    }
@@ -6838,69 +8004,93 @@ define( 'laxar/lib/loaders/page_loader',[
    //
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function processCompositions( self, page, compositionChain, topPage ) {
-      var promise = self.q_.when();
-      var seenCompositionIdCount = {};
+   function processCompositions( self, topPage, topPageName ) {
 
-      object.forEach( page.areas, function( widgets ) {
-         /*jshint loopfunc:true*/
-         for( var i = widgets.length - 1; i >= 0; --i ) {
-            ( function( widgetSpec, index ) {
-               if( has( widgetSpec, 'composition' ) ) {
+      return processNestedCompositions( topPage, null, [] );
+
+      function processNestedCompositions( page, instanceId, compositionChain ) {
+
+         var promise = self.q_.when();
+         var seenCompositionIdCount = {};
+
+         object.forEach( page.areas, function( widgets ) {
+            /*jshint loopfunc:true*/
+            for( var i = widgets.length - 1; i >= 0; --i ) {
+               ( function( widgetSpec, index ) {
                   if( widgetSpec.enabled === false ) {
                      return;
                   }
 
-                  var compositionName = widgetSpec.composition;
-                  if( compositionChain.indexOf( compositionName ) !== -1 ) {
-                     var message = 'Cycle in compositions detected: ' +
-                                   compositionChain.concat( [ compositionName ] ).join( ' -> ' );
-                     throwError( topPage, message );
+                  if( has( widgetSpec, 'widget' ) ) {
+                     if( !has( widgetSpec, 'id' ) ) {
+                        var widgetName = widgetSpec.widget.split( '/' ).pop();
+                        widgetSpec.id = nextId( self, widgetName.replace( SEGMENTS_MATCHER, dashToCamelcase ) );
+                     }
+                     return;
                   }
 
-                  if( !has( widgetSpec, 'id' ) ) {
-                     var escapedCompositionName =
-                        widgetSpec.composition.replace( SEGMENTS_MATCHER, dashToCamelcase );
-                     widgetSpec.id = nextId( self, escapedCompositionName );
-                  }
+                  if( has( widgetSpec, 'composition' ) ) {
+                     var compositionName = widgetSpec.composition;
+                     if( compositionChain.indexOf( compositionName ) !== -1 ) {
+                        var message = 'Cycle in compositions detected: ' +
+                                      compositionChain.concat( [ compositionName ] ).join( ' -> ' );
+                        throwError( topPage, message );
+                     }
 
-                  if( widgetSpec.id in seenCompositionIdCount ) {
-                     seenCompositionIdCount[ widgetSpec.id ]++;
-                  }
-                  else {
-                     seenCompositionIdCount[ widgetSpec.id ] = 1;
-                  }
+                     if( !has( widgetSpec, 'id' ) ) {
+                        var escapedCompositionName =
+                           widgetSpec.composition.replace( SEGMENTS_MATCHER, dashToCamelcase );
+                        widgetSpec.id = nextId( self, escapedCompositionName );
+                     }
 
-                  // Loading compositionUrl can be started asynchronously, but replacing the according widgets
-                  // in the page needs to take place in order. Otherwise the order of widgets could be messed up.
-                  promise = promise
-                     .then( function() {
-                        return load( self, assetUrl( self.baseUrl_, compositionName ) );
-                     } )
-                     .then( function( composition ) {
-                        return prefixCompositionIds( composition, widgetSpec );
-                     } )
-                     .then( function( composition ) {
-                        return processCompositionExpressions( composition, widgetSpec, throwError.bind( null, topPage ) );
-                     } )
-                     .then( function( composition ) {
-                        var chain = compositionChain.concat( compositionName );
-                        return processCompositions( self, composition, chain, topPage )
-                           .then( function() {
-                              return composition;
-                           } );
-                     } )
-                     .then( function( composition ) {
-                        mergeCompositionAreasWithPageAreas( composition, page, widgets, index );
-                     } );
-               }
-            } )( widgets[ i ], i );
+                     if( widgetSpec.id in seenCompositionIdCount ) {
+                        seenCompositionIdCount[ widgetSpec.id ]++;
+                     }
+                     else {
+                        seenCompositionIdCount[ widgetSpec.id ] = 1;
+                     }
+
+                     // Loading compositionUrl can be started asynchronously, but replacing the according widgets
+                     // in the page needs to take place in order. Otherwise the order of widgets could be messed up.
+                     promise = promise
+                        .then( function() {
+                           return load( self, assetUrl( self.baseUrl_, compositionName ) );
+                        } )
+                        .then( function( composition ) {
+                           return prefixCompositionIds( composition, widgetSpec );
+                        } )
+                        .then( function( composition ) {
+                           return processCompositionExpressions( composition, widgetSpec, throwError.bind( null, topPage ) );
+                        } )
+                        .then( function( composition ) {
+                           var chain = compositionChain.concat( compositionName );
+                           return processNestedCompositions( composition, widgetSpec.id, chain )
+                              .then( function() {
+                                 pageTooling.setCompositionDefinition( topPageName, widgetSpec.id, composition, pageTooling.FLAT );
+                                 return composition;
+                              } );
+                        } )
+                        .then( function( composition ) {
+                           mergeCompositionAreasWithPageAreas( composition, page, widgets, index );
+                        } );
+                  }
+               } )( widgets[ i ], i );
+            }
+         } );
+
+         // now that all IDs have been created, we can store a copy of the page prior to composition expansion
+         if( page === topPage ) {
+            pageTooling.setPageDefinition( topPageName, page, pageTooling.COMPACT );
          }
-      } );
+         else {
+            pageTooling.setCompositionDefinition( topPageName, instanceId, page, pageTooling.COMPACT );
+         }
 
-      checkForDuplicateCompositionIds( page, seenCompositionIdCount );
+         checkForDuplicateCompositionIds( page, seenCompositionIdCount );
 
-      return promise;
+         return promise;
+      }
+
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7043,7 +8233,7 @@ define( 'laxar/lib/loaders/page_loader',[
    //
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function postProcessWidgets( self, page ) {
+   function checkForDuplicateWidgetIds( self, page ) {
       var idCount = {};
 
       object.forEach( page.areas, function( widgetList, index ) {
@@ -7051,15 +8241,7 @@ define( 'laxar/lib/loaders/page_loader',[
             if( widgetSpec.enabled === false ) {
                return false;
             }
-
-            if( has( widgetSpec, 'widget' ) ) {
-               if( !has( widgetSpec, 'id' ) ) {
-                  var widgetName = widgetSpec.widget.split( '/' ).pop();
-                  widgetSpec.id = nextId( self, widgetName.replace( SEGMENTS_MATCHER, dashToCamelcase ) );
-               }
-
-               idCount[ widgetSpec.id ] = idCount[ widgetSpec.id ] ? idCount[ widgetSpec.id ] + 1 : 1;
-            }
+            idCount[ widgetSpec.id ] = idCount[ widgetSpec.id ] ? idCount[ widgetSpec.id ] + 1 : 1;
             return true;
          } );
       } );
@@ -7203,179 +8385,26 @@ define( 'laxar/lib/loaders/page_loader',[
 } );
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( 'laxar/lib/widget_adapters/plain_adapter',[], function() {
-   'use strict';
-
-   var widgetModules = {};
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function bootstrap( modules ) {
-      modules.forEach( function( module ) {
-         widgetModules[ module.name ] = module;
-      } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    *
-    * @param {Object}      environment
-    * @param {HTMLElement} environment.anchorElement
-    * @param {Object}      environment.context
-    * @param {EventBus}    environment.context.eventBus
-    * @param {Object}      environment.context.features
-    * @param {Function}    environment.context.id
-    * @param {Object}      environment.context.widget
-    * @param {String}      environment.context.widget.area
-    * @param {String}      environment.context.widget.id
-    * @param {String}      environment.context.widget.path
-    * @param {Object}      environment.specification
-    *
-    * @return {Object}
-    */
-   function create( environment ) {
-
-      var exports = {
-         createController: createController,
-         domAttachTo: domAttachTo,
-         domDetach: domDetach,
-         destroy: function() {}
-      };
-
-      var widgetName = environment.specification.name;
-      var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
-      var context = environment.context;
-      var controller = null;
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function createController() {
-         var module = widgetModules[ moduleName ];
-         var injector = createInjector();
-         var injections = ( module.injections || [] ).map( function( injection ) {
-            return injector.get( injection );
-         } );
-
-         controller = module.create.apply( module, injections );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function domAttachTo( areaElement, htmlTemplate ) {
-         if( htmlTemplate === null ) {
-            return;
-         }
-         environment.anchorElement.innerHTML = htmlTemplate;
-         areaElement.appendChild( environment.anchorElement );
-         controller.renderTo( environment.anchorElement );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function domDetach() {
-         var parent = environment.anchorElement.parentNode;
-         if( parent ) {
-            parent.removeChild( environment.anchorElement );
-         }
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function createInjector() {
-         var map = {
-            axContext: context,
-            axEventBus: context.eventBus,
-            axFeatures: context.features || {}
-         };
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         return {
-            get: function( name ) {
-               if( !( name in map ) ) {
-                  throw new Error( 'Unknown dependency "' + name + '".' );
-               }
-               return map[ name ];
-            }
-         };
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      return exports;
-
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      technology: 'plain',
-      bootstrap: bootstrap,
-      create: create
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/widget_adapters/angular_adapter',[
-   'angular',
-   'require',
-   '../utilities/assert',
-   '../logging/log'
-], function( ng, require, assert, log ) {
+define( 'laxar/lib/runtime/layout_widget_adapter',[
+   'angular'
+], function( ng ) {
    'use strict';
 
    var $compile;
-   var $controller;
    var $rootScope;
-
-   var controllerNames = {};
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function bootstrap( widgetModules ) {
-      var dependencies = ( widgetModules || [] ).map( function( module ) {
-         controllerNames[ module.name ] = capitalize( module.name ) + 'Controller';
-         supportPreviousNaming( module.name );
-         return module.name;
-      } );
-
-      return ng.module( 'axAngularWidgetAdapter', dependencies )
-         .run( [ '$compile', '$controller', '$rootScope', function( _$compile_, _$controller_, _$rootScope_ ) {
-            $controller = _$controller_;
-            $compile = _$compile_;
-            $rootScope = _$rootScope_;
-         } ] );
-   }
+   var module = ng.module( 'axLayoutWidgetAdapter', [] )
+      .run( [ '$compile', '$rootScope', function( _$compile_, _$rootScope_ ) {
+         $compile = _$compile_;
+         $rootScope = _$rootScope_;
+      } ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   /**
-    *
-    * @param {Object}      environment
-    * @param {HTMLElement} environment.anchorElement
-    * @param {Object}      environment.context
-    * @param {EventBus}    environment.context.eventBus
-    * @param {Object}      environment.context.features
-    * @param {Function}    environment.context.id
-    * @param {Object}      environment.context.widget
-    * @param {String}      environment.context.widget.area
-    * @param {String}      environment.context.widget.id
-    * @param {String}      environment.context.widget.path
-    * @param {Object}      environment.specification
-    *
-    * @return {Object}
-    */
-   function create( environment ) {
+   function create( layout, widget ) {
 
       var exports = {
          createController: createController,
@@ -7383,72 +8412,43 @@ define( 'laxar/lib/widget_adapters/angular_adapter',[
          domDetach: domDetach,
          destroy: destroy
       };
-
-      var context = environment.context;
-      var scope_;
-      var injections_;
+      var layoutElement;
+      var scope;
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function createController() {
-         var widgetName = environment.specification.name;
-         var moduleName = widgetName.replace( /^./, function( _ ) { return _.toLowerCase(); } );
-         var controllerName = controllerNames[ moduleName ];
-
-         injections_ = {
-            axContext: context,
-            axEventBus: context.eventBus
-         };
-         Object.defineProperty( injections_, '$scope', {
-            get: function() {
-               if( !scope_ ) {
-                  scope_ = $rootScope.$new();
-                  ng.extend( scope_, context );
-               }
-               return scope_;
-            }
-         } );
-
-         $controller( controllerName, injections_ );
+         // noop
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      /**
-       * Synchronously attach the widget DOM to the given area.
-       *
-       * @param {HTMLElement} areaElement
-       *    The widget area to attach this widget to.
-       * @param {String} templateHtml
-       *
-       */
-      function domAttachTo( areaElement, templateHtml ) {
-         if( templateHtml === null ) {
-            return;
-         }
+      function domAttachTo( areaElement, htmlTemplate ) {
+         scope = $rootScope.$new();
+         scope.widget = widget;
 
-         var element = ng.element( environment.anchorElement );
-         element.html( templateHtml );
-         areaElement.appendChild( environment.anchorElement );
-         $compile( environment.anchorElement )( injections_.$scope );
-         templateHtml = null;
+         var layoutNode = document.createElement( 'div' );
+         layoutNode.id = widget.id;
+         layoutNode.className = layout.className;
+         layoutNode.innerHTML = htmlTemplate;
+
+         layoutElement = $compile( layoutNode )( scope );
+         areaElement.appendChild( layoutNode );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function domDetach() {
-         var parent = environment.anchorElement.parentNode;
-         if( parent ) {
-            parent.removeChild( environment.anchorElement );
-         }
+         layoutElement.remove();
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function destroy() {
-         if( scope_ ) {
-            scope_.$destroy();
+         if( scope ){
+            scope.$destroy();
          }
+         scope = null;
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7457,355 +8457,17 @@ define( 'laxar/lib/widget_adapters/angular_adapter',[
 
    }
 
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function capitalize( _ ) {
-      return _.replace( /^./, function( _ ) { return _.toUpperCase(); } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function supportPreviousNaming( moduleName ) {
-      if( moduleName.indexOf( '.' ) === -1 ) {
-         return;
-      }
-
-      var lookupName = moduleName.replace( /^.*\.([^.]+)$/, function( $_, $1 ) {
-         return $1.replace( /_(.)/g, function( $_, $1 ) { return $1.toUpperCase(); } );
-      } );
-      controllerNames[ lookupName ] = controllerNames[ moduleName ] = moduleName + '.Controller';
-
-      log.warn( 'Deprecation: AngularJS widget module name "' + moduleName + '" violates naming rules! ' +
-                'Module should be named "' + lookupName + '". ' +
-                'Controller should be named "' + capitalize( lookupName ) + 'Controller".' );
-   }
-
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
-      technology: 'angular',
-      bootstrap: bootstrap,
-      create: create
+      create: create,
+      name: module.name
    };
 
 } );
 
 /**
- * Copyright 2015 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/widget_adapters/adapters',[
-   './plain_adapter',
-   './angular_adapter'
-], function( plainAdapter, angularAdapter ) {
-   'use strict';
-
-   var adapters = {};
-   adapters[ plainAdapter.technology ] = plainAdapter;
-   adapters[ angularAdapter.technology ] = angularAdapter;
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-
-      getFor: function( technology ) {
-         return adapters[ technology ];
-      },
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      addAdapters: function( additionalAdapters ) {
-         additionalAdapters.forEach( function( adapter ) {
-            adapters[ adapter.technology ] = adapter;
-         } );
-      }
-
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
- */
-define( 'laxar/lib/loaders/widget_loader',[
-   '../logging/log',
-   '../utilities/path',
-   '../utilities/assert',
-   '../utilities/object',
-   '../utilities/string',
-   './paths',
-   './features_provider',
-   '../widget_adapters/adapters'
-], function( log, path, assert, object, string, paths, featuresProvider, adapters ) {
-   'use strict';
-
-   var TYPE_WIDGET = 'widget';
-   var TYPE_ACTIVITY = 'activity';
-   var TECHNOLOGY_ANGULAR = 'angular';
-
-   var DEFAULT_INTEGRATION = { type: TYPE_WIDGET, technology: TECHNOLOGY_ANGULAR };
-
-   var ID_SEPARATOR = '-';
-   var INVALID_ID_MATCHER = /[^A-Za-z0-9_\.-]/g;
-
-   /**
-    * @typedef {{then: Function}} Promise
-    *
-    * @param q
-    * @param fileResourceProvider
-    * @param themeManager
-    * @param cssLoader
-    * @param eventBus
-    * @returns {{load: Function}}
-    */
-   function create( q, fileResourceProvider, themeManager, cssLoader, eventBus ) {
-
-      return {
-         load: load
-      };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Load a widget using an appropriate adapter
-       *
-       * First, get the given widget's specification to validate and instantiate the widget features.
-       * Then, instantiate a widget adapter matching the widget's technology. Using the adapter, create the
-       * widget controller. The adapter is returned and can be used to attach the widget to the DOM, or to
-       * destroy it.
-       *
-       * @param {Object} widgetConfiguration
-       *    a widget instance configuration (as used in page definitions) to instantiate the widget from
-       *
-       * @return {Promise} a promise for a widget adapter, with an already instantiated controller
-       */
-      function load( widgetConfiguration ) {
-         var widgetPath = widgetConfiguration.widget;
-         var widgetJsonPath = path.join( paths.WIDGETS, widgetPath, 'widget.json' );
-
-         return fileResourceProvider.provide( widgetJsonPath )
-            .then( function( specification ) {
-               var integration = object.options( specification.integration, DEFAULT_INTEGRATION );
-               var type = integration.type;
-               var technology = integration.technology;
-               // Handle legacy widget code:
-               if( type === TECHNOLOGY_ANGULAR ) {
-                  type = TYPE_WIDGET;
-               }
-               if( type !== TYPE_WIDGET && type !== TYPE_ACTIVITY ) {
-                  throwError( widgetConfiguration, 'unknown integration type ' + type );
-               }
-
-               var throwWidgetError = throwError.bind( null, widgetConfiguration );
-               var features =
-                  featuresProvider.featuresForWidget( specification, widgetConfiguration, throwWidgetError );
-               var anchorElement = document.createElement( 'DIV' );
-               anchorElement.className = camelCaseToDashed( specification.name );
-               anchorElement.id = 'ax' + ID_SEPARATOR + widgetConfiguration.id;
-               var widgetEventBus = createEventBusForWidget( eventBus, specification, widgetConfiguration );
-
-               var adapter = adapters.getFor( technology ).create( {
-                  anchorElement: anchorElement,
-                  context: {
-                     eventBus: widgetEventBus,
-                     features: features,
-                     id: createIdGeneratorForWidget( widgetConfiguration.id ),
-                     widget: {
-                        area: widgetConfiguration.area,
-                        id: widgetConfiguration.id,
-                        path: widgetConfiguration.widget
-                     }
-                  },
-                  specification: specification
-               } );
-               adapter.createController();
-
-               return {
-                  id: widgetConfiguration.id,
-                  adapter: adapter,
-                  destroy: function() {
-                     widgetEventBus.release();
-                     adapter.destroy();
-                  },
-                  templatePromise: loadAssets( widgetPath, integration, specification )
-               };
-
-            }, function( err ) {
-               var message = 'Could not load spec for widget [0] from [1]: [2]';
-               log.error( message, widgetPath, widgetJsonPath, err );
-            } );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * Locates and loads the widget HTML template for this widget (if any) as well as any CSS stylesheets
-       * used by this widget or its controls.
-       *
-       * @param widgetReferencePath
-       *    The path suffix used to look up the widget, as given in the instance configuration.
-       * @param integration
-       *    Details on the integration type and technology: Activities do not require assets.
-       * @param widgetSpecification
-       *    The widget specification, used to find out if any controls need to be loaded.
-       *
-       * @return {Promise<String>}
-       *    A promise that will be resolved with the contents of any HTML template for this widget, or with
-       *    `null` if there is no template (for example, if this is an activity).
-       */
-      function loadAssets( widgetReferencePath, integration, widgetSpecification ) {
-
-         return integration.type === TYPE_ACTIVITY ? q.when( null ) : resolve().then( function( urls ) {
-            urls.cssFileUrls.forEach( function( url ) { cssLoader.load( url ); } );
-            return urls.templateUrl ? fileResourceProvider.provide( urls.templateUrl ) : null;
-         } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function resolve() {
-            var technicalName = widgetReferencePath.split( '/' ).pop();
-            var widgetPath = path.join( paths.WIDGETS, widgetReferencePath );
-            var htmlFile = technicalName + '.html';
-            var cssFile = path.join( 'css/', technicalName + '.css' );
-
-            var promises = [];
-            promises.push( themeManager.urlProvider(
-               path.join( widgetPath, '[theme]' ),
-               path.join( paths.THEMES, '[theme]', 'widgets', widgetReferencePath )
-            ).provide( [ htmlFile, cssFile ] ) );
-
-            promises = promises.concat( ( widgetSpecification.controls || [] )
-               .map( function( controlReference ) {
-                  // By appending a path now and .json afterwards, trick RequireJS into generating the
-                  // correct descriptor path when loading from a 'package'.
-                  var controlLocation = path.normalize( require.toUrl( path.join( controlReference, 'control' ) ) );
-                  var descriptorUrl = controlLocation + '.json';
-                  return fileResourceProvider.provide( descriptorUrl ).then( function( descriptor ) {
-                     // LaxarJS 1.x style control (name determined from descriptor):
-                     var name = camelCaseToDashed( descriptor.name );
-                     return themeManager.urlProvider(
-                        path.join( controlLocation.replace( /\/control$/, '' ), '[theme]' ),
-                        path.join( paths.THEMES, '[theme]', 'controls', name )
-                     ).provide( [ path.join( 'css/',  name + '.css' ) ] );
-                  },
-                  function() {
-                     // LaxarJS 0.x style controls (no descriptor, uses AMD path as name):
-                     var name = controlReference.split( '/' ).pop();
-                     return themeManager.urlProvider(
-                        path.join( require.toUrl( controlReference ), '[theme]' ),
-                        path.join( paths.THEMES, '[theme]', controlReference )
-                     ).provide( [ path.join( 'css/', name + '.css' ) ] );
-                  } );
-               } ) );
-
-            return q.all( promises )
-               .then( function( results ) {
-                  var widgetUrls = results[ 0 ];
-                  var cssUrls = results.slice( 1 )
-                     .map( function( urls ) { return urls[ 0 ]; } )
-                     .concat( widgetUrls.slice( 1 ) )
-                     .filter( function( url ) { return !!url; } );
-
-                  return {
-                     templateUrl: widgetUrls[ 0 ] || '',
-                     cssFileUrls: cssUrls
-                  };
-               } );
-         }
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function camelCaseToDashed( str ) {
-      return str.replace( /[A-Z]/g, function( character, offset ) {
-         return ( offset > 0 ? '-' : '' ) + character.toLowerCase();
-      } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function throwError( widgetConfiguration, message ) {
-      throw new Error( string.format(
-         'Error loading widget "[widget]" (id: "[id]"): [0]', [ message ], widgetConfiguration
-      ) );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function createIdGeneratorForWidget( widgetId ) {
-      var charCodeOfA = 'a'.charCodeAt( 0 );
-      function fixLetter( l ) {
-         // We map invalid characters deterministically to valid lower case letters. Thereby a collision of
-         // two ids with different invalid characters at the same positions is less likely to occur.
-         return String.fromCharCode( charCodeOfA + l.charCodeAt( 0 ) % 26 );
-      }
-
-      var prefix = 'ax' + ID_SEPARATOR + widgetId.replace( INVALID_ID_MATCHER, fixLetter ) + ID_SEPARATOR;
-      return function( localId ) {
-         return prefix + ( '' + localId ).replace( INVALID_ID_MATCHER, fixLetter );
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function createEventBusForWidget( eventBus, widgetSpecification, widgetConfiguration ) {
-
-      var collaboratorId = 'widget.' + widgetSpecification.name + '#' + widgetConfiguration.id;
-
-      function forward( to ) {
-         return function() {
-            return eventBus[ to ].apply( eventBus, arguments );
-         };
-      }
-
-      function augmentOptions( optionalOptions ) {
-         return object.options( optionalOptions, { sender: collaboratorId } );
-      }
-
-      var subscriptions = [];
-      function unsubscribe( subscriber ) {
-         eventBus.unsubscribe( subscriber );
-      }
-
-      return {
-         addInspector: forward( 'addInspector' ),
-         setErrorHandler: forward( 'setErrorHandler' ),
-         setMediator: forward( 'setMediator' ),
-         unsubscribe: unsubscribe,
-         subscribe: function( eventName, subscriber, optionalOptions ) {
-            subscriptions.push( subscriber );
-
-            var options = object.options( optionalOptions, { subscriber: collaboratorId } );
-
-            eventBus.subscribe( eventName, subscriber, options );
-         },
-         publish: function( eventName, optionalEvent, optionalOptions ) {
-            return eventBus.publish( eventName, optionalEvent, augmentOptions( optionalOptions ) );
-         },
-         publishAndGatherReplies: function( eventName, optionalEvent, optionalOptions ) {
-            return eventBus.publishAndGatherReplies( eventName, optionalEvent, augmentOptions( optionalOptions ) );
-         },
-         release: function() {
-            subscriptions.forEach( unsubscribe );
-         }
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return {
-      create: create
-   };
-
-} );
-
-/**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -7985,7 +8647,7 @@ define( 'laxar/lib/runtime/area_helper',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8069,7 +8731,7 @@ define( 'laxar/lib/runtime/locale_event_manager',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8233,7 +8895,7 @@ define( 'laxar/lib/runtime/visibility_event_manager',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8244,13 +8906,16 @@ define( 'laxar/lib/runtime/page',[
    '../loaders/page_loader',
    '../loaders/widget_loader',
    '../loaders/paths',
+   './layout_widget_adapter',
+   './flow',
    './area_helper',
    './locale_event_manager',
-   './visibility_event_manager'
-], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, createAreaHelper, createLocaleEventManager, createVisibilityEventManager ) {
+   './visibility_event_manager',
+   '../tooling/pages'
+], function( ng, assert, layoutModule, pageLoader, widgetLoader, paths, layoutWidgetAdapter, flowModule, createAreaHelper, createLocaleEventManager, createVisibilityEventManager, pageTooling ) {
    'use strict';
 
-   var module = ng.module( 'axPage', [ layoutModule.name ] );
+   var module = ng.module( 'axPage', [ layoutModule.name, layoutWidgetAdapter.name, flowModule.name ] );
 
    /** Delay between sending didLifeCycle and attaching widget templates. */
    var WIDGET_ATTACH_DELAY_MS = 5;
@@ -8286,136 +8951,214 @@ define( 'laxar/lib/runtime/page',[
    /**
     * Manages widget adapters and their DOM for the current page
     */
-   module.controller( 'AxPageController', [
-      '$scope', '$q', '$timeout', 'axPageService', 'axVisibilityService', 'axConfiguration', 'axCssLoader', 'axLayoutLoader', 'axGlobalEventBus', 'axFileResourceProvider', 'axThemeManager',
-      function( $scope, $q, $timeout , pageService, visibilityService, configuration, cssLoader, layoutLoader, eventBus, fileResourceProvider, themeManager ) {
+   ( function() {
 
-         var self = this;
-         var pageLoader_ = pageLoader.create( $q, null, paths.PAGES, fileResourceProvider );
+      var pageControllerDependencies = [ '$scope', '$q', '$timeout', 'axPageService'];
 
-         var areaHelper_;
-         var widgetAdapters_ = [];
+      var axServiceDependencies = [
+         'axConfiguration',
+         'axControls',
+         'axCssLoader',
+         'axFileResourceProvider',
+         'axFlowService',
+         'axGlobalEventBus',
+         'axHeartbeat',
+         'axI18n',
+         'axLayoutLoader',
+         'axThemeManager',
+         'axTimestamp',
+         'axVisibilityService'
+      ];
 
-         var theme = themeManager.getTheme();
-         var localeManager = createLocaleEventManager( $q, eventBus, configuration );
-         var visibilityManager = createVisibilityEventManager( $q, eventBus );
-         var lifecycleEvent = { lifecycleId: 'default' };
-         var senderOptions = { sender: 'AxPageController' };
+      var createPageControllerInjected = pageControllerDependencies
+            .concat( axServiceDependencies )
+            .concat( function( $scope, $q, $timeout, pageService ) {
 
-         var renderLayout = function( layoutInfo ) {
-            assert.codeIsUnreachable( 'No renderer for page layout ' + layoutInfo.className );
-         };
-
-         var cleanup = pageService.registerPageController( this );
-         $scope.$on( '$destroy', cleanup );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function widgetsForPage( page ) {
-            var widgets = [];
-            ng.forEach( page.areas, function( area, areaName ) {
-               area.forEach( function( widget ) {
-                  widget.area = areaName;
-                  widgets.push( widget );
-               } );
-            } );
-            return widgets;
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function beginLifecycle() {
-            return eventBus.publishAndGatherReplies(
-               'beginLifecycleRequest.default',
-               lifecycleEvent,
-               senderOptions );
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function publishTheme() {
-            return eventBus.publish( 'didChangeTheme.' + theme, { theme: theme }, senderOptions );
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /**
-          * Instantiate all widget controllers on this page, and then load their UI.
-          *
-          * @return {Promise}
-          *    A promise that is resolved when all controllers have been instantiated, and when the initial
-          *    events have been sent.
-          */
-         function setupPage( pageName ) {
-            var widgetLoader_ = widgetLoader.create( $q, fileResourceProvider, themeManager, cssLoader, eventBus );
-
-            var layoutDeferred = $q.defer();
-            var pagePromise = pageLoader_.loadPage( pageName )
-               .then( function( page ) {
-                  areaHelper_ = createAreaHelper( $q, page, visibilityService );
-                  visibilityManager.setAreaHelper( areaHelper_ );
-                  self.areas = areaHelper_;
-                  layoutLoader.load( page.layout ).then( layoutDeferred.resolve );
-
-                  localeManager.subscribe();
-                  // instantiate controllers
-                  var widgets = widgetsForPage( page );
-                  return $q.all( widgets.map( widgetLoader_.load ) );
-               } )
-               .then( function( widgetAdapters ) {
-                  widgetAdapters_ = widgetAdapters;
-               } )
-               .then( localeManager.initialize )
-               .then( publishTheme )
-               .then( beginLifecycle )
-               .then( visibilityManager.initialize );
-
-            var layoutReady = layoutDeferred.promise.then( function( result ) {
-               // function wrapper is necessary here to dereference `renderlayout` _after_ the layout is ready
-               renderLayout( result );
+            var axServices = {};
+            var injections = [].slice.call( arguments );
+            axServiceDependencies.forEach( function( name, index ) {
+               axServices[ name ] = injections[ pageControllerDependencies.length + index ];
             } );
 
-            // Give the widgets (a little) time to settle on the event bus before $digesting and painting:
-            var widgetsInitialized = pagePromise.then( function() {
-               return $timeout( function(){}, WIDGET_ATTACH_DELAY_MS, false );
-            } );
+            var visibilityService = axServices.axVisibilityService;
+            var configuration = axServices.axConfiguration;
+            var layoutLoader = axServices.axLayoutLoader;
+            var eventBus = axServices.axGlobalEventBus;
+            var fileResourceProvider = axServices.axFileResourceProvider;
+            var themeManager = axServices.axThemeManager;
 
-            return $q.all( [ layoutReady, widgetsInitialized ] )
-               .then( function() {
-                  areaHelper_.attachWidgets( widgetAdapters_ );
-               } );
-         }
+            var self = this;
+            var pageLoader_ = pageLoader.create( $q, null, paths.PAGES, fileResourceProvider );
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            var areaHelper_;
+            var widgetAdapters_ = [];
+            var viewChangeApplyFunctions_ = [];
 
-         function tearDownPage() {
-            visibilityManager.unsubscribe();
-            localeManager.unsubscribe();
+            var theme = themeManager.getTheme();
+            var localeManager = createLocaleEventManager( $q, eventBus, configuration );
+            var visibilityManager = createVisibilityEventManager( $q, eventBus );
+            var lifecycleEvent = { lifecycleId: 'default' };
+            var senderOptions = { sender: 'AxPageController' };
 
-            return eventBus
-               .publishAndGatherReplies( 'endLifecycleRequest.default', lifecycleEvent, senderOptions )
-               .then( function() {
-                  widgetAdapters_.forEach( function( adapterRef ) {
-                     adapterRef.destroy();
+            var renderLayout = function( layoutInfo ) {
+               assert.codeIsUnreachable( 'No renderer for page layout ' + layoutInfo.className );
+            };
+
+            var cleanup = pageService.registerPageController( this );
+            $scope.$on( '$destroy', cleanup );
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function widgetsForPage( page ) {
+               var widgets = [];
+               ng.forEach( page.areas, function( area, areaName ) {
+                  area.forEach( function( widget ) {
+                     widget.area = areaName;
+                     widgets.push( widget );
                   } );
-                  widgetAdapters_ = [];
                } );
-         }
+               return widgets;
+            }
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function registerLayoutRenderer( render ) {
-            renderLayout = render;
-         }
+            function beginLifecycle() {
+               return eventBus.publishAndGatherReplies(
+                  'beginLifecycleRequest.default',
+                  lifecycleEvent,
+                  senderOptions );
+            }
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         this.setupPage = setupPage;
-         this.tearDownPage = tearDownPage;
-         this.registerLayoutRenderer = registerLayoutRenderer;
-      }
+            function publishTheme() {
+               return eventBus.publish( 'didChangeTheme.' + theme, { theme: theme }, senderOptions );
+            }
 
-   ] );
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /**
+             * Instantiate all widget controllers on this page, and then load their UI.
+             *
+             * @return {Promise}
+             *    A promise that is resolved when all controllers have been instantiated, and when the initial
+             *    events have been sent.
+             */
+            function setupPage( pageName ) {
+               var widgetLoader_ = widgetLoader.create( $q, axServices );
+
+               var layoutDeferred = $q.defer();
+               var pagePromise = pageLoader_.loadPage( pageName )
+                  .then( function( page ) {
+                     areaHelper_ = createAreaHelper( $q, page, visibilityService );
+                     visibilityManager.setAreaHelper( areaHelper_ );
+                     self.areas = areaHelper_;
+                     layoutLoader.load( page.layout ).then( layoutDeferred.resolve );
+
+                     localeManager.subscribe();
+                     // instantiate controllers
+                     var widgets = widgetsForPage( page );
+                     return $q.all( widgets.map( function( widget ) {
+                        if( 'layout' in widget ) {
+                           return createLayoutWidgetAdapter( widget );
+                        }
+
+                        return widgetLoader_.load( widget );
+                     } ) );
+                  } )
+                  .then( function( widgetAdapters ) {
+                     pageTooling.setCurrentPage( pageName );
+                     widgetAdapters.forEach( function( adapter ) {
+                        if( typeof adapter.applyViewChanges === 'function' &&
+                            viewChangeApplyFunctions_.indexOf( adapter.applyViewChanges ) === -1 ) {
+                           viewChangeApplyFunctions_.push( adapter.applyViewChanges );
+                        }
+                     } );
+                     widgetAdapters_ = widgetAdapters;
+                  } )
+                  .then( localeManager.initialize )
+                  .then( publishTheme )
+                  .then( beginLifecycle )
+                  .then( visibilityManager.initialize );
+
+               var layoutReady = layoutDeferred.promise.then( function( result ) {
+                  // function wrapper is necessary here to dereference `renderlayout` _after_ the layout is ready
+                  renderLayout( result );
+               } );
+
+               // Give the widgets (a little) time to settle on the event bus before $digesting and painting:
+               var widgetsInitialized = pagePromise.then( function() {
+                  return $timeout( function(){}, WIDGET_ATTACH_DELAY_MS, false );
+               } );
+
+               return $q.all( [ layoutReady, widgetsInitialized ] )
+                  .then( function() {
+                     areaHelper_.attachWidgets( widgetAdapters_ );
+                  } );
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function tearDownPage() {
+               visibilityManager.unsubscribe();
+               localeManager.unsubscribe();
+
+               return eventBus
+                  .publishAndGatherReplies( 'endLifecycleRequest.default', lifecycleEvent, senderOptions )
+                  .then( function() {
+                     widgetAdapters_.forEach( function( adapterRef ) {
+                        adapterRef.destroy();
+                     } );
+                     widgetAdapters_ = [];
+                     viewChangeApplyFunctions_ = [];
+                  } );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function registerLayoutRenderer( render ) {
+               renderLayout = render;
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function createLayoutWidgetAdapter( widget ) {
+               return layoutLoader.load( widget.layout )
+                  .then( function( layout ) {
+                     var adapter = layoutWidgetAdapter.create( layout, {
+                        area: widget.area,
+                        id: widget.id,
+                        path: widget.layout
+                     } );
+
+                     return {
+                        id: widget.id,
+                        adapter: adapter,
+                        destroy: adapter.destroy,
+                        templatePromise: $q.when( layout.htmlContent )
+                     };
+                  } );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function applyViewChanges() {
+               viewChangeApplyFunctions_.forEach( function( applyFunction ) {
+                  applyFunction();
+               } );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            this.applyViewChanges = applyViewChanges;
+            this.setupPage = setupPage;
+            this.tearDownPage = tearDownPage;
+            this.registerLayoutRenderer = registerLayoutRenderer;
+         } );
+
+      module.controller( 'AxPageController', createPageControllerInjected );
+
+   } )();
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -8465,7 +9208,7 @@ define( 'laxar/lib/runtime/page',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8678,7 +9421,7 @@ define( 'laxar/lib/profiling/output',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8918,7 +9661,7 @@ define( 'laxar/lib/profiling/profiling',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8947,7 +9690,7 @@ define( 'laxar/lib/runtime/runtime_dependencies',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -8955,30 +9698,44 @@ define( 'laxar/laxar',[
    'angular',
    './lib/logging/log',
    './lib/directives/directives',
+   './lib/event_bus/event_bus',
+   './lib/file_resource_provider/file_resource_provider',
    './lib/i18n/i18n',
+   './lib/loaders/widget_loader',
    './lib/utilities/assert',
    './lib/utilities/configuration',
    './lib/utilities/fn',
    './lib/utilities/object',
+   './lib/utilities/path',
    './lib/utilities/storage',
    './lib/utilities/string',
    './lib/runtime/runtime',
    './lib/runtime/runtime_dependencies',
-   './lib/widget_adapters/adapters'
+   './lib/runtime/controls_service',
+   './lib/runtime/theme_manager',
+   './lib/widget_adapters/adapters',
+   './lib/tooling/pages'
 ], function(
    ng,
    log,
    directives,
+   eventBus,
+   fileResourceProvider,
    i18n,
+   widgetLoader,
    assert,
    configuration,
    fn,
    object,
+   path,
    storage,
    string,
    runtime,
    runtimeDependencies,
-   adapters
+   controlsService,
+   themeManager,
+   adapters,
+   pageToolingApi
 ) {
    'use strict';
 
@@ -9009,7 +9766,7 @@ define( 'laxar/laxar',[
       if( optionalWidgetAdapters && Array.isArray( optionalWidgetAdapters ) ) {
          adapters.addAdapters( optionalWidgetAdapters );
       }
-      var dependencies = [ runtime.name, runtimeDependencies.name ];
+      var dependencies = [ runtime.module.name, runtimeDependencies.name ];
 
       Object.keys( widgetModules ).forEach( function( technology ) {
          var adapter = adapters.getFor( technology );
@@ -9074,6 +9831,29 @@ define( 'laxar/laxar',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   // API to leverage tooling support.
+   // Not for direct use by widgets/activities!
+   //  - laxar-mocks needs this for widget tests
+   //  - laxar-patterns needs this to have the same (mocked) q version as the event bus
+   var toolingApi = {
+      controlsService: controlsService,
+      eventBus: eventBus,
+      fileResourceProvider: fileResourceProvider,
+      path: path,
+      themeManager: themeManager,
+      widgetAdapters: adapters,
+      widgetLoader: widgetLoader,
+      runtimeDependenciesModule: runtimeDependencies,
+      provideQ: function() {
+         return runtime.api.provideQ();
+      },
+
+      // Prototype support for page inspection tools:
+      pages: pageToolingApi
+   };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    return {
       assert: assert,
       bootstrap: bootstrap,
@@ -9084,7 +9864,8 @@ define( 'laxar/laxar',[
       log: log,
       object: object,
       storage: storage,
-      string: string
+      string: string,
+      _tooling: toolingApi
    };
 
 } );
@@ -11042,7 +11823,7 @@ return Q;
 });
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -11289,7 +12070,7 @@ define( 'laxar/lib/testing/http_mock',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -11380,7 +12161,7 @@ define( 'laxar/lib/testing/jquery_mock',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -11525,7 +12306,7 @@ define( 'laxar/lib/testing/matchers',[], function() {
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -11644,12 +12425,43 @@ define( 'laxar/lib/testing/portal_mocks',[
       return jasmine.Clock.installed.nowMillis;
    }
 
+   ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createControlsServiceMock( mockControls ) {
+      mockControls = mockControls || {};
+      return {
+         load: jasmine.createSpy( 'axControls.load' ).andCallFake( function( controlRef ) {
+            if( !mockControls[ controlRef ] ) {
+               mockControls[ controlRef ] = {
+                  descriptor: {
+                     name: controlRef.split( '/' ).pop(),
+                     integration: { technology: 'plain' }
+                  },
+                  path: require.toUrl( controlRef ),
+                  module: {}
+               };
+            }
+            return qMock.when( mockControls[ controlRef ].descriptor );
+         } ),
+         descriptor: jasmine.createSpy( 'axControls.descriptor' ).andCallFake( function( controlRef ) {
+            return mockControls[ controlRef ].descriptor;
+         } ),
+         provide: jasmine.createSpy( 'axControls.provide' ).andCallFake( function( controlRef ) {
+            return mockControls[ controlRef ].module;
+         } ),
+         resolve: function( controlRef ) {
+            return mockControls[ controlRef ].path;
+         }
+      };
+   }
+
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
       mockQ: createQMock,
       mockTick: createTickMock,
       mockHttp: httpMock.create,
+      mockControlsService: createControlsServiceMock,
       mockEventBus: createEventBusMock,
       mockFileResourceProvider: createFileResourceProviderMock,
       mockHeartbeat: createHeartbeatMock,
@@ -11666,7 +12478,7 @@ define( 'laxar/lib/testing/portal_mocks',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -11686,6 +12498,8 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
    'use strict';
 
    var TICK_CONSTANT = 101;
+   var resourceCache = {};
+   var resourceChacheMisses = {};
 
    log.setLogThreshold( log.level.TRACE );
 
@@ -11716,8 +12530,20 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
    /**
     * Creates a test bed for widget controller tests.
     *
-    * @param {String} widgetPathOrModule
-    *    The path that can be used to load this widget into a page (e.g. 'ax-some-widget', 'laxar/my_widget').
+    * For historical reasons, a variety of invocations has to be supported:
+    *
+    * - preferred: directly pass the contents of the widget.json descriptor
+    *              this is the only clean way, which incidentally also works for AMD-installable widgets,
+    *              as they cannot rely on a category folder
+    * - supported: pass the file reference for this widget:
+    *              this is the path to the widget folder, relative to the RequireJS path laxar-path-widgets
+    * - deprecated: pass the old-style AngularJS module name (widget.category.SomeWidget)
+    *               from which the path is then guessed.
+    *
+    * @param {String} descriptorPathOrModule
+    *    The contents of the widget.json descriptor.
+    *    Alternatively (not recommended), the file reference to load this widget into a page
+    *    (e.g. 'ax-some-widget', 'laxar/my_widget').
     *    For backwards-compatibility, an old-style widget module name starting with 'widgets.' may be given
     *    instead (See LaxarJS/laxar#153).
     * @param {String} [controllerName]
@@ -11733,28 +12559,37 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
     *    @property {Function} controller   The controller
     *    @property {Object}   widgetMock   The widget specification @deprecated
     */
-   function createControllerTestBed( widgetPathOrModule, controllerName ) {
+   function createControllerTestBed( descriptorPathOrModule, controllerName ) {
       jasmine.Clock.useMock();
       mockDebounce();
 
+      var descriptor;
       var widgetPath;
       var moduleName;
       var fullControllerName;
-      if( widgetPathOrModule.indexOf( 'widgets.' ) === 0 ) {
+      if( descriptorPathOrModule.name ) {
+         // preferred call style (pass descriptor):
+         descriptor = descriptorPathOrModule;
+         moduleName = normalize( descriptor.name );
+         widgetPath = '/' + descriptor.name;
+         resourceCache[ widgetPath + '/widget.json' ] = descriptor;
+         resourceChacheMisses[ widgetPath + '/default.theme/' + descriptor.name + '.html' ] = true;
+         resourceChacheMisses[ widgetPath + '/default.theme/css/' + descriptor.name + '.css' ] = true;
+         fullControllerName = inferControllerName( moduleName );
+      }
+      else if( descriptorPathOrModule.indexOf( 'widgets.' ) === 0 ) {
          // old style module name (pre LaxarJS/laxar#153)
-         moduleName = widgetPathOrModule;
+         moduleName = descriptorPathOrModule;
          widgetPath = moduleName.replace( /^widgets\./, '' ).replace( /\./g, '/' );
          fullControllerName = moduleName + '.' + ( controllerName || 'Controller' );
       }
       else {
-         widgetPath = widgetPathOrModule;
-         var widget = widgetPath.replace( /(.*[/])?([^/]*)/, '$2' );
+         // early 1.0.x style: use (local) widget reference
+         widgetPath = descriptorPathOrModule;
          // derive the module from the directory name
-         moduleName = widget.replace( /(.)[_-]([a-z])/g, function( _, $1, $2 ) {
-            return $1 + $2.toUpperCase();
-         } );
-         var upperCaseModuleName = moduleName.charAt( 0 ).toUpperCase() + moduleName.slice( 1 );
-         fullControllerName = upperCaseModuleName + 'Controller';
+         var widgetName = widgetPath.replace( /(.*[/])?([^/]*)/, '$2' );
+         moduleName = normalize( widgetName );
+         fullControllerName = inferControllerName( moduleName );
       }
 
       var testBed = {
@@ -11914,32 +12749,42 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * Install an underscore-compatible debounce-mock function that supports the mock-clock.
+    * Install an `laxar.fn.debounce`-compatible debounce-mock function that supports the mock-clock.
     * The debounce-mock offers a `debounce.force` method, to process all debounced callbacks on demand.
-    * Additionally, there is a `debounce.waiting` array, to inspect waiting calls with their args.
+    * Additionally, there is a `debounce.waiting` array, to inspect waiting calls.
     */
    function mockDebounce() {
 
-      fn.debounce = debounceMock;
-      fn.debounce.force = forceAll;
-
+      fn.debounce.force = force;
       fn.debounce.waiting = [];
-      function forceAll() {
-         fn.debounce.waiting.forEach( function( waiting ) { waiting.force(); } );
-         fn.debounce.waiting = [];
-      }
+
+      fn._nowMilliseconds = function() {
+         return jasmine.Clock.installed.nowMillis;
+      };
+
+      fn._setTimeout = function( f, interval ) {
+         var timeout;
+         var run = function( force ) {
+            if( timeout === null ) { return; }
+            removeWaiting( timeout );
+            window.clearTimeout( timeout );
+            timeout = null;
+            f( force );
+         };
+
+         timeout = window.setTimeout( run, interval );
+         fn.debounce.waiting.push( run );
+         run.timeout = timeout;
+         return timeout;
+      };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function putWaiting( f, context, args, timeout ) {
-         var waiting = { force: null, args: args, timeout: timeout };
-         waiting.force = function() {
-            f.apply( context, args );
-            window.clearTimeout( timeout );
-            // force should be idempotent
-            waiting.force = function() {};
-         };
-         fn.debounce.waiting.push( waiting );
+      function force() {
+         fn.debounce.waiting.forEach( function( run ) {
+            run( true );
+         } );
+         fn.debounce.waiting.splice( 0 );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -11948,55 +12793,6 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
          fn.debounce.waiting = fn.debounce.waiting.filter( function( waiting ) {
             return waiting.timeout !== timeout;
          } );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /**
-       * An underscore-compatible debounce that uses the jasmine mock clock.
-       *
-       * @param {Function} func
-       *    The function to debounce
-       * @param {Number} wait
-       *    How long to wait for calls to settle (in mock milliseconds) before calling through.
-       * @param immediate
-       *    `true` if the function should be called through immediately, but not after its last invocation
-       *
-       * @returns {Function}
-       *    a debounced proxy to `func`
-       */
-      function debounceMock( func, wait, immediate ) {
-         var timeout, result;
-         return function debounceMockProxy() {
-            var context = this;
-            var args = arguments;
-            var timestamp = jasmine.Clock.installed.nowMillis;
-            var later = function() {
-               var last = jasmine.Clock.installed.nowMillis - timestamp;
-               if( last < wait ) {
-                  timeout = window.setTimeout( later, wait - last );
-                  putWaiting( func, context, args, timeout );
-               }
-               else {
-                  removeWaiting( timeout );
-                  timeout = null;
-                  if( !immediate ) {
-                     result = func.apply(context, args);
-                  }
-               }
-            };
-
-            var callNow = immediate && !timeout;
-            if( !timeout ) {
-               timeout = window.setTimeout( later, wait );
-               putWaiting( func, context, args, timeout );
-            }
-            if( callNow ) {
-               if( timeout ) { removeWaiting( timeout ); }
-               result = func.apply( context, args );
-            }
-            return result;
-         };
       }
 
    }
@@ -12062,18 +12858,16 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   var cache = {};
-   var misses = {};
    function getWidgetLoader( testBed ) {
       var q = portalMocks.mockQ();
       var fileResourceProvider = {
          provide: function( url ) {
             var deferred = q.defer();
-            if( cache[ url ] ) {
-               deferred.resolve( object.deepClone( cache[ url ] ) );
+            if( resourceCache[ url ] ) {
+               deferred.resolve( object.deepClone( resourceCache[ url ] ) );
             }
-            else if( misses[ url ] ) {
-               deferred.reject( misses[ url ] );
+            else if( resourceChacheMisses[ url ] ) {
+               deferred.reject( resourceChacheMisses[ url ] );
             }
             else {
                // Support for very old servers: undefined by default to infer type from response header.
@@ -12087,11 +12881,11 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
                   dataType: dataTypeGuess,
                   async: false,
                   success: function( data ) {
-                     cache[ url ] = object.deepClone( data );
+                     resourceCache[ url ] = object.deepClone( data );
                      deferred.resolve( data );
                   },
                   error: function( xhr, status, err ) {
-                     misses[ url ] = err;
+                     resourceChacheMisses[ url ] = err;
                      deferred.reject( err );
                   }
                } );
@@ -12112,7 +12906,13 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
       adapters.addAdapters( [ portalMocksAngularAdapter( testBed ) ] );
 
       return widgetLoaderModule
-         .create( q, fileResourceProvider, themeManager.create( fileResourceProvider, q, 'default' ), { load: function() {} }, testBed.eventBusMock );
+         .create( q, {
+            axControls: portalMocks.mockControlsService(),
+            axFileResourceProvider: fileResourceProvider,
+            axThemeManager: themeManager.create( fileResourceProvider, q, 'default' ),
+            axCssLoader: { load: function() {} },
+            axGlobalEventBus: testBed.eventBusMock
+         } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12200,6 +13000,7 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
                $q: mockQ( scope ),
                $timeout: mockAngularTimeout( scope ),
                axTimestamp: portalMocks.mockTimestamp,
+               axControls: portalMocks.mockControlsService(),
                axContext: environment.context,
                axEventBus: eventBus
             } );
@@ -12233,6 +13034,23 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function normalize( widgetName ) {
+      return widgetName.replace( /([a-zA-Z0-9])[-_]([a-zA-Z0-9])/g, function( $_, $1, $2 ) {
+         return $1 + $2.toUpperCase();
+      } ).replace( /^[A-Z]/, function( $_ ) {
+         return $_.toLowerCase();
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function inferControllerName( moduleName ) {
+      var upperCaseModuleName = moduleName.charAt( 0 ).toUpperCase() + moduleName.slice( 1 );
+      return upperCaseModuleName + 'Controller';
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    return {
       addMatchersTo: portalMocks.addMatchersTo,
       any: portalMocks.any,
@@ -12250,7 +13068,7 @@ define( 'laxar/lib/testing/portal_mocks_angular',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -12352,7 +13170,7 @@ define( 'laxar/lib/testing/run_spec',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -12380,7 +13198,7 @@ define( 'laxar/lib/testing/testing',[
 } );
 
 /**
- * Copyright 2014 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
@@ -12393,6 +13211,7 @@ define( 'laxar/laxar_testing',[
    function LaxarTesting() {
       this.testing = testing;
    }
+   ax._tooling.provideQ = function() { return testing.qMock; };
    LaxarTesting.prototype = ax;
 
    return new LaxarTesting();

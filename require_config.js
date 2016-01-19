@@ -3,21 +3,21 @@ var require = {
    paths: {
       // LaxarJS Core:
       requirejs: 'requirejs/require',
-      jquery: 'jquery/dist/jquery',
-      angular: 'angular/angular',
-      'angular-mocks': 'angular-mocks/angular-mocks',
-      'angular-route': 'angular-route/angular-route',
-      'angular-sanitize': 'angular-sanitize/angular-sanitize',
-      jjv: 'jjv/lib/jjv',
-      jjve: 'jjve/jjve',
-
-      // LaxarJS Core Testing:
-      jasmine: 'jasmine/lib/jasmine-core/jasmine',
-      q_mock: 'q_mock/q',
-
-      // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
       json: 'requirejs-plugins/src/json',
+
+      'laxar': 'laxar/dist/laxar.with-deps',
+      'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
+      'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
+
+      // LaxarJS Testing:
+      'laxar-mocks': 'laxar-mocks/dist/laxar-mocks',
+      jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
+      'promise-polyfill': 'promise-polyfill/Promise',
+      jquery: 'jquery/dist/jquery',
+
+      // LaxarJS Patterns:
+      'json-patch': 'fast-json-patch/src/json-patch-duplex',
 
       // App Parts:
       'laxar-path-root': '..',
@@ -27,24 +27,21 @@ var require = {
       'laxar-path-themes': '../includes/themes',
       'laxar-path-flow': '../application/flow/flow.json',
 
-      'laxar-application-dependencies': '../var/static/laxar_application_dependencies',
+      // AngularJS:
+      angular: 'angular/angular',
+      'angular-mocks': 'angular-mocks/angular-mocks',
+      'angular-route': 'angular-route/angular-route',
+      'angular-sanitize': 'angular-sanitize/angular-sanitize',
 
-      'laxar': 'laxar/dist/laxar',
-      'laxar/laxar_testing': 'laxar/dist/laxar_testing',
-      'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
-      'laxar-uikit/controls': 'laxar-uikit/dist/controls',
-      'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme'
+      // React:
+      'react': 'react/react',
+      'laxar-react-adapter': 'laxar-react-adapter/laxar-react-adapter'
    },
    packages: [
       {
          name: 'laxar-application',
          location: '..',
          main: 'init'
-      },
-      {
-         name: 'moment',
-         location: 'moment',
-         main: 'moment'
       }
    ],
    shim: {
@@ -52,31 +49,28 @@ var require = {
          exports: 'angular'
       },
       'angular-mocks': {
-         deps: [
-            'angular'
-         ],
+         deps: [ 'angular' ],
          init: function ( angular ) {
             'use strict';
             return angular.mock;
          }
       },
       'angular-route': {
-         deps: [
-            'angular'
-         ],
+         deps: [ 'angular' ],
          init: function ( angular ) {
             'use strict';
             return angular;
          }
       },
       'angular-sanitize': {
-         deps: [
-            'angular'
-         ],
+         deps: [ 'angular' ],
          init: function ( angular ) {
             'use strict';
             return angular;
          }
+      },
+      'json-patch': {
+         exports: 'jsonpatch'
       }
    }
 };

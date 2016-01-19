@@ -1,0 +1,92 @@
+//
+// Fonts
+// -----------------------------------------------------------------------------------------------------------
+
+// Link the font relative to the compiled theme.css
+$fa-font-path: "../fonts" !default;
+
+
+//
+// Base Icons
+// -----------------------------------------------------------------------------------------------------------
+
+$ax-icon-close-width: 30px !default;
+
+
+$ax-icon-close           : $fa-var-times !default;
+$ax-icon-previous        : $fa-var-arrow-circle-left !default;
+$ax-icon-previous-primary: $fa-var-arrow-circle-left !default;
+$ax-icon-next            : $fa-var-arrow-circle-right !default;
+$ax-icon-next-primary    : $fa-var-arrow-circle-right !default;
+$ax-icon-add             : $fa-var-plus !default;
+$ax-icon-delete          : $fa-var-times-circle !default;
+$ax-icon-ok              : $fa-var-check-circle !default;
+$ax-icon-apply           : $fa-var-check-circle !default;
+$ax-icon-cancel          : $fa-var-times-circle !default;
+$ax-icon-yes             : $fa-var-check-circle !default;
+$ax-icon-no              : $fa-var-times-circle !default;
+$ax-icon-finish          : $fa-var-check-circle !default;
+$ax-icon-info            : $fa-var-info-circle !default;
+$ax-icon-warn            : $fa-var-exclamation-triangle !default;
+$ax-icon-help            : $fa-var-question-circle !default;
+$ax-icon-print           : $fa-var-print !default;
+$ax-icon-busy            : $fa-var-refresh !default;
+
+
+//
+// Base Status
+// -----------------------------------------------------------------------------------------------------------
+
+$ax-state-busy-border-width: 2px !default;
+$ax-state-busy-border-color: inherit !default;
+
+$ax-state-readonly-color: $gray !default;
+$ax-state-readonly-background: $gray-light !default;
+$ax-state-readonly-border-color: $ax-state-readonly-color !default;
+
+$ax-state-disabled-color: $gray !default;
+$ax-state-disabled-background: $gray-light !default;
+$ax-state-disabled-border-color: $ax-state-disabled-color !default;
+
+$ax-state-error-color: $state-danger-text !default;
+$ax-state-error-background: $state-danger-bg !default;
+$ax-state-error-border-color: $ax-state-error-color !default;
+
+
+//
+// Base Border
+// -----------------------------------------------------------------------------------------------------------
+
+$ax-base-border-width: 1px !default;
+$ax-base-border-style: solid !default;
+$ax-base-border-color: $gray-light !default;
+$ax-base-border: $ax-base-border-width $ax-base-border-style $ax-base-border-color !default;
+$ax-base-border-radius: $border-radius-base !default;
+
+
+//
+// Z-Index
+// -----------------------------------------------------------------------------------------------------------
+
+$zindex-navbar:            40;
+$zindex-navbar-fixed:      50;
+$zindex-modal-background:  50;
+$zindex-modal:             50;
+$zindex-popover:           60;
+$zindex-dropdown:          70;
+$zindex-tooltip:           70;
+
+$ax-zindex-page-blocker:  100 !default;
+$ax-zindex-popup-on-top:  200 !default;
+
+//
+// Units
+// -----------------------------------------------------------------------------------------------------------
+
+$ax-unit-horizontal-double: 26px !default;
+$ax-unit-horizontal       : round( $ax-unit-horizontal-double / 2) !default;
+$ax-unit-horizontal-half  : round( $ax-unit-horizontal-double / 4) !default;
+
+$ax-unit-vertical-double  : 20px !default;
+$ax-unit-vertical         : round( $ax-unit-vertical-double / 2) !default;
+$ax-unit-vertical-half    : round( $ax-unit-vertical-double / 4) !default;

@@ -1,0 +1,128 @@
+//
+// Icons
+// -----------------------------------------------------------------------------------------------------------
+
+// Deprecated:
+// See https://github.com/LaxarJS/laxar-uikit/issues/22
+%ax-font-awesome {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Use this mixin to set the icon within an other css rule
+// Sass does not allow to extend
+// Deprecated:
+// See https://github.com/LaxarJS/laxar-uikit/issues/22
+@mixin ax-set-icon( $ax-icon-code ) {
+   @extend %ax-font-awesome;
+   content: $ax-icon-code;
+}
+
+
+//
+// Text ellipsis for a single line (Don't work with multiple lines!)
+// ------------------------------------------------------
+@mixin ax-text-ellipsis {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+
+//
+// Disable Foxus Border
+// -----------------------------------------------------------------------------------------------------------
+
+@mixin ax-disable-focus-style {
+   a,
+   a i,
+   a i:after,
+   a:focus,
+   a:active,
+   a:focus i,
+   a:active i {
+
+      outline: none;
+      border: none;
+      box-shadow: none;
+   }
+}
+
+
+//
+// Equal hight of columns
+// -----------------------------------------------------------------------------------------------------------
+
+// Important:
+// The columns should be inside a parent wrapper (f.e. the class row) with 'position: relative'
+// in order for absolute positioning to work.
+
+// <div class="row">
+//    <div class="col col-lg-6 first">
+//       ...
+//    </div>
+//    <div class="col col-lg-6 last">
+//       ...
+//    </div>
+// </div>
+
+@mixin ax-equal-col-height( $ax-col-width: $col-lg-3 ) {
+
+   position: relative;
+
+   > .col {
+      &:before {
+         content:'';
+         position: absolute;
+         top: 0;
+         bottom: 0;
+         z-index: -1;
+         width: $ax-col-width;
+         // Assign the background-style in the specific layout theme
+      }
+
+      &:first-child:before,
+      &:last-child:before {
+         width: $ax-col-width - $ax-unit-horizontal;
+      }
+   }
+}
+
+// This mixin expect a sass list with col widths.
+// For example:
+// $cols: $col-lg-6 $col-lg-3 $col-lg-3;
+// @include ax-equal-cols-height( $cols );
+@mixin ax-equal-cols-height( $ax-cols ) {
+
+   position: relative;
+
+   > .col {
+      &:before {
+         content:'';
+         position: absolute;
+         top: 0;
+         bottom: 0;
+         z-index: -1;
+         // Assign the background-style in the specific layout theme
+      }
+   }
+
+   $length: length( $ax-cols );
+
+   @for $i from 1 through $length {
+
+      .col:nth-child( #{$i} ):before {
+
+         @if $i == 1 or $i == $length {
+            width: ( nth( $ax-cols, $i ) - $ax-unit-horizontal );
+         } @else {
+            width: nth( $ax-cols, $i );
+         }
+      }
+   }
+}
