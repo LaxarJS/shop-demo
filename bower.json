@@ -8,25 +8,22 @@
     "url": "https://github.com/LaxarJS/shop-demo.git"
   },
   "dependencies": {
-    "requirejs": "2.1.x",
-    "requirejs-plugins": "1.0.x",
+    "requirejs": "~2.1.0",
+    "requirejs-plugins": "~1.0.0",
     "laxar": "~1.2.0",
     "laxar-uikit": "~1.1.0",
-    "laxar-patterns": "~1.2.0",
-    "bootswatch-scss": "3.2.x",
+    "bootswatch-scss": "~3.2.0",
     "angular": "~1.4.3",
-    "angular-mocks": "~1.4.3",
     "angular-route": "~1.4.3",
     "angular-sanitize": "~1.4.3",
     "laxar-react-adapter": "~0.2.0",
-    "laxar-developer-tools-widget": "2.0.0-alpha.3"
+    "laxar-developer-tools-widget": "~2.0.0"
   },
   "devDependencies": {
-    "jasmine2": "jasmine#2.3.x",
-    "laxar-mocks": "~0.6.0"
+    "laxar-mocks": "~1.0.0",
+    "angular-mocks": "~1.4.3"
   },
   "resolutions": {
-    "bootstrap-sass-official": "3.3.x",
-    "laxar": "~1.2.0"
+    "bootstrap-sass-official": "~3.3.0"
   }
 }
