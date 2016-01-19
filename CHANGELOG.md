@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#34](https://github.com/LaxarJS/shop-demo/issues/34): documentation: using screenshots of page visualization for tutorial
 - [#33](https://github.com/LaxarJS/shop-demo/issues/33): widgets: expanded the widget definition for page visualization
 
 

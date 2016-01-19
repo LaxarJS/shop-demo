@@ -14,6 +14,10 @@ var require = {
       'laxar-mocks': 'laxar-mocks/dist/laxar-mocks',
       jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
       'promise-polyfill': 'promise-polyfill/Promise',
+      jquery: 'jquery/dist/jquery',
+
+      // LaxarJS Patterns:
+      'json-patch': 'fast-json-patch/src/json-patch-duplex',
 
       // App Parts:
       'laxar-path-root': '..',
@@ -64,6 +68,9 @@ var require = {
             'use strict';
             return angular;
          }
+      },
+      'json-patch': {
+         exports: 'jsonpatch'
       }
    }
 };
