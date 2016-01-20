@@ -1,8 +1,8 @@
 
 /**
- * Copyright 2015 aixigo AG
+ * Copyright 2016 aixigo AG
  * Released under the MIT license.
- * www.laxarjs.org
+ * http://laxarjs.org/license
  */
 require( [
    'laxar',
