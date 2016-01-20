@@ -104,18 +104,18 @@ define( [
          return;
       }
 
-      ax._tooling.pages.addListener( onPageChange );
-      if( !hasLogChannel ) {
-         ax.log.addLogChannel( logChannel );
-         hasLogChannel = true;
-      }
-
       developerHooks = window.axDeveloperTools = ( window.axDeveloperTools || {} );
       developerHooks.buffers = ( developerHooks.buffers || { events: [], log: [] } );
       developerHooks.eventCounter = developerHooks.eventCounter || Date.now();
       developerHooks.logCounter = developerHooks.logCounter || Date.now();
       developerHooks.pageInfo = developerHooks.pageInfo || ax._tooling.pages.current();
       developerHooks.pageInfoVersion = developerHooks.pageInfoVersion || 1;
+
+      ax._tooling.pages.addListener( onPageChange );
+      if( !hasLogChannel ) {
+         ax.log.addLogChannel( logChannel );
+         hasLogChannel = true;
+      }
 
       ensureEventBusInspection( eventBus );
 

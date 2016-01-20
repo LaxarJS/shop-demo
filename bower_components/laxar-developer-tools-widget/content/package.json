@@ -1,6 +1,6 @@
 {
   "name": "laxar-developer-tools",
-  "version": "2.0.0-pre",
+  "version": "2.0.2",
   "private": true,
   "description": "Used by the LaxarJS DeveloperToolsWidget",
   "license": "MIT",

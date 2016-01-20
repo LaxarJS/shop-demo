@@ -4,6 +4,16 @@
 ## Last Changes
 
 
+## v2.0.2
+
+- [#47](https://github.com/LaxarJS/ax-developer-tools-widget/issues/47): fixed error messages after page navigation
+
+
+## v2.0.1
+
+- [#48](https://github.com/LaxarJS/ax-developer-tools-widget/issues/48): fixed initialization sequence of log channel and `developerHooks`
+
+
 ## v2.0.0
 
 - [#45](https://github.com/LaxarJS/ax-developer-tools-widget/issues/45): polish (styles, documentation)

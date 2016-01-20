@@ -2,6 +2,11 @@
 
 ## Last Changes
 
+## v1.11.1
+
+- [#35](https://github.com/LaxarJS/shop-demo/issues/35): fixed url in headers and updated laxar-developer-tools-widget
+
+
 ## v1.11.0
 
 - [#34](https://github.com/LaxarJS/shop-demo/issues/34): documentation: using screenshots of page visualization for tutorial

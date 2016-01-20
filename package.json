@@ -1,6 +1,6 @@
 {
   "name": "ShopDemo",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "A DemoApp to learn how LaxarJS works.",
   "license": "MIT",
   "scripts": {
