@@ -1,8 +1,8 @@
 define(['exports', 'module', 'react'], function (exports, module, _react) {
    /**
-    * Copyright 2015 aixigo AG
+    * Copyright 2016 aixigo AG
     * Released under the MIT license.
-    * http://www.laxarjs.org
+    * http://laxarjs.org/license
     *
     * compile using
     * > babel -m amd -d . article-teaser-widget.jsx
