@@ -1,6 +1,6 @@
 {
    "name": "laxar-developer-tools-widget",
-   "version": "2.0.2",
+   "version": "2.0.3",
    "description": "Provides developer tools to inspect the event bus and the application log, and the grid-alignment of widgets",
    "license": "MIT",
    "repository": {

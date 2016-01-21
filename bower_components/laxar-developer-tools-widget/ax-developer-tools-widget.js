@@ -104,6 +104,8 @@ define( [
          return;
       }
 
+      ax._tooling.pages.addListener( onPageChange );
+
       developerHooks = window.axDeveloperTools = ( window.axDeveloperTools || {} );
       developerHooks.buffers = ( developerHooks.buffers || { events: [], log: [] } );
       developerHooks.eventCounter = developerHooks.eventCounter || Date.now();
@@ -111,7 +113,6 @@ define( [
       developerHooks.pageInfo = developerHooks.pageInfo || ax._tooling.pages.current();
       developerHooks.pageInfoVersion = developerHooks.pageInfoVersion || 1;
 
-      ax._tooling.pages.addListener( onPageChange );
       if( !hasLogChannel ) {
          ax.log.addLogChannel( logChannel );
          hasLogChannel = true;
