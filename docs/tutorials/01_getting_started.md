@@ -22,6 +22,8 @@ Now we can obtain the LaxarJS templates which we will instantiate using `yo`, to
 npm install -g generator-laxarjs
 ```
 
+If you don't have root access to your system, take a look to the section ["local installation" of the LaxarJS generator.](https://github.com/LaxarJS/generator-laxarjs#local-installation)
+
 
 ## Creating a LaxarJS Application from the Template
 
@@ -36,16 +38,15 @@ It creates the basic file- and directory structure of a LaxarJS application.
 If there is no service currently running on port 8000 we can just accept the suggested answer.
 Otherwise, we need to make sure to remember to port we choose, and use it to access the application later on.
 
+Answer the following questions of LaxarJS generator:
 ```
-Please answer the following:
-? Application name (shop-demo): shop-demo
+? The application name: (shop-demo)
 ? Description (optional): A demo application to learn how LaxarJS works
-? Licenses (none) MIT
-? Project homepage (none) http://www.laxarjs.org
-? Author name (author) LaxarJS
-? Development server port (8000)
-? Should a set of example widgets be generated? (Y/n) no
-? Create a README.md? (y/N) no
+? Licenses: MIT
+? Project homepage (optional): http://www.laxarjs.org
+? Author name (optional): LaxarJS
+? Development server port: 8000
+? Should a set of example widgets be generated? No
 ```
 
 The script creates the application _shop-demo_ with the necessary dependencies to LaxarJS.
