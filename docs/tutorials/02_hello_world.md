@@ -33,8 +33,8 @@ We want to change the description and some of the other default answers as shown
 ```
 Please answer the following:
 ? The widget name (headline-widget)
-? Description (My new LaxarJS widget): Displays a simple headline and an intro html text.
-? Licenses (none): MIT
+? Description (optional): Displays a simple headline and an intro html text.
+? Licenses: (MIT)
 ? Project homepage (optional): http://www.laxarjs.org
 ? Author name (optional): LaxarJS
 ? Integration technology: angular
@@ -63,7 +63,7 @@ It is accompanied by testing infrastructure files which are usually seldom or ne
 The [widget.json](../../includes/widgets/shop-demo/headline-widget/widget.json) descriptor contains configuration options for the widget, grouped by *feature*.
 Everything that can later be configured when adding the widget to the page is specified here in [JSON schema draft v4](http://json-schema.org/documentation.html) notation.
 Lets give our headline-widget the features *headline* and *intro*, each with a property *htmlText*.
-The *headline* feature has the additional property *level* which we make sure to be a number between one and six.
+Add the following two objects to the *properties* of the *features* object in the `widget.json`:
 
 ```json
 "headline": {
@@ -74,13 +74,6 @@ The *headline* feature has the additional property *level* which we make sure to
       "htmlText": {
          "type": "string",
          "description": "The HTML headline content."
-      },
-      "level": {
-         "type": "integer",
-         "description": "The hierarchical level of the headline (1 to 6).",
-         "minimum": 1,
-         "maximum": 6,
-         "default": 1
       }
    }
 },
