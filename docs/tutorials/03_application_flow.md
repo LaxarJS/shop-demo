@@ -44,7 +44,7 @@ The final version of our [ShopDemo](http://laxarjs.github.io/shop-demo/#/shopDem
 The header will contain a logo, an _article-search-box-widget_ to filter articles, and the _headline-widget_ we already created.
 The main contents consist of an _article-browser-widget_ to view matching articles, an _article-teaser-widget_ for details on a specific item and a _shopping-cart-widget_ to keep track of what will be "bought".
 
-We delete the directory `application/layouts/one-column` with the template files and create our own [application layout](../../application/layouts/application/default.theme/application.html) with associated [styles](https://github.com/LaxarJS/shop-demo/blob/feature/5-documentation-add-manual-references/application/layouts/application/default.theme/css/application.css).
+We delete the directory `application/layouts/one-column` with the template files and create our own [application layout](../../application/layouts/application/default.theme/application.html) with associated [styles](https://github.com/LaxarJS/shop-demo/blob/master/application/layouts/application/default.theme/css/application.css).
 
 Then, we change both of the pages to use the new layout:
 
