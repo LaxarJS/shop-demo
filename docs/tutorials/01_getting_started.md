@@ -7,6 +7,11 @@ Rudimentary knowledge of *git* is assumed as well.
 If you are unfamiliar with LaxarJS, you might want to check out [Why LaxarJS](https://github.com/LaxarJS/laxar/blob/master/docs/why_laxar.md) and maybe have a brief look at the [key concepts](https://github.com/LaxarJS/laxar/blob/master/docs/concepts.md) first.
 
 
+In this tutorial we don't display and explain each line of code of the whole project.
+Instead we introduce in each step a new concept of LaxarJS.
+For the final version of the project files we link them in each section.
+
+
 ## Get the Prerequisites
 
 First, we install the *grunt* command-line interface and the *Yeoman* scaffolding tool.
