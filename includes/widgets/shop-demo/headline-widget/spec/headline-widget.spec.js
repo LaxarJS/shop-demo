@@ -32,7 +32,7 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       it( 'displays a headline', function() {
-         expect( widgetDom.querySelector( 'h2' ).textContent ).toEqual( 'I am here!' );
+         expect( widgetDom.querySelector( 'h1' ).textContent ).toEqual( 'I am here!' );
       } );
 
    } );
