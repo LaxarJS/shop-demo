@@ -10,7 +10,18 @@ window.laxar = ( function() {
       description: 'A DemoApp to learn how LaxarJS works.',
       theme: 'cube',
       useMergedCss: mode === 'PRODUCTION',
-      useEmbeddedFileListings: mode === 'PRODUCTION'
+      useEmbeddedFileListings: mode === 'PRODUCTION',
+      tooling: {
+         enabled: true,
+         grid: {
+            columns: {
+               width: 64,
+               gutter: 30,
+               padding: 0,
+               count: 12
+            }
+         }
+      }
    };
 
 } )();

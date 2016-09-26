@@ -2,6 +2,20 @@
    "layout": "application",
 
    "areas": {
+      "activities": [
+         {
+            "widget": "amd:laxar-developer-tools-widget",
+            "features": {
+               "button": {
+                  "enabled": false
+               },
+               "open": {
+                  "onActions": [ "showDevTools" ],
+                  "onGlobalMethod": "goDevelop"
+               }
+            }
+         }
+      ],
       "contentA": [
          {
             "widget": "shop-demo/headline-widget",
@@ -24,18 +38,6 @@
                },
                "intro": {
                   "htmlText": "We will send your stuff as soon as possible.<br>Forgot to buy something? <a href='#/' title='Go back'>Go Back.</a>"
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-developer-tools-widget",
-            "features": {
-               "button": {
-                  "enabled": false
-               },
-               "open": {
-                  "onActions": [ "showDevTools" ],
-                  "onGlobalMethod": "goDevelop"
                }
             }
          }

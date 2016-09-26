@@ -10,6 +10,18 @@
                   "resource": "articles"
                }
             }
+         },
+         {
+            "widget": "amd:laxar-developer-tools-widget",
+            "features": {
+               "button": {
+                  "enabled": false
+               },
+               "open": {
+                  "onActions": [ "showDevTools" ],
+                  "onGlobalMethod": "goDevelop"
+               }
+            }
          }
       ],
 
@@ -63,18 +75,6 @@
                },
                "order": {
                   "target": "finishOrder"
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-developer-tools-widget",
-            "features": {
-               "button": {
-                  "enabled": false
-               },
-               "open": {
-                  "onActions": [ "showDevTools" ],
-                  "onGlobalMethod": "goDevelop"
                }
             }
          }
