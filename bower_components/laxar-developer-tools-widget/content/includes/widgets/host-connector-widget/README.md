@@ -1,6 +1,6 @@
 # host-connector-widget
 
-Reads development information from the host application and publishes it on the event bus for other developer tools widgets.
+Reads development information from the host application or from an inspected window and publishes it on the event bus for other developer tools widgets.
 This widget is tightly coupled to the _laxar-developer-tools-widget_, whose captured information it bridges to the event bus within the developer tools widget.
 
 
@@ -41,6 +41,9 @@ It is a widget (and not an activity) because it heavily uses the browser object 
       },
       "grid": {
          "resource": "gridSettings"
+      },
+      "laxarApplication": {
+         "flag": "isLaxarApplication"
       }
    }
 }
@@ -74,6 +77,10 @@ For full configuration options refer to the [widget.json](widget.json).
 *R4.1* The widget MUST poll the host application for page inspection information and publish this information as a resource using didReplace.
 
 
+### 5. Publish Flag about the State of the Application
+
+*R5.1* The Widget MUST publish the state if a LaxarJS Application is available.
+
 
 ## Integration
 
@@ -82,15 +89,20 @@ For full configuration options refer to the [widget.json](widget.json).
 Together with other developer-tools widgets, this widget uses the non-standard `didProduce.*` event stream protocol.
 Additionally the widget supports the following event patterns as specified by the [LaxarJS Patterns] documentation.
 
+
 #### Resources
 
 * Resource: grid.resource
-* Role: Master
+* Role: Sender
 * Description: Publish CSS grid settings from the host application
 
 * Resource: pageInfo.resource
-* Role: Master
+* Role: Sender
 * Description: Publish page and composition information from the host application
+
+* Flag: laxarApplication.flag
+* Role: Sender
+* Description: Publish if a LaxarJS application is available
 
 
 ## References

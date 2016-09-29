@@ -1,7 +1,7 @@
 /**
  * Copyright 2016 aixigo AG
  * Released under the MIT license.
- * http://www.laxarjs.org
+ * http://laxarjs.org/license
  */
 define( [
    'laxar',
@@ -48,7 +48,8 @@ define( [
          window[ $scope.features.open.onGlobalMethod ] = openContentWindow;
       }
 
-      if( $scope.features.grid ) {
+      developerHooks.gridSettings = ax.configuration.get( 'tooling.grid', undefined );
+      if( developerHooks.gridSettings === undefined && Object.keys( $scope.features.grid ).length > 0 ) {
          developerHooks.gridSettings = $scope.features.grid;
       }
 

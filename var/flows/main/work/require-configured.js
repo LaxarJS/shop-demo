@@ -25,6 +25,7 @@ var require = {
       "angular-sanitize": "angular-sanitize/angular-sanitize", 
       "react": "react/react", 
       "laxar-react-adapter": "laxar-react-adapter/laxar-react-adapter", 
+      "react-dom": "react/react-dom", 
       "laxar-patterns": "laxar-patterns/dist/laxar-patterns"
    }, 
    "packages": [

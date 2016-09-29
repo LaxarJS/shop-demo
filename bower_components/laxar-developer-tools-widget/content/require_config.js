@@ -45,6 +45,7 @@ var require = {
       // React support (ax-page-inspector-widget):
       'laxar-react-adapter': 'laxar-react-adapter/laxar-react-adapter',
       'react': 'react/react',
+      'react-dom': 'react/react-dom',
       // dagre library (ax-page-inspector-widget):
       lodash: 'lodash/lodash',
       dagre: 'dagre/dist/dagre.core',

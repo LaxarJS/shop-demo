@@ -63,6 +63,18 @@
                   "default": true
                }
             }
+         },
+         "laxarApplication": {
+            "type": "object",
+            "description": "Publish the state of the inspected window. True if a LaxarJS application is running.",
+            "required": [ "flag" ],
+            "properties": {
+               "flag": {
+                  "type": "string",
+                  "format": "flag-topic",
+                  "description": "The topic through which to publish the current state."
+               }
+            }
          }
       }
    }

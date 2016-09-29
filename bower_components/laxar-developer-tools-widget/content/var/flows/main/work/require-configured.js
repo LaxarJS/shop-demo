@@ -30,6 +30,7 @@ var require = {
       "promise-polyfill": "promise-polyfill/Promise", 
       "laxar-react-adapter": "laxar-react-adapter/laxar-react-adapter", 
       "react": "react/react", 
+      "react-dom": "react/react-dom", 
       "lodash": "lodash/lodash", 
       "dagre": "dagre/dist/dagre.core", 
       "graphlib": "graphlib/dist/graphlib.core", 

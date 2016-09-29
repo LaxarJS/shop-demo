@@ -4,18 +4,47 @@
 ## Last Changes
 
 
-## v2.0.3
+## v2.1.1
 
+- [#59](https://github.com/LaxarJS/ax-developer-tools-widget/issues/59): developer-toolbar-widget: fixed reload page handling for widget outline
+
+
+## v2.1.0
+
+
+## v2.1.0-alpha.5
+
+- [#58](https://github.com/LaxarJS/ax-developer-tools-widget/issues/58): Use grid settings from application configuration
+
+- [#57](https://github.com/LaxarJS/ax-developer-tools-widget/issues/57): developer-toolbar-widget: handle empty grid settings resource
+
+
+## v2.1.0-alpha.4
+
+- [#55](https://github.com/LaxarJS/ax-developer-tools-widget/issues/55): host-connector-widget: Publish empty grid resource when the grid settings aren't configured
+
+
+## v2.1.0-alpha.3
+
+- [#54](https://github.com/LaxarJS/ax-developer-tools-widget/issues/54): developer-toolbar-widget: Fix message for Firefox extension if host app is not available
+
+
+## v2.1.0-alpha.2
+
+- [#53](https://github.com/LaxarJS/ax-developer-tools-widget/issues/53): developer-toolbar-widget: Changed `href` attribute to prevent CSP error message in Chrome web extension
+
+
+## v2.1.0-alpha.1
+
+- [#52](https://github.com/LaxarJS/ax-developer-tools-widget/issues/52): Using Firefox Add-on SDK API if running in Firefox developer tools
+
+
+## v2.1.0-alpha.0
+
+- [#51](https://github.com/LaxarJS/ax-developer-tools-widget/issues/51): Using chrome extension API if running in chrome developer tools
+- [#50](https://github.com/LaxarJS/ax-developer-tools-widget/issues/50): performance: updated wireflow to v0.6.0, React to v0.14.7
 - [#49](https://github.com/LaxarJS/ax-developer-tools-widget/issues/49): fixed late listener registration
-
-
-## v2.0.2
-
 - [#47](https://github.com/LaxarJS/ax-developer-tools-widget/issues/47): fixed error messages after page navigation
-
-
-## v2.0.1
-
 - [#48](https://github.com/LaxarJS/ax-developer-tools-widget/issues/48): fixed initialization sequence of log channel and `developerHooks`
 
 

@@ -1,6 +1,6 @@
 {
    "name": "laxar-mocks",
-   "version": "1.0.0",
+   "version": "1.1.0",
    "description": "The companion testing framework for LaxarJS widgets.",
    "homepage": "http://laxarjs.org",
    "main": "dist/laxar-mocks.js",

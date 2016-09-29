@@ -111,8 +111,8 @@
          },
          "pages": [],
          "widgets": [
-            "shop-demo/headline-widget",
-            "amd:laxar-developer-tools-widget"
+            "amd:laxar-developer-tools-widget",
+            "shop-demo/headline-widget"
          ]
       },
       {
@@ -134,11 +134,11 @@
          "pages": [],
          "widgets": [
             "shop-demo/dummy-articles-activity",
+            "amd:laxar-developer-tools-widget",
             "shop-demo/article-search-box-widget",
             "shop-demo/article-browser-widget",
             "shop-demo/article-teaser-widget",
-            "shop-demo/shopping-cart-widget",
-            "amd:laxar-developer-tools-widget"
+            "shop-demo/shopping-cart-widget"
          ]
       }
    ],

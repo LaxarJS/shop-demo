@@ -1,6 +1,6 @@
 {
    "name": "laxar-mocks",
-   "version": "1.0.0",
+   "version": "1.1.0",
    "description": "The companion testing framework for LaxarJS widgets.",
    "main": "dist/laxar-mocks.js",
    "authors": [],
@@ -18,6 +18,6 @@
       "promise-polyfill": "~2.1.0"
    },
    "devDependencies": {
-      "laxar-mocks": "LaxarJS/laxar-mocks#1.0.0"
+      "laxar-mocks": "LaxarJS/laxar-mocks#1.1.0"
    }
 }

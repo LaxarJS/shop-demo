@@ -16,6 +16,12 @@ Each article in the list has title, price, and description as well as a URL to a
 
 Because activities have no visual appearance, all we need to do is to create the activity using `yo laxarjs:activity`, allow configuration of an event bus topic, and implement the activity controller.
 
+Create the activity with *yo* and select the integration technology *angular*:
+
+```shell
+yo laxarjs:activity dummy-articles-activity --directory=includes/widgets/shop-demo/
+```
+
 First, let us add the feature configuration option to the activity's [descriptor](../../includes/widgets/shop-demo/dummy-articles-activity/widget.json#L16-26):
 
 ```json
@@ -35,19 +41,26 @@ The only configuration option is the resource topic under which to publish our a
 Using the format `topic` ensures that only valid event bus topic IDs will be configured.
 
 
-Then, we can implement the [controller](../../includes/widgets/shop-demo/dummy-articles-activity/dummy-articles-activity.js#L13-23):
+Then, we can implement the [controller](../../includes/widgets/shop-demo/dummy-articles-activity/dummy-articles-activity.js#L14-23):
 
 ```javascript
-function Controller( context, eventBus ) {
-   eventBus.subscribe( 'beginLifecycleRequest', function() {
-      var articleResource = context.features.articles.resource;
-      eventBus.publish( 'didReplace.' + articleResource, {
-         resource: articleResource,
-         data: { entries: articles }
+   function Controller( context, eventBus ) {
+      eventBus.subscribe( 'beginLifecycleRequest', function() {
+         var articleResource = context.features.articles.resource;
+         eventBus.publish( 'didReplace.' + articleResource, {
+            resource: articleResource,
+            data: {
+               entries: articles
+            }
+         } );
       } );
-   } );
-}
+   }
 ```
+
+Inject the `axContext` and the `axEventBus` to use them in the controller function as `context` and `eventBus`.
+The `axContext` allows the controller to have access to the feature configuration of the widget.
+
+Create a [static file "articles.js"](../../includes/widgets/shop-demo/dummy-articles-activity/articles.js) in the widget directory and load it in the controller.
 
 First the controller waits for the _beginLifecycleRequest_ event, to make sure that all other widgets are ready to receive.
 Then it uses the feature configuration to determine the _topic_ under which to publish the articles.
@@ -68,6 +81,33 @@ This allows you to extend the resource in the future, and to add meta-data such 
 Keep in mind that all event payloads must be directly representable as JSON, so we cannot just add properties to the `articles` array itself.
 
 
+### Adding the Activity to the Page
+
+Finally, we modify the page `application/pages/shop_demo.json`.
+Delete the areas *header*, *content* and *footer* and add instead the following areas:
+
+```json
+"searchBox": [],
+"contentA": [],
+"contentB": [],
+"contentC": []
+```
+
+Now add our activity to the `activities` area:
+```json
+"activities": [
+         {
+            "widget": "shop-demo/dummy-articles-activity",
+            "features": {
+               "articles": {
+                  "resource": "articles"
+               }
+            }
+         }
+      ],
+```
+
+
 ## Creating the article-search-box-widget
 
 This is what the article-search-box-widget will look like:
@@ -76,6 +116,10 @@ This is what the article-search-box-widget will look like:
 
 The widget has a simple input field and a submit button, and allows the user to filter a list of articles.
 
+Create the widget with the generator:
+```shell
+yo laxarjs:widget article-search-box-widget --directory=includes/widgets/shop-demo/
+```
 
 ### Implementing the Widget Features
 
@@ -93,7 +137,10 @@ $scope.model = {
 
 This allows us to bind `$scope.model.searchTerm` to the input field in the [HTML template](../../includes/widgets/shop-demo/article-search-box-widget/default.theme/article-search-box-widget.html#L7).
 
-Now, we store any incoming articles and invoke the `search` method whenever they have changed:
+After creating the widget template we finalize the widget controller `article-search-box-widget.js`.
+
+We inject the `axEventbus` to the [controller](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L11-13 and use it as `eventBus`.
+Now, we store any incoming articles and invoke the `search` method whenever they have changed.
 
 ```javascript
 eventBus.subscribe( 'didReplace.' + articlesResource, function( event ) {
@@ -138,12 +185,14 @@ function infixMatch( subject, query ) {
 }
 ```
 
+Make sure that you have all used variables [defined.](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L18-25)
+
 
 ## Adding the Widget to the Page
 
 Finally, we include the [article-search-box-widget](../../includes/widgets/shop-demo/article-search-box-widget) into our [shop_demo](../../application/pages/shop_demo.json#L16-28) page:
 
-```javascript
+```json
 "searchBox": [
    {
       "widget": "shop-demo/article-search-box-widget",

@@ -5,6 +5,7 @@
             {
                "src": [
                   "bower_components/laxar-uikit/dist/themes/default.theme/css/theme.css",
+                  "bower_components/laxar-developer-tools-widget/default.theme/css/ax-developer-tools-widget.css",
                   "includes/widgets/shop-demo/article-browser-widget/default.theme/css/article-browser-widget.css",
                   "includes/widgets/shop-demo/article-search-box-widget/default.theme/css/article-search-box-widget.css",
                   "includes/widgets/shop-demo/article-teaser-widget/default.theme/css/article-teaser-widget.css",
@@ -16,6 +17,7 @@
             {
                "src": [
                   "includes/themes/cube.theme/css/theme.css",
+                  "bower_components/laxar-developer-tools-widget/default.theme/css/ax-developer-tools-widget.css",
                   "includes/widgets/shop-demo/article-browser-widget/cube.theme/css/article-browser-widget.css",
                   "includes/widgets/shop-demo/article-search-box-widget/default.theme/css/article-search-box-widget.css",
                   "includes/widgets/shop-demo/article-teaser-widget/cube.theme/css/article-teaser-widget.css",
@@ -27,6 +29,7 @@
             {
                "src": [
                   "includes/themes/darkly.theme/css/theme.css",
+                  "bower_components/laxar-developer-tools-widget/default.theme/css/ax-developer-tools-widget.css",
                   "includes/widgets/shop-demo/article-browser-widget/default.theme/css/article-browser-widget.css",
                   "includes/widgets/shop-demo/article-search-box-widget/darkly.theme/css/article-search-box-widget.css",
                   "includes/widgets/shop-demo/article-teaser-widget/default.theme/css/article-teaser-widget.css",
@@ -38,6 +41,7 @@
             {
                "src": [
                   "includes/themes/darkly_scss.theme/css/theme.css",
+                  "bower_components/laxar-developer-tools-widget/default.theme/css/ax-developer-tools-widget.css",
                   "includes/widgets/shop-demo/article-browser-widget/default.theme/css/article-browser-widget.css",
                   "includes/widgets/shop-demo/article-search-box-widget/default.theme/css/article-search-box-widget.css",
                   "includes/widgets/shop-demo/article-teaser-widget/default.theme/css/article-teaser-widget.css",

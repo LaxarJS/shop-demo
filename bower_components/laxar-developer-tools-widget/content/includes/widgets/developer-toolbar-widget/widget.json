@@ -33,6 +33,16 @@
                   "default": "events"
                }
             }
+         },
+         "detailsOn": {
+            "type": "array",
+            "description": "Publish the state if a LaxarJS application is running in the inspected window.",
+            "items": {
+               "type": "string",
+               "format": "flag-topic",
+               "axPattern": "flag",
+               "description": "The topic through which to publish the current state."
+            }
          }
       }
    }

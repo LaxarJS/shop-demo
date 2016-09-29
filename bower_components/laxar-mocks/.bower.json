@@ -1,6 +1,6 @@
 {
   "name": "laxar-mocks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The companion testing framework for LaxarJS widgets.",
   "main": "dist/laxar-mocks.js",
   "authors": [],
@@ -18,16 +18,16 @@
     "promise-polyfill": "~2.1.0"
   },
   "devDependencies": {
-    "laxar-mocks": "LaxarJS/laxar-mocks#1.0.0"
+    "laxar-mocks": "LaxarJS/laxar-mocks#1.1.0"
   },
   "homepage": "https://github.com/LaxarJS/dist-laxar-mocks",
-  "_release": "1.0.0",
+  "_release": "1.1.0",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0",
-    "commit": "d15fb002d51d05cecf6d3a3305226c502c96a30f"
+    "tag": "v1.1.0",
+    "commit": "10a61ad8afd55d2b9cb69f458178fbb3295c2dc4"
   },
-  "_source": "git://github.com/LaxarJS/dist-laxar-mocks.git",
-  "_target": "~1.0.0",
+  "_source": "https://github.com/LaxarJS/dist-laxar-mocks.git",
+  "_target": "~1.1.0",
   "_originalSource": "laxar-mocks"
 }

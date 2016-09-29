@@ -732,6 +732,16 @@ define( 'laxar/lib/logging/log',[
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
+    * Pass this as an additional replacement parameter to a log-method to blackbox your logging call.
+    * Blackboxed callers are ignored when logging the source information (file, line). (#322)
+    *
+    * @type {Object}
+    */
+   var BLACKBOX = {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
     * Constructor for a logger.
     *
     * @constructor
@@ -750,7 +760,7 @@ define( 'laxar/lib/logging/log',[
          var result = {};
          object.forEach( levels, function( level, levelName ) {
             logger[ levelName.toLowerCase() ] = function() {
-               var args = [ level ].concat( slice.call( arguments, 0 ) );
+               var args = [ level ].concat( slice.call( arguments, 0 ) ).concat( [ BLACKBOX ] );
                return this.log.apply( this, args );
             };
             result[ level ] = levelName;
@@ -787,22 +797,29 @@ define( 'laxar/lib/logging/log',[
     *    the level for this message
     * @param {String} message
     *    the message to log
-    * @param {...*} replacements
+    * @param {...*} replacementArguments
     *    objects that should replace placeholders within the message
     */
-   Logger.prototype.log = function( level, message, replacements ) {
+   Logger.prototype.log = function( level, message, replacementArguments ) {
       if( level < this.threshold_ ) {
          return;
+      }
+
+      var replacements = slice.call( arguments, 2 ) || [];
+      var blackboxDepth = 0;
+      while( replacements[ replacements.length - 1 ] === BLACKBOX ) {
+         ++blackboxDepth;
+         replacements.pop();
       }
 
       var messageObject = {
          id: this.counter_++,
          level: this.levelToName_[ level ],
          text: message,
-         replacements: slice.call( arguments, 2 ) || [],
+         replacements: replacements,
          time: new Date(),
          tags: this.gatherTags(),
-         sourceInfo: gatherSourceInformation()
+         sourceInfo: gatherSourceInformation( blackboxDepth + 1 ) // add 1 depth to exclude this function
       };
       this.channels_.forEach( function( channel ) {
          channel( messageObject );
@@ -1049,7 +1066,7 @@ define( 'laxar/lib/logging/log',[
    var FIRE_FOX_STACK_MATCHER = /@(.+)\:(\d+)$/;
    var EMPTY_CALL_INFORMATION = { file: '?', line: -1, char: -1 };
 
-   function gatherSourceInformation() {
+   function gatherSourceInformation( blackboxDepth ) {
       var e = new Error();
 
       if( !e.stack ) {
@@ -1083,14 +1100,8 @@ define( 'laxar/lib/logging/log',[
          return EMPTY_CALL_INFORMATION;
       }
 
-      for( var i = 0; i < rows.length; ++i ) {
-         var row = interpreterFunction( rows[ i ] );
-         if( row.file.indexOf( '/logging/log.js' ) === -1 ) {
-            return row;
-         }
-      }
-
-      return EMPTY_CALL_INFORMATION;
+      var row = rows[ blackboxDepth + 1 ]; // add 1 depth to exclude this function
+      return row ? interpreterFunction( row ) : EMPTY_CALL_INFORMATION;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1250,7 +1261,7 @@ define( 'laxar/lib/directives/layout/layout',[
  *
  * When requiring `laxar`, it is available as `laxar.string`.
  *
- * @module object
+ * @module string
  */
 define( 'laxar/lib/utilities/string',[], function() {
    'use strict';
@@ -2101,10 +2112,13 @@ define( 'laxar/lib/event_bus/event_bus',[
       function didCollector( event, meta ) {
          givenDidResponses.push( { event: event, meta: meta } );
 
-         var senderIndex = willWaitingForDid.indexOf( meta.sender );
-         if( senderIndex !== -1 ) {
-            willWaitingForDid.splice( senderIndex, 1 );
-         }
+         var senderIndex;
+         do {
+            senderIndex = willWaitingForDid.indexOf( meta.sender );
+            if( senderIndex !== -1 ) {
+               willWaitingForDid.splice( senderIndex, 1 );
+            }
+         } while( senderIndex !== -1 );
 
          if( willWaitingForDid.length === 0 && cycleFinished ) {
             finish();
@@ -2124,19 +2138,19 @@ define( 'laxar/lib/event_bus/event_bus',[
          }
       }, options.pendingDidTimeout );
 
-      this.publish( eventName, optionalEvent, options ).then( function() {
-         if( willWaitingForDid.length === 0 ) {
-            // either there was no will or all did responses were already given in the same cycle as the will
-            finish();
-            return;
-         }
-
-         cycleFinished = true;
-      } );
+      this.publish( eventName, optionalEvent, options )
+         .then( function() {
+            self.unsubscribe( willCollector );
+            if( willWaitingForDid.length === 0 ) {
+               // either there was no will or all did responses were already given in the same cycle as the will
+               finish();
+               return;
+            }
+            cycleFinished = true;
+         } );
 
       function finish( wasCanceled ) {
          clearTimeout( timeoutRef );
-         self.unsubscribe( willCollector );
          self.unsubscribe( didCollector );
          ( wasCanceled ? deferred.reject : deferred.resolve )( givenDidResponses );
       }
@@ -3476,7 +3490,7 @@ define( 'laxar/lib/loaders/features_provider',[
       var report = validator.validate( featureConfiguration );
 
       if( report.errors.length > 0 ) {
-         var message = 'Validation for widget features failed. Errors: ';
+         var message = 'Validation of feature-configuration failed. Errors: ';
 
          report.errors.forEach( function( error ) {
             message += '\n - ' + error.message.replace( /\[/g, '\\[' );
@@ -6248,11 +6262,12 @@ define( 'laxar/lib/runtime/flow',[
    '../logging/log',
    '../json/validator',
    '../utilities/object',
+   '../utilities/configuration',
    '../utilities/timer',
    '../utilities/path',
    '../loaders/paths',
    'json!../../static/schemas/flow.json'
-], function( ng, ngRoute, log, jsonValidator, object, timer, path, paths, flowSchema ) {
+], function( ng, ngRoute, log, jsonValidator, object, configuration, timer, path, paths, flowSchema ) {
    'use strict';
 
    var module = ng.module( 'axFlow', [ 'ngRoute' ] );
@@ -6260,33 +6275,33 @@ define( 'laxar/lib/runtime/flow',[
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var $routeProvider_;
+   var html5Mode_;
+   var routePrefix_;
+   var exitPoints_;
+   var entryPoint_;
 
-   module.config( [ '$routeProvider', function( $routeProvider ) {
+   module.config( [ '$routeProvider', '$locationProvider', function( $routeProvider, $locationProvider ) {
+      html5Mode_ = configuration.get( 'flow.router.html5Mode', false );
+      $locationProvider.html5Mode( html5Mode_ );
       $routeProvider_ = $routeProvider;
    } ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var fileResourceProvider_;
-   var exitPoints_;
-   var entryPoint_;
 
-   module.run( [
-      '$route', 'axConfiguration', 'axFileResourceProvider',
+   module.run( [ '$route', 'axFileResourceProvider', function( $route, fileResourceProvider ) {
+      fileResourceProvider_ = fileResourceProvider;
+      routePrefix_ = configuration.get( 'flow.router.base', '' );
+      entryPoint_ = configuration.get( 'flow.entryPoint' );
+      exitPoints_ = configuration.get( 'flow.exitPoints' );
 
-      function( $route, configuration, fileResourceProvider ) {
-         fileResourceProvider_ = fileResourceProvider;
-
-         entryPoint_ = configuration.get( 'flow.entryPoint' );
-         exitPoints_ = configuration.get( 'flow.exitPoints' );
-
-         // idea for lazy loading routes using $routeProvider and $route.reload() found here:
-         // https://groups.google.com/d/msg/angular/mrcy_2BZavQ/Mqte8AvEh0QJ
-         loadFlow( path.normalize( paths.FLOW_JSON ) ).then( function() {
-            $route.reload();
-         } );
-      } ]
-   );
+      // idea for lazy loading routes using $routeProvider and $route.reload() found here:
+      // https://groups.google.com/d/msg/angular/mrcy_2BZavQ/Mqte8AvEh0QJ
+      loadFlow( path.normalize( paths.FLOW_JSON ) ).then( function() {
+         $route.reload();
+      } );
+   } ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -6308,9 +6323,9 @@ define( 'laxar/lib/runtime/flow',[
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    module.controller( 'AxFlowController', [
-      '$window', '$location', '$routeParams', 'place', 'axGlobalEventBus', 'axFlowService', 'axPageService',
+      '$location', '$routeParams', 'place', 'axGlobalEventBus', 'axFlowService', 'axPageService',
 
-      function FlowController( $window, $location, $routeParams, place, eventBus, flowService, pageService ) {
+      function FlowController( $location, $routeParams, place, eventBus, flowService, pageService ) {
          // The flow controller is instantiated on route change by AngularJS. It then announces the start of
          // navigation ("willNavigate") and initiates loading of the new page. As soon as the new page is
          // loaded, the "didNavigate" event finishes the navigation logic. The flow controller then starts to
@@ -6361,7 +6376,7 @@ define( 'laxar/lib/runtime/flow',[
                   } );
             } )
             .then( null, function( error ) {
-               log.error( error );
+               log.error( 'Error during navigation: [0]', error );
             } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6420,7 +6435,7 @@ define( 'laxar/lib/runtime/flow',[
     * @name axFlowService
     * @injection
     */
-   module.factory( 'axFlowService', [ '$location', function( $location ) {
+   module.factory( 'axFlowService', [ '$location', '$browser', function( $location, $browser ) {
 
       var flowService = {
 
@@ -6493,8 +6508,14 @@ define( 'laxar/lib/runtime/flow',[
           * @memberOf axFlowService
           */
          constructAbsoluteUrl: function( targetOrPlace, optionalParameters ) {
-            var absUrl = $location.absUrl().split( '#' )[0];
-            return absUrl + flowService.constructAnchor( targetOrPlace, optionalParameters );
+            if( html5Mode_ && html5Mode_.enabled !== false ) {
+               return $browser.baseHref().replace( /\/$/, '' ) +
+                  flowService.constructPath( targetOrPlace, optionalParameters );
+            }
+            else {
+               var absUrl = $location.absUrl().split( '#' )[0];
+               return absUrl + flowService.constructAnchor( targetOrPlace, optionalParameters );
+            }
          },
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6532,11 +6553,10 @@ define( 'laxar/lib/runtime/flow',[
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function placeNameForNavigationTarget( targetOrPlaceName, activePlace ) {
-      var placeName = object.path( activePlace, 'targets.' + targetOrPlaceName, targetOrPlaceName );
+      var placeName = object.path( activePlace, 'targets.' + targetOrPlaceName, routePrefix_ + targetOrPlaceName );
       if( placeName in places_ ) {
          return placeName;
       }
-
       log.error( 'Unknown target or place "[0]".', targetOrPlaceName );
    }
 
@@ -6574,7 +6594,7 @@ define( 'laxar/lib/runtime/flow',[
             } );
 
             $routeProvider_.otherwise( {
-               redirectTo: '/entry'
+               redirectTo: '/' + routePrefix_ + 'entry'
             } );
          } );
    }
@@ -6584,14 +6604,15 @@ define( 'laxar/lib/runtime/flow',[
    function assembleRoute( routeName, place ) {
       if( place.redirectTo ) {
          $routeProvider_.when( '/' + routeName, {
-            redirectTo: place.redirectTo
+            redirectTo: routePrefix_ + place.redirectTo
          } );
          return;
       }
 
       if( place.entryPoints ) {
+         var route = routeByEntryPoint( place.entryPoints );
          $routeProvider_.when( '/' + routeName, {
-            redirectTo: routeByEntryPoint( place.entryPoints )
+            redirectTo: route != null ? ( routePrefix_ + route ) : route
          } );
          return;
       }
@@ -6638,12 +6659,20 @@ define( 'laxar/lib/runtime/flow',[
    function processPlaceParameters( places ) {
       var processedRoutes = {};
 
-      object.forEach( places, function( place, placeName ) {
+      object.forEach( places, function( place, placeSuffix ) {
+         var placeName = routePrefix_ + placeSuffix;
+
          place.expectedParameters = [];
          place.id = placeName;
 
          if( !place.targets ) {
             place.targets = {};
+         }
+
+         if( routePrefix_ ) {
+            ng.forEach( place.targets, function( targetPlaceSuffix, target ) {
+               place.targets[ target ] = routePrefix_ + place.targets[ target ];
+            } );
          }
          if( !place.targets[ TARGET_SELF ] ) {
             place.targets[ TARGET_SELF ] = placeName.split( /\/:/ )[0];
@@ -6682,7 +6711,7 @@ define( 'laxar/lib/runtime/flow',[
 
       if( result.errors.length ) {
          result.errors.forEach( function( error ) {
-            log.error( '[0]', error.message );
+            log.error( 'Failed validating flow file: [0]', error.message );
          } );
 
          throw new Error( 'Illegal flow.json format' );
@@ -6775,11 +6804,12 @@ define( 'laxar/lib/loaders/page_loader',[
    '../utilities/object',
    '../utilities/string',
    '../utilities/path',
+   '../logging/log',
    '../json/validator',
    './features_provider',
    'json!../../static/schemas/page.json',
    '../tooling/pages'
-], function( assert, object, string, path, jsonValidator, featuresProvider, pageSchema, pageTooling ) {
+], function( assert, object, string, path, log, jsonValidator, featuresProvider, pageSchema, pageTooling ) {
    'use strict';
 
    var SEGMENTS_MATCHER = /[_/-]./g;
@@ -6854,10 +6884,14 @@ define( 'laxar/lib/loaders/page_loader',[
             return processExtends( self, page, extensionChain );
          } )
          .then( function() {
+            generateMissingIds( self, page );
+            // we need to check ids before and after expanding compositions
+            checkForDuplicateIds( self, page );
             return processCompositions( self, page, pageName );
          } )
          .then( function() {
-            return checkForDuplicateWidgetIds( self, page );
+            checkForDuplicateIds( self, page );
+            removeDisabledWidgets( self, page );
          } )
          .then( function() {
             pageTooling.setPageDefinition( pageName, page, pageTooling.FLAT );
@@ -6917,21 +6951,18 @@ define( 'laxar/lib/loaders/page_loader',[
       function processNestedCompositions( page, instanceId, compositionChain ) {
 
          var promise = self.q_.when();
-         var seenCompositionIdCount = {};
 
          object.forEach( page.areas, function( widgets ) {
             /*jshint loopfunc:true*/
             for( var i = widgets.length - 1; i >= 0; --i ) {
-               ( function( widgetSpec, index ) {
+               ( function( widgetSpec ) {
                   if( widgetSpec.enabled === false ) {
                      return;
                   }
 
+                  ensureWidgetSpecHasId( self, widgetSpec );
+
                   if( has( widgetSpec, 'widget' ) ) {
-                     if( !has( widgetSpec, 'id' ) ) {
-                        var widgetName = widgetSpec.widget.split( '/' ).pop();
-                        widgetSpec.id = nextId( self, widgetName.replace( SEGMENTS_MATCHER, dashToCamelcase ) );
-                     }
                      return;
                   }
 
@@ -6943,30 +6974,30 @@ define( 'laxar/lib/loaders/page_loader',[
                         throwError( topPage, message );
                      }
 
-                     if( !has( widgetSpec, 'id' ) ) {
-                        var escapedCompositionName =
-                           widgetSpec.composition.replace( SEGMENTS_MATCHER, dashToCamelcase );
-                        widgetSpec.id = nextId( self, escapedCompositionName );
-                     }
-
-                     if( widgetSpec.id in seenCompositionIdCount ) {
-                        seenCompositionIdCount[ widgetSpec.id ]++;
-                     }
-                     else {
-                        seenCompositionIdCount[ widgetSpec.id ] = 1;
-                     }
+                     var compositionUrl = assetUrl( self.baseUrl_, compositionName );
 
                      // Loading compositionUrl can be started asynchronously, but replacing the according widgets
                      // in the page needs to take place in order. Otherwise the order of widgets could be messed up.
                      promise = promise
                         .then( function() {
-                           return load( self, assetUrl( self.baseUrl_, compositionName ) );
+                           return load( self, compositionUrl )
+                              .catch( function() {
+                                 var message =
+                                    'Composition "' + compositionName + '" could not be found' +
+                                    ' at location "' + compositionUrl + '"';
+                                 throwError( { name: page.name }, message );
+                              } );
                         } )
                         .then( function( composition ) {
                            return prefixCompositionIds( composition, widgetSpec );
                         } )
                         .then( function( composition ) {
-                           return processCompositionExpressions( composition, widgetSpec, throwError.bind( null, topPage ) );
+                           return processCompositionExpressions( composition, widgetSpec, function( message ) {
+                              var messagePrefix =
+                                 'Error loading composition "' + compositionName + '"' +
+                                 ' (id: "' + widgetSpec.id + '"). ';
+                              throwError( { name: page.name }, messagePrefix + message );
+                           } );
                         } )
                         .then( function( composition ) {
                            var chain = compositionChain.concat( compositionName );
@@ -6977,10 +7008,10 @@ define( 'laxar/lib/loaders/page_loader',[
                               } );
                         } )
                         .then( function( composition ) {
-                           mergeCompositionAreasWithPageAreas( composition, page, widgets, index );
+                           mergeCompositionAreasWithPageAreas( composition, page, widgets, widgetSpec );
                         } );
                   }
-               } )( widgets[ i ], i );
+               } )( widgets[ i ] );
             }
          } );
 
@@ -6992,8 +7023,6 @@ define( 'laxar/lib/loaders/page_loader',[
             pageTooling.setCompositionDefinition( topPageName, instanceId, page, pageTooling.COMPACT );
          }
 
-         checkForDuplicateCompositionIds( page, seenCompositionIdCount );
-
          return promise;
       }
 
@@ -7001,10 +7030,10 @@ define( 'laxar/lib/loaders/page_loader',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function mergeCompositionAreasWithPageAreas( composition, page, widgets, index ) {
+   function mergeCompositionAreasWithPageAreas( composition, page, widgets, compositionSpec ) {
       object.forEach( composition.areas, function( compositionAreaWidgets, areaName ) {
          if( areaName === '.' ) {
-            replaceEntryAtIndexWith( widgets, index, compositionAreaWidgets );
+            insertAfterEntry( widgets, compositionSpec, compositionAreaWidgets );
             return;
          }
 
@@ -7015,6 +7044,18 @@ define( 'laxar/lib/loaders/page_loader',[
 
          mergeWidgetLists( page.areas[ areaName ], compositionAreaWidgets, page );
       } );
+
+      removeEntry( widgets, compositionSpec );
+
+      function insertAfterEntry( arr, entry, replacements ) {
+         var index = arr.indexOf( entry );
+         arr.splice.apply( arr, [ index, 0 ].concat( replacements ) );
+      }
+
+      function removeEntry( arr, entry, replacements ) {
+         var index = arr.indexOf( entry );
+         arr.splice( index, 1 );
+      }
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7042,13 +7083,15 @@ define( 'laxar/lib/loaders/page_loader',[
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function processCompositionExpressions( composition, widgetSpec, throwPageError ) {
+   function processCompositionExpressions( composition, compositionSpec, throwPageError ) {
       var expressionData = {};
 
       // feature definitions in compositions may contain generated topics for default resource names or action
       // topics. As such these are generated before instantiating the composition's features.
       composition.features = iterateOverExpressions( composition.features || {}, replaceExpression );
-      expressionData.features = featuresProvider.featuresForWidget( composition, widgetSpec, throwPageError );
+      expressionData.features = featuresProvider.featuresForWidget(
+         composition, compositionSpec, throwPageError
+      );
 
       if( typeof composition.mergedFeatures === 'object' ) {
          var mergedFeatures = iterateOverExpressions( composition.mergedFeatures, replaceExpression );
@@ -7072,7 +7115,7 @@ define( 'laxar/lib/loaders/page_loader',[
          var expression = matches[2];
          var result;
          if( expression.indexOf( COMPOSITION_TOPIC_PREFIX ) === 0 ) {
-            result = topicFromId( widgetSpec.id ) +
+            result = topicFromId( compositionSpec.id ) +
                SUBTOPIC_SEPARATOR + expression.substr( COMPOSITION_TOPIC_PREFIX.length );
          }
          else {
@@ -7122,33 +7165,30 @@ define( 'laxar/lib/loaders/page_loader',[
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function checkForDuplicateCompositionIds( page, idCount ) {
-      var duplicates = Object.keys( idCount ).filter( function( compositionId ) {
-         return idCount[ compositionId ] > 1;
-      } );
-
-      if( duplicates.length ) {
-         throwError( page, 'Duplicate composition ID(s): ' + duplicates.join( ', ' ) );
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
    //
    // Additional Tasks
    //
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function checkForDuplicateWidgetIds( self, page ) {
-      var idCount = {};
-
+   function removeDisabledWidgets( self, page ) {
       object.forEach( page.areas, function( widgetList, index ) {
          page.areas[ index ] = widgetList.filter( function( widgetSpec ) {
             if( widgetSpec.enabled === false ) {
                return false;
             }
-            idCount[ widgetSpec.id ] = idCount[ widgetSpec.id ] ? idCount[ widgetSpec.id ] + 1 : 1;
             return true;
+         } );
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function checkForDuplicateIds( self, page ) {
+      var idCount = {};
+
+      object.forEach( page.areas, function( widgetList, index ) {
+         object.forEach( widgetList, function( widgetSpec ) {
+            idCount[ widgetSpec.id ] = idCount[ widgetSpec.id ] ? idCount[ widgetSpec.id ] + 1 : 1;
          } );
       } );
 
@@ -7157,8 +7197,44 @@ define( 'laxar/lib/loaders/page_loader',[
       } );
 
       if( duplicates.length ) {
-         throwError( page, 'Duplicate widget ID(s): ' + duplicates.join( ', ' ) );
+         throwError( page, 'Duplicate widget/composition ID(s): ' + duplicates.join( ', ' ) );
       }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function generateDefaultWidgetSpecName( widgetSpec ) {
+      var name;
+      if( widgetSpec.hasOwnProperty( 'widget' ) ) {
+         name = widgetSpec.widget.split( '/' ).pop();
+      }
+      else if( widgetSpec.hasOwnProperty( 'composition' ) ) {
+         name = widgetSpec.composition;
+      }
+      else if( widgetSpec.hasOwnProperty( 'layout' ) ) {
+         name = widgetSpec.layout;
+      }
+      // Assume that non-standard items do not require a specific name.
+      return name ? name.replace( SEGMENTS_MATCHER, dashToCamelcase ) : '';
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function ensureWidgetSpecHasId( self, widgetSpec ) {
+      if( widgetSpec.hasOwnProperty( 'id' ) ) {
+         return;
+      }
+      widgetSpec.id = nextId( self, generateDefaultWidgetSpecName( widgetSpec ) );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function generateMissingIds( self, page ) {
+      object.forEach( page.areas, function( widgetList ) {
+         object.forEach( widgetList, function( widgetSpec ) {
+            ensureWidgetSpecHasId( self, widgetSpec );
+         } );
+      } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7244,10 +7320,6 @@ define( 'laxar/lib/loaders/page_loader',[
 
    function topicFromId( id ) {
       return id.replace( ID_SEPARATOR_MATCHER, SUBTOPIC_SEPARATOR ).replace( SEGMENTS_MATCHER, dashToCamelcase );
-   }
-
-   function replaceEntryAtIndexWith( arr, index, replacements ) {
-      arr.splice.apply( arr, [ index, 1 ].concat( replacements ) );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8600,6 +8672,92 @@ define( 'laxar/lib/runtime/runtime_dependencies',[
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
+define( 'laxar/lib/tooling/external_api',[
+   'angular',
+   './pages',
+   '../logging/log',
+   '../utilities/object',
+   '../utilities/configuration'
+],
+function( ng, pages, log, object, configuration ) {
+   'use strict';
+
+   /**
+    * If the documentElement has the attribute 'data-laxar-developer-tools-extension' or
+    * the property 'laxarDeveloperToolsExtensionLoaded' of the window is true or
+    * the tooling is enabled by configuration in the laxar application then
+    * laxar is providing the API by creating the object `window.laxarDeveloperToolsApi`.
+    * The attribute 'data-laxar-developer-tools-extension' is set by the web extension and
+    * the property 'laxarDeveloperToolsExtensionLoaded' is set by the firefox extension.
+    */
+   function create( eventBus ) {
+      if( !( window.laxarDeveloperToolsExtensionLoaded ||
+             document.documentElement.hasAttribute( 'data-laxar-developer-tools-extension' ) ||
+             configuration.get( 'tooling.enabled', false ) ) ) {
+         return;
+      }
+
+      pages.addListener( onPageChange );
+      var bufferSize = configuration.get( 'tooling.bufferSize', 2500 );
+
+      var developerHooks = window.laxarDeveloperToolsApi = ( window.laxarDeveloperToolsApi || {} );
+      developerHooks.buffers = { events: [], log: [] } ;
+      developerHooks.eventCounter = Date.now();
+      developerHooks.logCounter = Date.now();
+      developerHooks.pageInfo = pages.current();
+      developerHooks.pageInfoVersion =  1;
+      developerHooks.gridSettings = configuration.get( 'tooling.grid', null );
+
+      log.addLogChannel( logChannel );
+      var cleanupInspector = eventBus.addInspector( inspector );
+
+      window.addEventListener( 'beforeunload', function() {
+         log.removeLogChannel( logChannel );
+         cleanupInspector();
+      } );
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function logChannel( messageObject ) {
+         var index = developerHooks.logCounter++;
+         var jsonItem = JSON.stringify( messageObject );
+         pushIntoStore( 'log', { index: index, json: jsonItem } );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function inspector( item ) {
+         var index = developerHooks.eventCounter++;
+         var jsonItem = JSON.stringify( object.options( { time: Date.now() }, item ) );
+         pushIntoStore( 'events', { index: index, json: jsonItem } );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function onPageChange( pageInfo ) {
+         developerHooks.pageInfo = pageInfo;
+         ++developerHooks.pageInfoVersion;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function pushIntoStore( storeName, item ) {
+         var buffer = developerHooks.buffers[ storeName ];
+         while( buffer.length >= bufferSize ) {
+            buffer.shift();
+         }
+         buffer.push( item );
+      }
+   }
+
+   return ng.module( 'axToolingExternalApi', [] ).run( [ 'axGlobalEventBus', create ] );
+} );
+
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
 define( 'laxar/laxar',[
    'angular',
    './lib/logging/log',
@@ -8620,7 +8778,8 @@ define( 'laxar/laxar',[
    './lib/runtime/controls_service',
    './lib/runtime/theme_manager',
    './lib/widget_adapters/adapters',
-   './lib/tooling/pages'
+   './lib/tooling/pages',
+   './lib/tooling/external_api'
 ], function(
    ng,
    log,
@@ -8641,7 +8800,8 @@ define( 'laxar/laxar',[
    controlsService,
    themeManager,
    adapters,
-   pageToolingApi
+   pageToolingApi,
+   externalApi
 ) {
    'use strict';
 
@@ -8672,7 +8832,7 @@ define( 'laxar/laxar',[
       if( optionalWidgetAdapters && Array.isArray( optionalWidgetAdapters ) ) {
          adapters.addAdapters( optionalWidgetAdapters );
       }
-      var dependencies = [ runtime.module.name, runtimeDependencies.name ];
+      var dependencies = [ runtime.module.name, runtimeDependencies.name, externalApi.name ];
 
       Object.keys( widgetModules ).forEach( function( technology ) {
          var adapter = adapters.getFor( technology );

@@ -1,6 +1,6 @@
 # AxDeveloperToolbarWidget
 
-The AxDeveloperToolsWidget helps to visualize of the position of host application widgets and their grid alignment .
+The AxDeveloperToolsWidget helps to visualize of the position of host application widgets and their grid alignment.
 
 
 ## Content
@@ -24,6 +24,11 @@ The AxDeveloperToolsWidget helps to visualize of the position of host applicatio
 The widget MUST act as a slave to the grid resource.
 
 
+#### 3. Show Toolbar or a Message
+
+*R3.1* The widget MUST listen to flags and either show a toolbar with the buttons for the features above or if no LaxarJS Application is available it MUST show a message.
+
+
 ## Integration
 
 ### Patterns
@@ -33,11 +38,16 @@ The widget supports the following event patterns as specified by the [LaxarJS Pa
 #### Resources
 
 * Resource: grid.resource
-* Role: Slave
+* Role: Receiver
 * Description: The grid resource has the following fields, which have precedence over the corresponding fields in the widget configuration:
     - `selector` a CSS selector string that determines where to insert the grid layer
     - `columns` grid column configuration: `{ count: 12, width: 72, gutter: 26, padding: 13 }`
     - `css` additional CSS styles that should be applied to the grid layer
+
+
+* Flag: detailsOn
+* Role: Receiver
+* Description: If a LaxarJS application is available the widget shows details about it
 
 
 ## References

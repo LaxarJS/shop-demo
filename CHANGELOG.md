@@ -2,8 +2,12 @@
 
 ## Last Changes
 
-## v1.11.1
 
+## v1.12.0
+
+- [#39](https://github.com/LaxarJS/shop-demo/issues/39): updated dependencies to support widget outline and grid of the laxar-developer-tools
+- [#38](https://github.com/LaxarJS/shop-demo/issues/38): fixed spec-test
+- [#37](https://github.com/LaxarJS/shop-demo/issues/37): documentation: improved and updated tutorial
 - [#35](https://github.com/LaxarJS/shop-demo/issues/35): fixed url in headers and updated laxar-developer-tools-widget
 
 

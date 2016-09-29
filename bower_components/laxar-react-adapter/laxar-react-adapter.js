@@ -3,7 +3,7 @@
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-define( [ 'react' ], function( React ) {
+define( [ 'react-dom' ], function( ReactDom ) {
    'use strict';
 
    var widgetModules = {};
@@ -86,7 +86,7 @@ define( [ 'react' ], function( React ) {
             axFeatures: context.features || {},
             axReactRender: function( componentInstance ) {
                if( isAttached ) {
-                  React.render(
+                  ReactDom.render(
                      componentInstance,
                      environment.anchorElement
                   );

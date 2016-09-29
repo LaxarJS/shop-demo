@@ -1,21 +1,21 @@
 {
   "name": "laxar-react-adapter",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "description": "Helps to develop React-based LaxarJS widgets and controls",
   "license": "MIT",
   "dependencies": {
-    "laxar": "^1.1.0-alpha.10",
-    "react": "~0.13.3"
+    "laxar": "^1.1.0",
+    "react": "~0.14.7"
   },
   "devDependencies": {},
   "homepage": "https://github.com/LaxarJS/laxar-react-adapter",
-  "_release": "0.2.0",
+  "_release": "0.4.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.0",
-    "commit": "0f3ecfef3ad8d9902bb92b8362027293eab3b3b2"
+    "tag": "v0.4.0",
+    "commit": "60c7769cb63889b90c3118b43bcb6e32438585f7"
   },
-  "_source": "git://github.com/LaxarJS/laxar-react-adapter.git",
-  "_target": "~0.2.0",
+  "_source": "https://github.com/LaxarJS/laxar-react-adapter.git",
+  "_target": "~0.4.0",
   "_originalSource": "laxar-react-adapter"
 }

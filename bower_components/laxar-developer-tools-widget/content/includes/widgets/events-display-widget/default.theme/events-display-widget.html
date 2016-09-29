@@ -1,6 +1,48 @@
 <div class="ax-affix-area"
      ax-affix
      ax-affix-offset-top="100">
+
+     <div ng-if="!model.eventInfos.length"
+          class="text-large">
+        <h4 class="text-primary">Empty Events List</h4>
+        <p><i class="fa fa-clock-o"></i> Waiting for events from host application...</p>
+     </div>
+
+     <div ng-if="model.eventInfos.length && !model.visibleEventInfos.length"
+          class="text-large">
+        <h4 class="text-primary">0/{{ model.eventInfos.length }} Event Items</h4>
+        <p>No events matching current filters.</p>
+        <p><button type="button"
+                   class="btn btn-sm btn-primary"
+                   ng-click="commands.clearFilters()">Show All</button></p>
+     </div>
+
+     <div ng-if="model.problemSummary.hasProblems"
+          class="text-large">
+        <h4 class="text-primary ax-error">{{ model.problemSummary.eventInfos.length }}/{{ model.eventInfos.length }} Events with Problems</h4>
+        <ul>
+           <li ng-repeat="event in model.problemSummary.eventInfos">
+              <h5><strong>{{ event.name }}</strong> <em>(source: {{ event.source }})</em></h5>
+              <ul>
+                 <li ng-repeat="problem in event.problems track by problem.description"
+                    class="ax-event-problem">
+                    <i class="fa fa-warning ax-error"></i> {{ problem.description }}
+                 </li>
+              </ul>
+           </li>
+        </ul>
+        <p class="ax-event-problems-explanation">
+           Events with problems are marked <strong class="ax-error">red</strong> in the events table.
+           Filter by event/source as needed.
+        </p>
+     </div>
+
+
+     <div ng-if="model.visibleEventInfos.length"
+          class="text-large">
+        <h4 class="text-primary">{{ model.visibleEventInfos.length }}/{{ model.eventInfos.length }} Events</h4>
+     </div>
+
    <div class="ax-button-wrapper form-inline">
 
       <div class="form-group form-group-sm">
@@ -111,48 +153,6 @@
       </span>
    </div>
 </div>
-
-<div ng-if="!model.eventInfos.length"
-     class="text-large">
-   <h4 class="text-primary">Empty Events List</h4>
-   <p><i class="fa fa-clock-o"></i> Waiting for events from host application...</p>
-</div>
-
-<div ng-if="model.eventInfos.length && !model.visibleEventInfos.length"
-     class="text-large">
-   <h4 class="text-primary">0/{{ model.eventInfos.length }} Event Items</h4>
-   <p>No events matching current filters.</p>
-   <p><button type="button"
-              class="btn btn-sm btn-primary"
-              ng-click="commands.clearFilters()">Show All</button></p>
-</div>
-
-<div ng-if="model.problemSummary.hasProblems"
-     class="text-large">
-   <h4 class="text-primary ax-error">{{ model.problemSummary.eventInfos.length }}/{{ model.eventInfos.length }} Events with Problems</h4>
-   <ul>
-      <li ng-repeat="event in model.problemSummary.eventInfos">
-         <h5><strong>{{ event.name }}</strong> <em>(source: {{ event.source }})</em></h5>
-         <ul>
-            <li ng-repeat="problem in event.problems track by problem.description"
-               class="ax-event-problem">
-               <i class="fa fa-warning ax-error"></i> {{ problem.description }}
-            </li>
-         </ul>
-      </li>
-   </ul>
-   <p class="ax-event-problems-explanation">
-      Events with problems are marked <strong class="ax-error">red</strong> in the events table.
-      Filter by event/source as needed.
-   </p>
-</div>
-
-
-<div ng-if="model.visibleEventInfos.length"
-     class="text-large">
-   <h4 class="text-primary">{{ model.visibleEventInfos.length }}/{{ model.eventInfos.length }} Events</h4>
-</div>
-
 
 <table ng-if="model.visibleEventInfos.length"
        class="table">

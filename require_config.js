@@ -35,7 +35,8 @@ var require = {
 
       // React:
       'react': 'react/react',
-      'laxar-react-adapter': 'laxar-react-adapter/laxar-react-adapter'
+      'laxar-react-adapter': 'laxar-react-adapter/laxar-react-adapter',
+      'react-dom': 'react/react-dom'
    },
    packages: [
       {

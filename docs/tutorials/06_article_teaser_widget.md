@@ -31,13 +31,31 @@ When looking at the [widget controller](../../includes/widgets/shop-demo/article
 To recompile the `.jsx` controller to a version that can be accessed by LaxarJS running in your browser, make sure to recompile it using `babel -m amd`.
 In order to actually instantiate the React-based widget, we need to install the `laxar-react-adapter` into our application.
 The [installation documentation](https://github.com/LaxarJS/laxar-react-adapter#installation) of the laxar-react-adapter should contain all information that you will need for this.
-To recompile the `.jsx` file, you will also need to `npm install -g babel` if you have not already. 
+To recompile the `.jsx` file, we use babel in version 5.8.
+Install babel locally in the project with `npm install --save-dev babel@5.8`.
+Add the `"babel": "babel"` to the `"scripts"` section of the `package.json`.
 
 There also is a [previous version](https://github.com/LaxarJS/shop-demo/blob/v1.9.0/includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js) of the widget which is implemented in AngularJS with an [external HTML template](https://github.com/LaxarJS/shop-demo/blob/v1.9.0/includes/widgets/shop-demo/article-teaser-widget/default.theme/article-teaser-widget.html).
-If your not interested in learning how to create a React-based widget right now, you can simply have a look at that previous version.
+If you're not interested in learning how to create a React-based widget right now, you can simply have a look at that previous version.
 All relevant concepts have already been introduced in the previous chapters.
 
 The following explanation is based on the more recent React-based version.
+
+
+## Create a React Widget
+
+Use the LaxarJS generator to create the basic files of a react widget:
+```shell
+yo laxarjs:widget article-teaser-widget --directory=includes/widgets/shop-demo/
+```
+
+Select `react` when the script asks for the `integration technology`.
+
+The generated widget has a controller in a `.jsx` file.
+When changing the file compile a `.js` version with babel:
+```
+npm run babel -- -m amd includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.jsx --out-file includes/widgets/shop-demo/article-teaser-widget/article-teaser-widget.js
+```
 
 
 ## Displaying an Article
@@ -58,7 +76,7 @@ eventBus.subscribe( 'didReplace.' + articleResource, event => {
 Note that the form of the React-module is slightly different to that of the AngularJS module.
 Instead of the `$scope`-injection that you get with AngularJS widgets, you are provided with an `axReactRender` injection, which is a function.
 This rendering function is used to create and refresh the HTML-representation of the widget, since in contrast to AngularJS, React does not automatically try to do this.
-The HTML template itself lives right here in the JSX file, as is customary for React applications. 
+The HTML template itself lives right here in the JSX file, as is customary for React applications.
 
 For everything to work, we add the required configuration for the feature `article` to the [widget descriptor](../../includes/widgets/shop-demo/article-teaser-widget/widget.json#L16-L26), and again add some [styling](../../includes/widgets/shop-demo/article-teaser-widget/default.theme/css/article-teaser-widget.css).
 

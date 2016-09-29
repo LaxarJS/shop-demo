@@ -16,6 +16,9 @@
                },
                "grid": {
                   "resource": "gridSettings"
+               },
+               "laxarApplication": {
+                  "flag": "isLaxarApplication"
                }
             }
          }
@@ -30,7 +33,8 @@
                },
                "tabs": {
                   "parameter": "tab"
-               }
+               },
+               "detailsOn": [ "isLaxarApplication" ]
             }
          }
       ],

@@ -1,6 +1,7 @@
 /**
  * Copyright 2016 aixigo AG
  * Released under the MIT license.
+ * http://laxarjs.org/license
  */
 define( [
    'json!../widget.json',
@@ -41,6 +42,9 @@ define( [
             },
             pageInfo: {
                resource: 'page'
+            },
+            laxarApplication: {
+               flag: 'isLaxarApplication'
             }
          } );
       } );
@@ -57,10 +61,10 @@ define( [
          function( done ) {
             axMocks.eventBus.publish( 'beginLifecycleRequest' );
             axMocks.eventBus.flush();
-            expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalled();
+                           expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalledWith( 'didProduce.logItems', jasmine.any(Object) );
             fakeChannel.buffers.events.push( { index: 0, json: JSON.stringify( { fake: 'event item' } ) } );
             window.setTimeout( function() {
-               expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalled();
+                              expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalledWith( 'didProduce.logItems', jasmine.any(Object) );
                window.setTimeout( function() {
                   expect( axMocks.widget.axEventBus.publish ).toHaveBeenCalledWith( 'didProduce.eventBusItems', {
                      stream: 'eventBusItems',
@@ -79,10 +83,10 @@ define( [
             axMocks.eventBus.publish( 'beginLifecycleRequest' );
             axMocks.eventBus.flush();
 
-            expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalled();
+                        expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalledWith( 'didProduce.logItems', jasmine.any(Object) );
             fakeChannel.buffers.log.push( { index: 0, json: JSON.stringify( { fake: 'log item' } ) } );
             window.setTimeout( function() {
-               expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalled();
+               expect( axMocks.widget.axEventBus.publish ).not.toHaveBeenCalledWith( 'didProduce.logItems', jasmine.any(Object) );
                window.setTimeout( function() {
                   expect( axMocks.widget.axEventBus.publish ).toHaveBeenCalledWith( 'didProduce.logItems', {
                      stream: 'logItems',

@@ -1,19 +1,23 @@
 {
   "name": "ShopDemo",
-  "version": "1.11.1",
+  "version": "1.12.0",
   "description": "A DemoApp to learn how LaxarJS works.",
   "license": "MIT",
   "scripts": {
     "test": "grunt test --force",
     "prepublish": "bower install && grunt optimize",
     "start": "grunt start",
-    "optimize": "grunt optimize"
+    "optimize": "grunt optimize",
+    "yo": "yo",
+    "babel": "babel"
   },
   "devDependencies": {
     "babel": "^5.8.23",
     "bower": "~1.5.1",
+    "generator-laxarjs": "~1.5.1",
     "grunt": "~0.4.4",
     "grunt-cli": "~0.1.13",
-    "grunt-laxar": "~1.1.0"
+    "grunt-laxar": "~1.1.0",
+    "yo": "~1.7.0"
   }
 }

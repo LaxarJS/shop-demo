@@ -7,32 +7,98 @@ define( [
    'laxar',
    'angular',
    'jquery',
-   'laxar-patterns'
-], function( ax, ng, $, axPatterns ) {
+   'laxar-patterns',
+   '../../lib/laxar-developer-tools/grid',
+   '../../lib/laxar-developer-tools/widget-outline'
+], function( ax, ng, $, axPatterns) {
    'use strict';
-
+   /* global chrome */
    // This controller performs heavy DOM-manipulation, which you would normally put into a directive.
    // However, only the DOM of the host application is manipulated, so this is acceptable.
 
    Controller.$inject = [ 'axEventBus', '$scope', '$window' ];
 
    function Controller( eventBus, $scope, $window ) {
+      var HINT_NO_LAXAR_EXTENSION = 'Reload page to enable LaxarJS developer tools!';
+      var HINT_DISABLE_TOGGLE_GRID = 'Configure grid settings in application to enable this feature!';
+      var HINT_NO_LAXAR_ANYMORE_WIDGET = 'Cannot access LaxarJS host window (or tab).' +
+                                          ' Reopen laxar-developer-tools from LaxarJS host window.';
+      var HINT_CONFIGURE_GRID = 'Configure grid settings in application to enable this feature!';
 
       var TABS = [
          { name: 'events', label: 'Events' },
          { name: 'page', label: 'Page' },
          { name: 'log', label: 'Log' }
       ];
+      var isBrowserWebExtension = ( window.chrome && chrome.runtime && chrome.runtime.id );
+      var firefoxExtensionMessagePort;
+
+      if( !window.opener ) {
+         window.addEventListener( 'message', function( event ) {
+            if( !firefoxExtensionMessagePort && event.ports ) {
+               $scope.model.noLaxar = HINT_NO_LAXAR_EXTENSION;
+               firefoxExtensionMessagePort = event.ports[ 0 ];
+               firefoxExtensionMessagePort.start();
+               var message = { text: 'messagePortStarted' };
+               firefoxExtensionMessagePort.postMessage( JSON.stringify( message ) );
+            } else {
+               var channel = JSON.parse( event.detail || event.data );
+               if( channel.text === 'reloadedPage' ) {
+                  $scope.model.gridOverlay = false;
+                  $scope.model.widgetOverlay = false;
+                  $scope.$apply();
+               }
+            }
+         } );
+      }
 
       $scope.resources = {};
-      axPatterns.resources.handlerFor( $scope ).registerResourceFromFeature( 'grid', { } );
 
       $scope.model = {
+         laxar: true,
          tabs: TABS,
          activeTab: null,
          gridOverlay: false,
-         widgetOverlay: false
+         widgetOverlay: false,
+         toggleGridTitle: HINT_DISABLE_TOGGLE_GRID,
+         noLaxar: HINT_NO_LAXAR_EXTENSION
       };
+
+
+
+      if( window.opener ) {
+         $scope.model.noLaxar = HINT_NO_LAXAR_ANYMORE_WIDGET;
+      }
+
+      axPatterns.resources.handlerFor( $scope ).registerResourceFromFeature(
+         'grid',
+         {
+            onReplace: function( event ) {
+               if( event.data === null ) {
+                  $scope.model.toggleGridTitle = HINT_CONFIGURE_GRID;
+                  $scope.model.gridOverlay = false;
+               }
+               else {
+                  $scope.model.toggleGridTitle = '';
+               }
+            }
+         }
+      );
+
+      axPatterns.flags.handlerFor( $scope ).registerFlag( $scope.features.detailsOn, {
+         initialState: $scope.model.laxar,
+         onChange: function( newState ) {
+            $scope.model.laxar = newState;
+         }
+      } );
+
+      if( isBrowserWebExtension ) {
+         chrome.devtools.network.onNavigated.addListener( function() {
+            $scope.model.gridOverlay = false;
+            $scope.model.widgetOverlay = false;
+            $scope.$apply();
+         } );
+      }
 
       axPatterns.visibility.handlerFor( $scope, { onAnyAreaRequest: function( event ) {
          var prefix = $scope.widget.id + '.';
@@ -65,6 +131,23 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      eventBus.subscribe( 'takeActionRequest.navigation', function( event ) {
+         eventBus.publish( 'willTakeAction.navigation', {
+            action: 'navigation'
+         } );
+         if( $scope.model.gridOverlay ) {
+            toggleGrid();
+         }
+         if( $scope.model.widgetOverlay ) {
+            toggleWidgetOutline();
+         }
+         eventBus.publish( 'didTakeAction.navigation', {
+            action: 'navigation'
+         } );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       $scope.activateTab = function( tab ) {
          var data = {};
          data[ $scope.features.tabs.parameter ] = tab.name;
@@ -77,137 +160,58 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       $scope.toggleGrid = function() {
-         var $grid = gridVisualizationLayer();
-         if( $grid.is( ':hidden' ) ) {
-            $grid.show();
-            $scope.model.gridOverlay = true;
-         }
-         else {
-            $grid.hide();
-            $scope.model.gridOverlay = false;
-         }
+         if( !$scope.resources.grid ){ return; }
+         toggleGrid();
+         $scope.model.gridOverlay = !$scope.model.gridOverlay;
       };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       $scope.toggleWidgetOutline = function() {
-         var $widgets = $( '[data-ax-widget-area]', applicationWindow().document ).children();
-         $widgets.toggleClass( 'ax-widget-outline' );
-         if( $widgets.is( '.ax-widget-outline' ) ) {
-            $widgets.on( 'mouseenter.axDeveloperToolbarWidget', function() {
-               var widgetClass = this.className.split( /\s+/ ).filter( function( _ ) {
-                  return !!_.match( /(-widget|-activity)$/ );
-               } ).concat( 'unknown' )[ 0 ];
-               infoLayer().html( '<strong>' + widgetClass + '</strong><br>ID: ' + this.id );
-            } );
-            $scope.model.widgetOverlay = true;
-         }
-         else {
-            $widgets.off( 'mouseenter.axDeveloperToolbarWidget' );
-            infoLayer().remove();
-            $scope.model.widgetOverlay = false;
-         }
+         toggleWidgetOutline();
+         $scope.model.widgetOverlay = !$scope.model.widgetOverlay;
       };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function applicationWindow() {
-         return $window.opener || $window.parent || $window;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function gridVisualizationLayer() {
-         var id = $scope.id( 'axGrid' );
-         var hostDocument = applicationWindow().document;
-         var $grid = $( '#' + id, hostDocument );
-
-         var resourceSettings = $scope.resources.grid;
-         if( !$grid.length ) {
-            var css = cssSettings( ax.object.options( {}, resourceSettings.css ), resourceSettings.columns );
-
-            $grid = $( '<div></div>', hostDocument ).attr( 'id', id ).hide().css( css );
-            $( resourceSettings.anchor, hostDocument ).prepend( $grid );
+      function toggleGrid() {
+         if( window.opener ) {
+            /* global axDeveloperToolsToggleGrid */
+            axDeveloperToolsToggleGrid( $scope.resources.grid );
+            return;
          }
-
-         return $grid;
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function cssSettings( css, columnSettings ) {
-
-            if( !css.padding ) {
-               css.padding = '0 ' + columnSettings.padding + 'px';
-            }
-
-            if( !css[ 'background-position' ] ) {
-               css[ 'background-position' ] = columnSettings.padding + 'px 0';
-            }
-
-            if( !css[ 'background-image' ] ) {
-               css[ 'background-image' ] =
-               'url("' + columnBackgroundUri( columnSettings ) + '")';
-            }
-
-            if( !css.width ) {
-               css.width = ( columnSettings.count * columnSettings.width +
-                             (columnSettings.count - 1 ) * columnSettings.gutter ) + 'px';
-            }
-
-            return css;
+         if( isBrowserWebExtension ) {
+            var event;
+            event = new CustomEvent( 'toogleGrid', {
+               detail: JSON.stringify( $scope.resources.grid )
+            } );
+            window.dispatchEvent( event );
          }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function columnBackgroundUri( settings ) {
-            var bgCanvas = document.createElement( 'canvas' );
-            var height = 64;
-            bgCanvas.width = settings.width + settings.gutter;
-            bgCanvas.height = height;
-            var context = bgCanvas.getContext( '2d' );
-            // padding
-            context.fillStyle = 'rgba(229, 111, 114, 0.25)';
-            context.fillRect( 0, 0, settings.padding, height );
-            context.fillRect( settings.width - settings.padding, 0, settings.padding, height );
-            // column
-            context.fillStyle = 'rgba(229, 111, 114, 0.4)';
-            context.fillRect( settings.padding, 0, settings.width - 2*settings.padding, height );
-            return bgCanvas.toDataURL();
+         else if( firefoxExtensionMessagePort ) {
+            var message = { text: 'toogleGrid', data: $scope.resources.grid };
+            firefoxExtensionMessagePort.postMessage( JSON.stringify( message ) );
          }
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function infoLayer() {
-         var id = $scope.id( 'axInfo' );
-         var hostDocument = applicationWindow().document;
-         var $info = $( '#' + id, hostDocument );
-         if( !$info.length ) {
-            $info = $( '<div></div>', { id: id, css: INFO_LAYER_STYLE } )
-               .appendTo( hostDocument.body )
-               .on( 'click', function() {
-                  $info.remove();
-               } );
+      function toggleWidgetOutline() {
+         if( window.opener ) {
+            /* global axDeveloperToolsToggleWidgetOutline */
+            axDeveloperToolsToggleWidgetOutline();
+            return;
          }
-         return $info;
+         if( isBrowserWebExtension ) {
+            var event;
+            event = new CustomEvent( 'widgetOutline', { } );
+            window.dispatchEvent( event );
+         }
+         else if( firefoxExtensionMessagePort ) {
+            var message = { text: 'widgetOutline', data: {} };
+            firefoxExtensionMessagePort.postMessage( JSON.stringify( message ) );
+         }
       }
    }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   var INFO_LAYER_STYLE = {
-      position: 'fixed',
-      top: -5,
-      left: -5,
-      'box-shadow': '2px 2px 15px rgba(0,0,0,0.5)',
-      'z-index': 1000,
-      padding: '0.5em 1em 0.75em',
-      'border-right': '1px solid white',
-      'border-bottom': '1px solid white',
-      'border-radius': '0 0 20px 0',
-      backgroundColor: '#ff9900',
-      color: 'white'
-   };
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

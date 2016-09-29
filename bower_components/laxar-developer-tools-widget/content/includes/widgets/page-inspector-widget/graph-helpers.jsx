@@ -1,3 +1,8 @@
+/**
+ * Copyright 2016 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
 import wireflow from 'wireflow';
 
 import { object } from 'laxar';
