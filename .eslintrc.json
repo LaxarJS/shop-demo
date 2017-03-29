@@ -1,0 +1,4 @@
+{
+   "extends": "laxarjs",
+   "plugins": [ "html", "vue" ]
+}

@@ -2,11 +2,10 @@
 atlassian-ide-plugin.xml
 *.orig
 .sass-cache
-/var
+/dist
+/build
 /node_modules
-*.backup.json
-ShopDemo-*.zip
 /bower_components
-*~
+*.backup.json
+paperdart-*.zip
 npm-debug.log
-test-results.xml

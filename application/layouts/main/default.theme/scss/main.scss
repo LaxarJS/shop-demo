@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+@import "variables_all";
+$app-laxarjs-logo: "../images/laxarjs-logo.svg";
+$app-pot-flower: "../images/pot-flower.svg";
+
+.app-header {
+   height: 60px;
+   padding-top: 27px;
+   padding-bottom: 27px;
+
+   h1 {
+      text-align: right;
+   }
+}
+
+.app-footer {
+   margin-top: 1em;
+}
+
+.app-logo {
+   display: block;
+   width: 229px;
+   height: 60px;
+   background: url( $app-laxarjs-logo ) no-repeat;
+   background-size: contain;
+}
+
+.app-version {
+   text-align: right;
+
+   @media (max-width: $screen-md-min) {
+      text-align: left;
+   }
+}
+
+h1 > a,
+h1 > a:hover,
+h1 > a:focus,
+h1 > a:visited  {
+   color: currentcolor;
+   text-decoration: none;
+}

@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+@import "variables_all";
+@import "../../default.theme/scss/shopping-cart-widget";
+
+.shopping-cart-widget {
+   h3.app-articles {
+      i {
+         background-color: $brand-success;
+      }
+   }
+}
