@@ -1,0 +1,78 @@
+@charset "UTF-8";
+
+@import "variables_all";
+
+$app-laxarjs-logo: "../images/laxarjs-logo.svg";
+$app-pot-flower: "../images/pot-flower.svg";
+
+.app-header {
+   height: 60px;
+   padding-top: 27px;
+   padding-bottom: 27px;
+
+   h1 {
+      text-align: right;
+   }
+}
+
+.app-footer {
+   margin-top: 1em;
+}
+
+.app-logo {
+   display: block;
+   width: 229px;
+   height: 60px;
+   background: url( $app-laxarjs-logo ) no-repeat;
+   background-size: contain;
+}
+
+.app-flower {
+   margin: 3em 0;
+   background-image: url( $app-pot-flower );
+   background-repeat: no-repeat;
+   background-position: center right;
+   background-size: contain;
+
+   @media (max-width: $screen-sm-max) {
+      margin: 0;
+      background-position: center;
+      height: 200px;
+   }
+}
+
+.app-flower-helper {
+   display: block;
+   height: 0;
+   padding-top: 100%;
+}
+
+.app-version {
+   text-align: right;
+
+   @media (max-width: $screen-md-min) {
+      text-align: left;
+   }
+}
+
+.app-thanks {
+   display: inline-block;
+   margin-top: 165px;
+
+   @media (min-width: $screen-sm-max) and (max-width: $screen-md-max) {
+      margin-top: 120px;
+   }
+
+   @media (max-width: $screen-sm-max) {
+      margin-top: 0
+   }
+}
+
+
+h1 > a,
+h1 > a:hover,
+h1 > a:focus,
+h1 > a:visited  {
+   color: currentcolor;
+   text-decoration: none;
+}

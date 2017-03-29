@@ -1,0 +1,19 @@
+{
+   "layout": "one-column",
+
+   "areas": {
+      "content": [
+         {
+            "widget": "headline-widget",
+            "features": {
+               "headline": {
+                  "htmlText": "404 - Page not Found"
+               },
+               "intro": {
+                  "htmlText": "This page does not exist. Try going <a href='/' title='home'>home</a>."
+               }
+            }
+         }
+      ]
+   }
+}

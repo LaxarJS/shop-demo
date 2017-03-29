@@ -2,11 +2,11 @@
 atlassian-ide-plugin.xml
 *.orig
 .sass-cache
-/var
+/dist
+/build
+/spec-output
 /node_modules
-*.backup.json
-ShopDemo-*.zip
 /bower_components
-*~
+/tmp
+*.backup.json
 npm-debug.log
-test-results.xml

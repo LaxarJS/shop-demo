@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+- [#42](https://github.com/LaxarJS/shop-demo/issues/42): rewrite in LaxarJS v2 / Vue.js
+    + **BREAKING CHANGE:** see ticket for details
+
 
 ## v1.12.0
 
