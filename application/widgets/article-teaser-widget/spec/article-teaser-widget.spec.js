@@ -7,9 +7,8 @@
 /* global define */
 define( [
    'laxar-mocks',
-   'laxar-react-adapter',
    './spec_data.json'
-], ( axMocks, axReactAdapter, resourceData ) => {
+], ( axMocks, resourceData ) => {
    'use strict';
 
    describe( 'The article-teaser-widget', () => {

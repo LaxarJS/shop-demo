@@ -5,6 +5,7 @@
 - [#42](https://github.com/LaxarJS/shop-demo/issues/42): rewrite in LaxarJS v2 / Vue.js
     + **BREAKING CHANGE:** see ticket for details
 
+
 ## v1.12.0
 
 - [#39](https://github.com/LaxarJS/shop-demo/issues/39): updated dependencies to support widget outline and grid of the laxar-developer-tools

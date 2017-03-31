@@ -4,8 +4,9 @@ atlassian-ide-plugin.xml
 .sass-cache
 /dist
 /build
+/spec-output
 /node_modules
 /bower_components
+/tmp
 *.backup.json
-paperdart-*.zip
 npm-debug.log

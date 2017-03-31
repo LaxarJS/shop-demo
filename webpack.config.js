@@ -7,9 +7,21 @@
 
 const path = require( 'path' );
 const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
+const WebpackJasmineHtmlRunnerPlugin = require( 'webpack-jasmine-html-runner-plugin' );
 
-module.exports = ( env = {} ) => {
+module.exports = ( env = {} ) => [
+   config( env ),
+   Object.assign( config( env ), {
+      entry: WebpackJasmineHtmlRunnerPlugin.entry( './application/widgets/**/spec/*.spec.js' ),
+      output: {
+         path: path.resolve( __dirname, 'spec-output' ),
+         publicPath: '/spec-output/',
+         filename: '[name].bundle.js'
+      }
+   } )
+];
 
+function config( env ) {
    const publicPath = env.production ? '/dist/' : '/build/';
 
    return {
@@ -24,9 +36,9 @@ module.exports = ( env = {} ) => {
          filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
       },
 
-      plugins: [
-         ...( env.production ? [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ] : [] )
-      ],
+      plugins: env.production ?
+         [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ] :
+         [ new WebpackJasmineHtmlRunnerPlugin() ],
 
       resolve: {
          modules: [ path.resolve( __dirname, 'node_modules' ) ],
@@ -101,5 +113,4 @@ module.exports = ( env = {} ) => {
          ]
       }
    };
-
-};
+}

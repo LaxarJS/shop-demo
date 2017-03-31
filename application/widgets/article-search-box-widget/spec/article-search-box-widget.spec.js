@@ -4,113 +4,103 @@
  * http://laxarjs.org/license
  */
 
-/* global define */
-define( [
-   'laxar-mocks',
-   'laxar',
-   './spec_data.json'
-], ( axMocks, ax, resourceData ) => {
-   'use strict';
+import * as axMocks from 'laxar-mocks';
+import { object } from 'laxar';
+import * as resourceData from './spec_data.json';
 
-   describe( 'A ArticleSearchBoxWidget', () => {
+describe( 'A ArticleSearchBoxWidget', () => {
 
-      let data;
-      let widgetEventBus;
-      let widgetScope;
-      let testEventBus;
+   let data;
+   let vueComponent;
 
-      beforeEach( axMocks.setupForWidget() );
-      beforeEach( () => {
-         axMocks.widget.configure( {
-            navigation: {
-               parameterName: 'query'
-            },
-            articles: {
-               resource: 'articles'
-            },
-            filteredArticles: {
-               resource: 'filteredArticles'
-            }
-         } );
+   beforeEach( axMocks.setupForWidget() );
+   beforeEach( () => {
+      axMocks.widget.configure( {
+         navigation: {
+            parameterName: 'query'
+         },
+         articles: {
+            resource: 'articles'
+         },
+         filteredArticles: {
+            resource: 'filteredArticles'
+         }
       } );
-      beforeEach( axMocks.widget.load );
+   } );
+   beforeEach( axMocks.widget.load );
+   beforeEach( () => {
+      data = object.deepClone( resourceData );
+      ({ vueComponent } = axMocks.widget);
+   } );
+   afterEach( axMocks.tearDown );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   describe( 'when articles are published without given search term', () => {
+
       beforeEach( () => {
-         data = ax.object.deepClone( resourceData );
-         widgetScope = axMocks.widget.$scope;
-         widgetEventBus = axMocks.widget.axEventBus;
-         testEventBus = axMocks.eventBus;
-      } );
-      afterEach( axMocks.tearDown );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      describe( 'when articles were published without given search term', () => {
-
-         beforeEach( () => {
-            testEventBus.publish( 'didReplace.articles', {
-               resource: 'articles',
-               data
-            } );
-            testEventBus.flush();
+         axMocks.eventBus.publish( 'didReplace.articles', {
+            resource: 'articles',
+            data
          } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         it( 'publishes the same list as filtered articles', () => {
-            expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
-               resource: 'filteredArticles',
-               data
-            } );
-         } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         describe( 'and a search was initiated afterwards', () => {
-
-            beforeEach( () => {
-               widgetScope.model.searchTerm = 'beer';
-               widgetScope.updateSearch();
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'publishes the updated search term as a place parameter', () => {
-               expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'navigateRequest._self', {
-                  target: '_self',
-                  data: {
-                     query: 'beer'
-                  }
-               } );
-            } );
-
-         } );
-
+         axMocks.eventBus.flush();
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      describe( 'when articles were published with already given search term', () => {
+      it( 'publishes the same list as filtered articles', () => {
+         expect( vueComponent.eventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+            resource: 'filteredArticles',
+            data
+         } );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      describe( 'and a search is initiated afterwards', () => {
 
          beforeEach( () => {
-            widgetScope.model.searchTerm = 'beer';
-            testEventBus.publish( 'didReplace.articles', {
-               resource: 'articles',
-               data
-            } );
-            testEventBus.flush();
+            vueComponent.searchTerm = 'beer';
+            vueComponent.updateSearch();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         it( 'publishes the matching articles only', () => {
-            expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
-               resource: 'filteredArticles',
+         it( 'publishes the updated search term as a place parameter', () => {
+            expect( vueComponent.eventBus.publish ).toHaveBeenCalledWith( 'navigateRequest._self', {
+               target: '_self',
                data: {
-                  entries: [ data.entries[ 1 ] ]
+                  query: 'beer'
                }
             } );
          } );
 
+      } );
+
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   describe( 'when articles are published with already given search term', () => {
+
+      beforeEach( () => {
+         vueComponent.searchTerm = 'beer';
+         axMocks.eventBus.publish( 'didReplace.articles', {
+            resource: 'articles',
+            data
+         } );
+         axMocks.eventBus.flush();
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      it( 'publishes the matching articles only', () => {
+         expect( vueComponent.eventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
+            resource: 'filteredArticles',
+            data: {
+               entries: [ data.entries[ 1 ] ]
+            }
+         } );
       } );
 
    } );

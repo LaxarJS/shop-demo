@@ -4,103 +4,79 @@
  * http://laxarjs.org/license
  */
 
-/* global define */
-define( [
-   'laxar-mocks',
-   'angular',
-   'angular-mocks',
-   'laxar',
-   './spec_data.json'
-], ( axMocks, ng, ngMocks, ax, resourceData ) => {
-   'use strict';
+import * as axMocks from 'laxar-mocks';
+import { object } from 'laxar';
+import * as resourceData from './spec_data.json';
 
-   describe( 'The article-browser-widget', () => {
+describe( 'The article-browser-widget', () => {
 
-      let $httpBackend;
-      let $rootScope;
-      let data;
-      let widgetEventBus;
-      let testEventBus;
+   let vueComponent;
+   let data;
 
-      beforeEach( axMocks.setupForWidget() );
+   beforeEach( axMocks.setupForWidget() );
+
+   beforeEach( () => {
+      axMocks.widget.configure( {
+         articles: {
+            resource: 'articles'
+         },
+         selection: {
+            resource: 'selectedArticle'
+         }
+      } );
+   } );
+
+   beforeEach( axMocks.widget.load );
+   beforeEach( () => {
+      data = object.deepClone( resourceData );
+      ({ vueComponent } = axMocks.widget);
+   } );
+
+   afterEach( axMocks.tearDown );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   it( 'subscribes to didReplace events of the articles resource', () => {
+      expect( vueComponent.eventBus.subscribe )
+         .toHaveBeenCalledWith( 'didReplace.articles', jasmine.any( Function ) );
+   } );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   describe( 'when the list of articles is replaced', () => {
 
       beforeEach( () => {
-         axMocks.widget.configure( {
-            articles: {
-               resource: 'articles'
-            },
-            selection: {
-               resource: 'selectedArticle'
-            }
+         axMocks.eventBus.publish( 'didReplace.articles', {
+            resource: 'articles',
+            data
          } );
-         ng.mock.module( $provide => {
-            $provide.factory( '$timeout', () => {
-               return { hans: true };
-            } );
-         } );
-         axMocks.widget.whenServicesAvailable( () => {
-            ng.mock.inject( _$httpBackend_ => {
-               $httpBackend = _$httpBackend_;
-               $httpBackend.whenGET( '/test' ).respond( { ok: true } );
-            } );
-         } );
-      } );
-
-      beforeEach( axMocks.widget.load );
-      beforeEach( () => {
-         data = ax.object.deepClone( resourceData );
-
-         widgetEventBus = axMocks.widget.axEventBus;
-         testEventBus = axMocks.eventBus;
-         $httpBackend.flush();
-      } );
-      afterEach( axMocks.tearDown );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      it( 'subscribes to didReplace events of the articles resource', () => {
-         expect( widgetEventBus.subscribe )
-            .toHaveBeenCalledWith( 'didReplace.articles', jasmine.any( Function ) );
+         axMocks.eventBus.flush();
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      describe( 'when the list of articles is replaced', () => {
+      it( 'resets the article selection', () => {
+         expect( vueComponent.eventBus.publish ).toHaveBeenCalledWith( 'didReplace.selectedArticle', {
+            resource: 'selectedArticle',
+            data: null
+         } );
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      describe( 'and the user selects an article', () => {
 
          beforeEach( () => {
-            testEventBus.publish( 'didReplace.articles', {
-               resource: 'articles',
-               data
-            } );
-            testEventBus.flush();
+            vueComponent.selectArticle( vueComponent.articles[ 1 ] );
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         it( 'resets the article selection', () => {
-            expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.selectedArticle', {
+         it( 'the configured selection resource is replaced', () => {
+            expect( vueComponent.eventBus.publish ).toHaveBeenCalledWith( 'didReplace.selectedArticle', {
                resource: 'selectedArticle',
-               data: null
+               data: vueComponent.articles[ 1 ]
             } );
-         } );
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         describe( 'and the user selects an article', () => {
-
-            beforeEach( () => {
-               axMocks.widget.$scope.selectArticle( axMocks.widget.$scope.resources.articles[ 1 ] );
-            } );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            it( 'the configured selection resource is replaced', () => {
-               expect( widgetEventBus.publish ).toHaveBeenCalledWith( 'didReplace.selectedArticle', {
-                  resource: 'selectedArticle',
-                  data: axMocks.widget.$scope.resources.articles[ 1 ]
-               } );
-            } );
-
          } );
 
       } );

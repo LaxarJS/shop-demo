@@ -53,14 +53,15 @@ export default {
    created() {
       this.eventBus.subscribe( `didReplace.${this.features.articles.resource}`, ({ data }) => {
          this.articles = data;
+         this.selectArticle( null );
       } );
    },
    methods: {
       selectArticle( data ) {
-         this.selectedArticle = data;
+         this.selectedArticle = data || { id: null };
          const { resource } = this.features.selection;
          this.eventBus.publish( `didReplace.${resource}`, { resource, data } );
       }
    }
-}
+};
 </script>
