@@ -9,17 +9,17 @@ const path = require( 'path' );
 const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 const WebpackJasmineHtmlRunnerPlugin = require( 'webpack-jasmine-html-runner-plugin' );
 
-module.exports = ( env = {} ) => [
-   config( env ),
-   Object.assign( config( env ), {
-      entry: WebpackJasmineHtmlRunnerPlugin.entry( './application/widgets/**/spec/*.spec.js' ),
-      output: {
-         path: path.resolve( __dirname, 'spec-output' ),
-         publicPath: '/spec-output/',
-         filename: '[name].bundle.js'
-      }
-   } )
-];
+module.exports = ( env = {} ) =>
+   env.browserSpec ?
+      Object.assign( config( env ), {
+         entry: WebpackJasmineHtmlRunnerPlugin.entry( './application/widgets/**/spec/*.spec.js' ),
+         output: {
+            path: path.resolve( __dirname, 'spec-output' ),
+            publicPath: '/spec-output/',
+            filename: '[name].bundle.js'
+         }
+      } ) :
+      config( env );
 
 function config( env ) {
    const publicPath = env.production ? '/dist/' : '/build/';

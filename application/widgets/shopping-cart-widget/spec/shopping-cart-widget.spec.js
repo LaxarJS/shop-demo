@@ -101,12 +101,12 @@ describe( 'The ShoppingCartWidget', () => {
 
          describe( 'and then triggered again', () => {
 
-            beforeEach( () => {
+            beforeEach( done => {
                axMocks.eventBus
                   .publish( 'takeActionRequest.addArticle', {
                      action: 'addArticle'
                   } );
-               axMocks.eventBus.flush();
+               axMocks.eventBus.drainAsync().then( done );
             } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,7 +139,7 @@ describe( 'The ShoppingCartWidget', () => {
 
                beforeEach( () => {
                   const increaseButton = widgetDom.querySelector(
-                     'tbody tr:first-child td:last-child button:first-child'
+                     '.app-increase-buttons button:first-child'
                   );
                   increaseButton.click();
                } );
@@ -147,7 +147,7 @@ describe( 'The ShoppingCartWidget', () => {
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
                it( 'updates the sum accordingly', () => {
-                  expect( axMocks.widget.axContext.sum ).toEqual( 74.97 );
+                  expect( axMocks.widget.vueComponent.sum ).toEqual( 74.97 );
                } );
 
             } );
@@ -166,7 +166,7 @@ describe( 'The ShoppingCartWidget', () => {
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
                it( 'updates the sum accordingly', () => {
-                  expect( axMocks.widget.axContext.sum ).toEqual( 24.99 );
+                  expect( axMocks.widget.vueComponent.sum ).toEqual( 24.99 );
                } );
 
                ///////////////////////////////////////////////////////////////////////////////////////////////
