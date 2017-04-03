@@ -12,7 +12,7 @@
       "browser-spec": "npm run browser-spec-build && npm run browser-spec-run",
       "browser-spec-build": "webpack --env.browserSpec",
       "browser-spec-run": "webpack-dev-server --env.browserSpec",
-      "eslint": "eslint widgets *.js",
+      "eslint": "eslint --ext=.js,.vue application/widgets *.js",
       "karma": "node karma.config.js",
       "dist": "webpack -p --env.production",
       "prepublish": "webpack --progress",

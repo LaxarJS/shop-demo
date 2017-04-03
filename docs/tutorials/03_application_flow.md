@@ -1,13 +1,13 @@
 # Defining the Application Flow
 
-After completing the initial two steps, we have a simple application with a first page, its layout and the first widget.
+After completing the initial two steps, we have a simple application with a first page, its layout and a first widget.
 In this step we are going to make some modification in order to add _a second page_ and to make for a nicer _appearance_ of the application.
-This allows us to get familiar with the declarative way that navigation is implemented in LaxarJS, and with the concept of _layouts._
+This allows us to get familiar with the declarative way that _navigation_ is implemented in LaxarJS, and to gain a deeper understanding of _layouts._
 
 
 ## Pages and the Flow
 
-Under `application/pages` we rename `home.json` to `shop_demo.json` and copy it to a second page, `finish_order.json` which we will come back to later.
+Under `application/pages` we rename `home.json` to `browse.json` and copy it to a second page, `finish_order.json` which we will come back to later.
 The `shop_demo` page will allow the user to search for articles, to add them to the shopping cart and to submit an order.
 The `finish_order` page will be shown after submitting an order to display a confirmation message.
 

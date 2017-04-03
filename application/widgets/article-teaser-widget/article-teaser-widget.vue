@@ -61,5 +61,5 @@ export default {
          this.eventBus.publish( `takeActionRequest.${action}`, { action } );
       }
    }
-}
+};
 </script>

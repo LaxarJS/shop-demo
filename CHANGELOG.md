@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#43](https://github.com/LaxarJS/shop-demo/issues/43): update tutorial for LaxarJS v2
 - [#42](https://github.com/LaxarJS/shop-demo/issues/42): rewrite in LaxarJS v2 / Vue.js
     + **BREAKING CHANGE:** see ticket for details
 
