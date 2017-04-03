@@ -5,12 +5,8 @@
  */
 @charset "UTF-8";
 
+// load variables from the cube.theme to override the defaults
 @import "variables_all";
-
-// Overwrite some default variables
-
-
-// Load the default style if you want
 @import "../../default.theme/scss/article-browser-widget";
 
 .article-browser-widget {

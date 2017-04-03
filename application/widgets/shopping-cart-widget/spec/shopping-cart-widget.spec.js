@@ -102,10 +102,9 @@ describe( 'The ShoppingCartWidget', () => {
          describe( 'and then triggered again', () => {
 
             beforeEach( done => {
-               axMocks.eventBus
-                  .publish( 'takeActionRequest.addArticle', {
-                     action: 'addArticle'
-                  } );
+               axMocks.eventBus.publish( 'takeActionRequest.addArticle', {
+                  action: 'addArticle'
+               } );
                axMocks.eventBus.drainAsync().then( done );
             } );
 
@@ -204,8 +203,8 @@ describe( 'The ShoppingCartWidget', () => {
 
    describe( 'with feature order', () => {
 
-      beforeEach( () => {
-         axMocks.widget.axContext.cart = [
+      beforeEach( done => {
+         axMocks.widget.vueComponent.cart = [
             {
                article: articles[ 0 ],
                quantity: 1
@@ -215,6 +214,7 @@ describe( 'The ShoppingCartWidget', () => {
                quantity: 4
             }
          ];
+         setTimeout( done, 0 );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -34,13 +34,7 @@ describe( 'The dummy-articles-activity', () => {
          expect( axMocks.widget.axEventBus.publish )
             .toHaveBeenCalledWith( 'didReplace.articles', {
                resource: 'articles',
-               data: {
-                  entries: articles.map( article => {
-                     article.pictureUrl = article.picture ?
-                        jasmine.any( String ) : null;
-                     return article;
-                  } )
-               }
+               data: articles
             } );
       } );
 

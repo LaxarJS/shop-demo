@@ -12,14 +12,14 @@
       "browse": {
          "patterns": [ "/browse/:search", "/browse" ],
          "targets": {
-            "next": "confirmation"
+            "next": "confirm"
          },
-         "page":  "browse"
+         "page":  "home"
       },
 
-      "confirmation": {
+      "confirm": {
          "patterns": [ "/confirm" ],
-         "page":  "confirm"
+         "page":  "confirmation"
       },
 
       "error404": {

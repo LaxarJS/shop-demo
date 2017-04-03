@@ -1,6 +1,6 @@
 <template>
 <div>
-   <h3 :class="`ax-function-point ${isSelected ? 'app-selection' : ''}`">
+   <h3 :class="`ax-function-point ${article.id ? 'app-selection' : ''}`">
       <i class='fa fa-search'></i> Details
    </h3>
    <div class="app-teaser-wrapper clearfix"
@@ -45,21 +45,18 @@
 export default {
    data: () => ({ article: { id: null } }),
    created() {
-      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, ({ data }) => {
-         this.article = data || { id: null };
+      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, event => {
+         this.article = event.data || { id: null };
       } );
    },
-   computed: {
-      isSelected() {
-         return this.article.id !== null;
-      }
-   },
    methods: {
-      formatted: price => price == null ? null : `€ ${price.toFixed( 2 )}`,
+      formatted( price ) {
+         return price == null ? '' : `€ ${price.toFixed( 2 )}`;
+      },
       addToCart() {
          const { action } = this.features.confirmation;
          this.eventBus.publish( `takeActionRequest.${action}`, { action } );
       }
    }
-}
+};
 </script>
