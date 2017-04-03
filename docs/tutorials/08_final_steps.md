@@ -1,47 +1,75 @@
 # Final Steps
 
-All that is left to do now is writing the order confirmation page for our application.
-In this final part of the tutorial, you will also learn how to create an optimized version of your application for production.
-
-
-## Adding Another Page
-
-The shopping-cart-widget from our previous step publishes a _navigateRequest_ for the configured target _finishOrder_.
-How is this target resolved to a JSON page definition?
-At this point, we go back to the [flow definition](../../application/flow/flow.json#L11-13), that was introduced in [step 3](03_application_flow.md):
-
-```json
-{
-   "places": {
-      "entry": {
-         "redirectTo": "shopDemo"
-      },
-
-      "shopDemo": {
-         "page":  "shop_demo"
-      },
-
-      "finishOrder": {
-         "page":  "finish_order"
-      }
-   }
-}
-```
-
-The flow definition allows to configure _global places_ as we have done here, which either point directly to a page or which redirect to another place.
-It is also possible to define _targets_ from each place to other places, establishing flow relations such as _next_ and _previous_.
-
-The [second page *finish_order.json*](../../application/pages/finish_order.json) uses and configures only the headline-widget, which we [introduced previously](02_hello_world.md).
-
-Now we start the server with `npm start` again and visit the application.
-By "placing" an order we can now navigate to the confirmation page.
+In this final part of the tutorial, you will learn to use a different theme as well as to create an optimized version of your application for production.
 
 
 ## Theming Widgets and Layouts
 
 The CSS files that we have written for our widgets and layouts only cover the basics that are necessary for displaying our application.
-For a more sophisticated styling, we add a _theme_ based on [Bootstrap CSS](http://getbootstrap.com) under `includes/themes/cube.theme`.
-The LaxarJS documentation contains a [manual on themes](//github.com/LaxarJS/laxar/blob/master/docs/manuals/creating_themes.md#creating-themes) related to this shop demo, which goes into more detail.
+For a more sophisticated styling, let us add a _theme_ based on [Bootstrap CSS](http://getbootstrap.com) under `application/themes/cube.theme`:
+
+```sh
+git clone https://github.com/LaxarJS/cube.theme.git application/themes/cube.theme
+```
+
+The LaxarJS documentation contains a [manual on themes](https://laxarjs.org/docs/laxar-v2-latest/manuals/creating_themes/) related to this shop demo, which goes into more detail.
+
+
+## Changing the Theme
+
+The theme used by the application can be changed in the file `init.js`, by replacing `"default"` with `"cube"`:
+
+-  …in the artifacts import:
+
+```js
+import artifacts from 'laxar-loader/artifacts?flow=main&theme=cube';
+```
+
+- …and in the LaxarJS application configuration:
+
+```js
+const configuration = {
+   // name, ...
+   theme: 'cube'
+};
+```
+
+Finally, the webpack configuration needs to be extended to support the SCSS-import paths required by the _cube.theme_.
+For this, the following element needs to be added to the `module.rules` array in the `webpack.config.js`:
+
+```js
+{
+   test: /\/cube[.]theme\/.*\.s[ac]ss$/,
+   loader: 'sass-loader',
+   options: {
+      includePaths: [
+         './application/themes/cube.theme/scss',
+         './node_modules/laxar-uikit/themes/default.theme/scss',
+         './node_modules/laxar-uikit/scss',
+         './node_modules/bootstrap-sass/assets/stylesheets',
+         './node_modules'
+      ].map( p => path.resolve( __dirname, p ) )
+   }
+}
+```
+
+
+### Theming Layouts and Widgets
+
+This already goes a long way in changing the appearance of the application.
+But the individual layouts and widgets will still fall back to their _default.theme_ folders, using the slightly different set of variables from vanilla Bootstrap CSS.
+To _fully_ theme your application, you'll need to use SCSS stylesheets that are customized for the cube.theme:
+
+  - [application/layouts/one-column/cube.theme/scss/one-column.scss](../../application/layouts/one-column/cube.theme/scss/one-column.scss)
+  - [application/layouts/three-columns/cube.theme/scss/three-columns.scss](../../application/layouts/three-columns/cube.theme/scss/three-columns.scss)
+  - [application/widgets/article-browser-widget/cube.theme/scss/article-teaser-widget.scss](../../application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss)
+  - [application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss](../../application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss)
+  - [application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss](../../application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss)
+
+
+After restarting the development server, your application should look similar to this:
+
+*TODO: screenshot with the cube.theme active*
 
 
 ## Deploying the Application
@@ -49,18 +77,22 @@ The LaxarJS documentation contains a [manual on themes](//github.com/LaxarJS/lax
 The application is now complete and we can prepare an _optimized version_ ready for deployment:
 
 ```shell
-npm run-script optimize
+npm run optimize
 ```
 
-Start the server with `npm start` and visit the [production version](http://localhost:8000/index.html).
+Start the server with `npm start` and visit the [production version](http://localhost:8080/).
 
-In contrast to the `debug.html`, the optimized `index.html` version does not pick up changes automatically.
-However, the number and transfer size of HTTP requests is greatly reduced when using the optimized version, making for a much better user experience.
+In contrast to the `debug.html`, the optimized version (`index.html`) does not pick up changes automatically.
+However, the download size of the application is greatly reduced when using the optimized version, making for a much better user experience, especially on mobile devices.
 For this reason, it is strongly recommended to always use this version for production.
+In case you are familiar with _webpack_:
+The above command simply runs `webpack -p --env.production`.
 
 Of course, when creating you own application, you do not have to use the HTML files provided by the LaxarJS scaffolding _as-is_.
 Instead, you should be able to include the relevant sections from the `index.html` file into any server side templating system:
-The stylesheet reference and the `body` contents are required, and do not forget to adjust the paths to your setup.
+Only the stylesheet reference and the `body` contents (container `div`, `script`) are required.
+Depending on you setup, you may need to update the paths to resources under `dist/`.
+For more advanced production configuration, consult the [webpack documentation](https://webpack.js.org).
 
 
 ## The Next Step

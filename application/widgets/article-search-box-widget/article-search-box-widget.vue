@@ -16,8 +16,6 @@
 
 
 <script>
-const searchFields = [ 'some', 'id', 'htmlDescription' ];
-
 /**
  * Copyright 2017 aixigo AG
  * Released under the MIT license.
@@ -30,48 +28,43 @@ export default {
       filteredArticles: []
    }),
    created() {
-      const articlesResource = this.features.articles.resource;
-
-      this.eventBus.subscribe( `didReplace.${articlesResource}`, ({ data }) => {
-         this.articles = data.entries || [];
-         this.search();
+      const { articles, navigation } = this.features;
+      this.eventBus.subscribe( `didReplace.${articles.resource}`, event => {
+         this.articles = event.data || [];
+         this.filter();
       } );
-
-      this.eventBus.subscribe( 'didNavigate', ({ data }) => {
-         this.searchTerm = data[ this.features.navigation.parameterName ] || '';
-         this.search();
+      this.eventBus.subscribe( 'didNavigate', event => {
+         this.searchTerm = event.data[ navigation.parameterName ] || '';
+         this.filter();
       } );
-   },
-   computed: {
-      isSelected() {
-         return this.article.id !== null;
-      }
    },
    methods: {
-      updateSearch() {
+      search() {
          const target = '_self';
          const data = {
             [ this.features.navigation.parameterName ]: this.searchTerm || null
          };
          this.eventBus.publish( `navigateRequest.${target}`, { target, data } );
       },
-      search() {
+      filter() {
          const search = this.searchTerm.toLowerCase();
          const matches = subject => ( subject || '' ).toLowerCase().indexOf( search ) !== -1;
-         const entries = search ?
-            this.articles.filter( article => searchFields.some( field => matches( article[ field ] ) ) ) :
+         const articles = search ?
+            this.articles.filter( article =>
+               [ 'name', 'id', 'htmlDescription' ].some( field => matches( article[ field ] ) )
+            ) :
             this.articles;
 
          const hasChanged =
-            this.filteredArticles.length !== entries.length ||
-            this.filteredArticles.some( (article, i) => article.id !== entries[ i ].id );
+            this.filteredArticles.length !== articles.length ||
+            this.filteredArticles.some( (article, i) => article.id !== articles[ i ].id );
 
          if( hasChanged ) {
-            this.filteredArticles = entries;
+            this.filteredArticles = articles;
             const { resource } = this.features.filteredArticles;
             this.eventBus.publish( `didReplace.${resource}`, {
                resource,
-               data: { entries }
+               data: articles
             } );
          }
       }

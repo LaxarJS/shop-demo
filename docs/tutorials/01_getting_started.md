@@ -1,79 +1,79 @@
 # Getting Started
 
-This tutorial explains how to create a simple web-based shopping application using [LaxarJS](http://laxarjs.org).
+This tutorial explains how to create a simple web-based shopping application using [LaxarJS](https://laxarjs.org).
 It provides a step-by-step introduction into creating widgets and activities and using them in an application.
-It is intended for programmers who are familiar with [*AngularJS*](https://angularjs.org/) and the related web technologies.
-Rudimentary knowledge of *git* is assumed as well.
-If you are unfamiliar with LaxarJS, you might want to check out [Why LaxarJS](https://github.com/LaxarJS/laxar/blob/master/docs/why_laxar.md) and maybe have a brief look at the [key concepts](https://github.com/LaxarJS/laxar/blob/master/docs/concepts.md) first.
+The tutorial is intended for developers who are familiar with standard web technologies (HTML, JavaScript) and a basic familiarity with a UI-technologies such as [*React*](https://facebook.github.io/react/), [*AngularJS*](https://angularjs.org/) or [*Vue.js*](https://vuejs.org/), with Vue.js being used throughout this tutorial.
 
-
-In this tutorial we don't display and explain each line of code of the whole project.
-Instead we introduce in each step a new concept of LaxarJS.
-For the final version of the project files we link them in each section.
+If you are completely unfamiliar with LaxarJS, you might want to check out [Why LaxarJS](https://laxarjs.org/docs/generator-v2-latest/docs/why_laxar/) and maybe have a brief look at the [key concepts](https://laxarjs.org/docs/generator-v2-latest/docs/concepts/) first.
+While this tutorial aims to be a comprehensive guide for starters, it will not include and explain every line of code of the whole project.
+Instead, each step introduces a new concept of LaxarJS.
+Still, links to the relevant project source files are provided from each section.
 
 
 ## Get the Prerequisites
 
-First, we install the *grunt* command-line interface and the *Yeoman* scaffolding tool.
-Depending on the system, we have to do this using `sudo` or from an administrative shell.
+To create projects with LaxarJS you need [*Node.js*](https://nodejs.org) (v6 or later).
+Everything else will be obtained as we go.
 
-```shell
-npm install -g grunt-cli yo
+First, you will need to create a new LaxarJS application.
+To simplify this process, install the *Yeoman* scaffolding tool as well as the *Yeoman generator for LaxarJS 2*:
+
+```console
+npm install -g yo generator-laxarjs2
 ```
 
-Now we can obtain the LaxarJS templates which we will instantiate using `yo`, to get started with our application and artifacts:
-
-```shell
-npm install -g generator-laxarjs
-```
-
-If you don't have root access to your system, take a look to the section ["local installation" of the LaxarJS generator.](https://github.com/LaxarJS/generator-laxarjs#local-installation)
+Depending on your setup you may need to use `sudo` for this.
+If you cannot or do not want to modify your global NPM packages, take a look to the [*local installation* instructions](https://laxarjs.org/docs/generator-laxarjs2-v2-latest/#local-installation) in the [generator documentation](https://laxarjs.org/docs/generator-laxarjs2-v2-latest/).
 
 
-## Creating a LaxarJS Application from the Template
+## Creating a LaxarJS Application
 
-```shell
+The recommended way to create a LaxarJS application is by using our _Yeoman generator._
+Since you just installed the generator, all you need to do is:
+
+```console
 mkdir shop-demo
 cd shop-demo
-yo laxarjs
+yo laxarjs2
 ```
 
-The script will ask for some details about the application and offer suggestions for possible answers to these questions.
-It creates the basic file- and directory structure of a LaxarJS application.
-If there is no service currently running on port 8000 we can just accept the suggested answer.
-Otherwise, we need to make sure to remember to port we choose, and use it to access the application later on.
+The generator will ask for some details about the application, offering helpful suggestions where possible.
+Let us answer the questions of the LaxarJS generator as follows:
 
-Answer the following questions of LaxarJS generator:
-```
+*TODO: update to v2 generator*
+*TODO: make sure that Vue.js support is selected*
+
+```console
 ? The application name: (shop-demo)
 ? Description (optional): A demo application to learn how LaxarJS works
 ? Licenses: MIT
-? Project homepage (optional): http://www.laxarjs.org
+? Project homepage (optional): https://www.laxarjs.org
 ? Author name (optional): LaxarJS
-? Development server port: 8000
 ? Should a set of example widgets be generated? No
 ```
 
-The script creates the application _shop-demo_ with the necessary dependencies to LaxarJS.
+Provided with this information, the generator will create a basic LaxarJS application for you.
+It also prepares a `package.json` containing its dependencies.
+To install these dependencies, you will need to run:
 
-First, we install the grunt-tools for LaxarJS, including the development server and its dependencies:
-```shell
+```console
 npm install
 ```
 
-Now we can start the development server to access our application from a web browser:
-```shell
+Now you can start the [webpack development server](https://webpack.js.org/configuration/dev-server/) which assembles your application and serves it over HTTP:
+
+```console
 npm start
 ```
 
-The empty application can now be visited at [http://localhost:8000/debug.html](http://localhost:8000/debug.html).
-Here we see an empty document containing nothing but a greeting message to inform us that everything was set up correctly.
+The empty application can now be opened, by pointing your web browser at [http://localhost:8080/debug.html](http://localhost:8000/debug.html).
+Here, you should see an empty document containing nothing but a greeting message to tell you that everything was set up correctly.
 
-To stop the server for now, we press `Ctrl-C`.
+To stop the server (for now), press `Ctrl-C`.
 
 
 ## The Next Step
 
-The next step is to create a simple widget and add it to our application in order to display ["Hello World!"](02_hello_world.md).
+The next step is to create a simple widget and to add it to your application in order to display ["Hello World!"](02_hello_world.md).
 
 Getting Started | [Hello, World! »](02_hello_world.md)
