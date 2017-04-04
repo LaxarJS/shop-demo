@@ -143,7 +143,7 @@ At first, your component is empty:
 </script>
 ```
 
-Let us now look at the features of the article-browser-widget widget, and extend the component accordingly.
+Let us now look at the features of the article-browser-widget widget, and implement the component accordingly.
 
 
 ### The Features of the article-browser-widget
@@ -155,8 +155,8 @@ The widget configuration supports two features: display a list of *articles* and
 
 *TODO: line numbers*
 
-For the first feature [*articles*](../../application/widgets/article-browser-widget/widget.json), we allow to configure the name of the resource containing the articles.
-Here is an appropriate JSON schema:
+For the first feature *articles*, we allow to configure the name of the resource containing the articles.
+Here is an appropriate JSON schema that you can add to the *properties* of you [widget descriptor](../../application/widgets/article-browser-widget/widget.json) features:
 
 ```json
 "articles": {
@@ -228,17 +228,19 @@ Another directive `v-for` is used to loop over the list of available articles, a
 Vue.js binding expressions (sometimes also called _mustache_ expressions, because they are surrounded by `{{ }}`) are used to render the properties of each article.
 The surrounding `div` is required because Vue.js demands that component templates have only a single direct child element.
 
-The controller object subscribes to _didReplace_-events for the configured resource and updates its data accordingly, which is then picked up by the template automatically.
-Note that being a widget controller object, this component automatically has access to certain properties provided by LaxarJS:
-Most importantly, there are `eventBus` (corresponding to the `axEventBus` injection seen in the dummy-articles-activity), and `features` (corresponding to `axFeatures`).
+The controller object has a `data` method that determines what component properties are available for binding in the template.
+It also has a `created` method (much like the `created` export of the plain activity).
+This method subscribes to _didReplace_-events for the configured resource and updates its data accordingly, which is then picked up by the template automatically.
 
+Note that being a _widget component controller,_ this object automatically has access to certain additional properties provided by LaxarJS:
+Most prominently, there are `eventBus` (corresponding to the `axEventBus` injection seen in the _dummy-articles-activity_), and `features` (corresponding to `axFeatures`).
 For full information on the `"vue"` integration technology, consult the [Vue.js adapter documentation](https://laxarjs.org/docs/laxar-vue-adapter-v2-latest/).
 
 
 ### Allowing the User to Select an Article
 
-Now we'll cover the second feature of the article-browser-widget, called [*selection*](../../application/widgets/shop-demo/article-browser-widget/widget.json).
-For this you'll need to add a second feature configuration, so that the widget can publish the currently selected article under a configured name:
+Now we'll cover the second feature of the article-browser-widget, called *selection*.
+For this you'll need to add another feature configuration schema, so that the widget can publish the currently selected article under a configurable name:
 
 ```json
 "selection": {

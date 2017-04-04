@@ -14,7 +14,7 @@
          "targets": {
             "next": "confirmation"
          },
-         "page":  "browse"
+         "page":  "home"
       },
 
       "confirmation": {

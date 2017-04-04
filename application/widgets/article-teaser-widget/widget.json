@@ -23,7 +23,7 @@
                   "type": "string",
                   "format": "topic",
                   "axRole": "inlet",
-                  "description": "Name of the data resource representing an article."
+                  "description": "resource representing an article to display"
                }
             }
          },
@@ -36,7 +36,7 @@
                   "type": "string",
                   "format": "topic",
                   "axRole": "outlet",
-                  "description": "Name of the action to request to add the selected article to cart"
+                  "description": "action to request adding the selected article to cart"
                }
             }
          }

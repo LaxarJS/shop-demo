@@ -14,12 +14,12 @@
          <col class="app-col-5">
       </colgroup>
       <thead>
-         <tr class="app-no-articles-row" :class="{ 'hidden': !isEmpty }">
+         <tr v-if="isEmpty" class="app-no-articles-row" >
             <th class="app-no-articles" colspan="5">
                Please select articles to add them to the cart!
             </th>
          </tr>
-         <tr class="app-articles-row" :class="{ 'hidden': isEmpty }">
+         <tr v-else class="app-articles-row">
             <th>Art. ID</th>
             <th>Article</th>
             <th class="text-right">Price</th>
@@ -36,7 +36,7 @@
                <button type="button" class="btn btn-link"
                   @click="increment( item.article )"
                   ><i class="fa fa-plus-square"></i></button>
-               <button class="btn btn-link" type="button"
+               <button type="button" class="btn btn-link"
                   @click="decrement( item.article )"
                   ><i class="fa fa-minus-square"></i></button>
             </td>
@@ -51,8 +51,8 @@
          </tr>
       </tfoot>
    </table>
-   <div class="clearfix app-order-button-area" :class="{ 'hidden': isEmpty }">
-      <button class="btn btn-default btn-success pull-right"
+   <div v-if="!isEmpty" class="clearfix app-order-button-area">
+      <button class="btn btn-success pull-right"
               type="button"
               @click="placeOrder()">
          <i class="fa fa-paper-plane"></i> Order
@@ -69,10 +69,7 @@
  * http://laxarjs.org/license
  */
 export default {
-   data: () => ({
-      article: { id: null },
-      cart: []
-   }),
+   data: () => ({ cart: [], article: { id: null } }),
    created() {
       this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, ({ data }) => {
          this.article = data || { id: null };
@@ -96,7 +93,9 @@ export default {
       }
    },
    methods: {
-      format: price => price == null ? null : `€ ${price.toFixed( 2 )}`,
+      format( price ) {
+         return price == null ? null : `€ ${price.toFixed( 2 )}`;
+      },
       increment( article ) {
          const isInCart = this.cart.some( item => item.article.id === article.id );
          this.cart = isInCart ?

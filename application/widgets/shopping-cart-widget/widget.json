@@ -23,11 +23,11 @@
                   "type": "string",
                   "format": "topic",
                   "axRole": "inlet",
-                  "description": "ID of the article resource to add to the cart."
+                  "description": "ID of the article resource to add to the cart"
                },
                "onActions": {
                   "type": "array",
-                  "description": "Adds the article to the cart.",
+                  "description": "adds the article to the cart",
                   "items": {
                      "type": "string",
                      "format": "topic",
@@ -43,7 +43,7 @@
             "properties": {
                "target": {
                   "type": "string",
-                  "description": "The target to be used in the navigateRequest event after placing the order."
+                  "description": "to be used in the navigateRequest for placing an order"
                }
             }
          }

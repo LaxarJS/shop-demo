@@ -43,7 +43,7 @@ Please answer the following:
 First, you will learn to create a widget _without_ using a View-Framework such as _Vue.js_, just based on plain web technologies.
 For this reason, make sure to pick `"plain"` when asked for an _integration technology._
 
-The headline-widget now consists of the following files:
+The headline-widget, placed under `application/widgets/headline-widget`, now consists of the following files:
 
 * A _descriptor_ (named `widget.json`) containing the widget configuration options.
 
@@ -69,30 +69,28 @@ If you remove the `features` block from the `widget.json`, your widget will simp
 However, using a schema is _recommended_ because it automatically documents and checks the configuration options for your widget.
 
 Let us now specify the features *headline* and *intro*, each with a property *htmlText*.
-To do this, use the following definition as *properties* of the *features* object in your `widget.json`:
+To do this, use the following feature schemas as *properties* of the *features* object in your [`widget.json`](../../application/widgets/headline-widget/widget.json):
 
 ```json
-{
-   "headline": {
-      "type": "object",
-      "description": "The HTML text to be shown as a headline.",
-      "required": [ "htmlText" ],
-      "properties": {
-         "htmlText": {
-            "type": "string",
-            "description": "The HTML headline content."
-         }
+"headline": {
+   "type": "object",
+   "description": "The HTML text to be shown as a headline.",
+   "required": [ "htmlText" ],
+   "properties": {
+      "htmlText": {
+         "type": "string",
+         "description": "The HTML headline content."
       }
-   },
+   }
+},
 
-   "intro": {
-      "type": "object",
-      "description": "Additional introductory HTML text to be shown below the headline.",
-      "properties": {
-         "htmlText": {
-            "type": "string",
-            "description": "The HTML intro content."
-         }
+"intro": {
+   "type": "object",
+   "description": "Additional introductory HTML text to be shown below the headline.",
+   "properties": {
+      "htmlText": {
+         "type": "string",
+         "description": "The HTML intro content."
       }
    }
 }
@@ -110,6 +108,7 @@ If on the other hand the validation was successful, the widget controller (see b
 
 Next, create an [HTML template](../../application/widgets/headline-widget/default.theme/headline-widget.html) for your new widget.
 Corresponding to the widget features, the template consists of an HTML element for the actual headline, followed by a paragraph for the intro text.
+The HTML template is located within the `default.theme` sub-folder of the widget, and is named after the widget itself (`headline-widget.html`).
 
 ```html
 <h2 class="headline-html-text"></h2>
@@ -119,13 +118,13 @@ Corresponding to the widget features, the template consists of an HTML element f
 The HTML template is selected based on the configured theme, and loaded as your widget's DOM (document object model).
 In _plain widgets,_ the JavaScript widget controller will be notified when the template HTML has been loaded, so that it can add dynamic contents.
 
-In the upcoming chapters, you will learn how to create a _Vue.js_ template for yuor widget, which is a lot more powerful than a plain HTML template.
+In the upcoming chapters, you will learn how to create a _Vue.js_ template for your widget, which is a lot more powerful than a plain HTML template.
 
 
 ### The Widget Controller
 
 The _headline-widget_ does nothing fancy.
-[Its controller](../../includes/widgets/shop-demo/headline-widget/headline-widget.js) just needs to put the configured _headline_ and _intro_ HTML into the widget DOM:
+[Its controller](../../application/widgets/headline-widget/headline-widget.js) just needs to put the configured _headline_ and _intro_ HTML into the widget DOM:
 
 ```js
 export const injections = [ 'axFeatures' ];
@@ -234,6 +233,6 @@ In case you are curious, here is [a simple test](../../application/widgets/headl
 
 ## The Next Step
 
-The [next step](03_application_flow.md) is to add a second widget to the application, and learning about the _event bus._
+The [next step](03_article_browser_widget.md) is to add a second widget to the application, and learning about the _event bus._
 
 [« Getting Started](01_getting_started.md) | Hello, World! | [The article-browser-widget »](03_article_browser_widget.md)
