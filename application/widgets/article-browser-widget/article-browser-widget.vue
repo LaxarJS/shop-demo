@@ -24,8 +24,8 @@
       <tbody>
          <tr class="selectable"
             v-for="article in articles.entries"
-            :class="{ selected: article.id === selectedArticle.id }"
-            @click="selectArticle( article )">
+            @click="selectArticle( article )"
+            :class="{ selected: article.id === selectedArticle.id }">
             <td class="app-col-1">{{ article.id }}</td>
             <td>{{ article.name }}</td>
             <td class="price">{{ article.price }}</td>

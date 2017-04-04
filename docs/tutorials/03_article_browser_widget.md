@@ -75,7 +75,7 @@ We use it to _publish_ an event of our own: the `didReplace` event, which announ
 To identify _which_ resource we have replaced, we specify its name using the second topic of our event (the part after the dot).
 As _payload_ of our event, we also provide the configured _resource_ name, along with the _data_ imported from the articles list.
 
-If you would like to know more about events, there is [a manual on events](https://laxarjs.org/docs/laxar-v2-latest/manuals/events/) as well as the [event bus API reference]https://laxarjs.org/docs/laxar-v2-latest/api/runtime.event_bus.md)
+If you would like to know more about events, there is [a manual on events](https://laxarjs.org/docs/laxar-v2-latest/manuals/events/) as well as the [event bus API reference](https://laxarjs.org/docs/laxar-v2-latest/api/runtime.event_bus/)
 The format of the didReplace event and its payload is not arbitrary, it follows the so-called _resource pattern_, allowing widgets to collaborating without even knowing which other widgets are there.
 The [LaxarJS patterns documentation]() has more information on these patterns.
 
@@ -119,7 +119,7 @@ yo laxarjs2:widget article-browser-widget
 ```
 
 This time, make sure to pick `"vue"` as the integration technology.
-Using this technology mean that your widget is a _Vue.js_ component at the same time: [article-browser-widget.vue](../../application/widgets/article-browser-widget/article-browser-widget.vue)!
+Using this technology mean that your widget is a _Vue.js_ component (article-browser-widget.vue) at the same time.
 Compared to a `"plain"` widget, this should make it much simpler to synchronize HTML DOM and data.
 
 Going into a full-depth explanation of Vue.js would take things too far, especially considering that there is a comprehensive [Guide on Vue.js](https://vuejs.org/v2/guide/) anyway.
@@ -178,11 +178,30 @@ Note that this closely resembles the configuration used for the _dummy-articles-
 This indicates that your activity _subscribes_ to the configured resource.
 
 Because the widget would be useless without a list of articles to render, we define the `resource` property as `required` in the feature schema.
-The implementation of the [controller](../../application/widgets/article-browser-widget/article-browser-widget.vue) starts out like this:
+The implementation of the _vue component_ starts out like this:
 
 ```vue
 <template>
-
+<div>
+   <h3><i class="fa fa-gift"></i> Articles</h3>
+   <table v-if="articles.entries.length"
+      class="table table-hover table-striped">
+      <thead>
+         <tr>
+            <th>Art. ID</th>
+            <th>Article</th>
+            <th>Price</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr v-for="article in articles.entries">
+            <td>{{ article.id }}</td>
+            <td>{{ article.name }}</td>
+            <td>{{ article.price }}</td>
+         </tr>
+      </tbody>
+   </table>
+</div>
 </template>
 
 <script>
@@ -199,16 +218,27 @@ export default {
 </script>
 ```
 
-The widget listens for _didReplace_-events and updates the contents of `$scope.resources` accordingly so that the template will reflect the new state of the resource.
-It also resets the currently selected article (see below).
+The template contains a headline, containing the [Font Awesome](http://fontawesome.io/) icon `fa-gift`.
+Font Awesome is automatically available when using the LaxarJS _default.theme_.
+Some [Bootstrap CSS classes](https://getbootstrap.com/css/#tables) are used as well, causing the table rows to use alternating colors.
 
-For the desired appearance, we modify the [HTML template](../../includes/widgets/shop-demo/article-browser-widget/default.theme/article-browser-widget.html) to display articles contained in the resource, or a hint that currently there are no articles available.
-Basic widget styles are implemented using a [CSS stylesheet](../../includes/widgets/shop-demo/article-browser-widget/default.theme/css/article-browser-widget.css).
+Then, there is a table displaying the `articles` from the component data.
+The _Vue.js directive_ `v-if` is used to show the header row only if there are articles.
+Another directive `v-for` is used to loop over the list of available articles, and render a table row for each of them.
+Vue.js binding expressions (sometimes also called _mustache_ expressions, because they are surrounded by `{{ }}`) are used to render the properties of each article.
+The surrounding `div` is required because Vue.js demands that component templates have only a single direct child element.
+
+The controller object subscribes to _didReplace_-events for the configured resource and updates its data accordingly, which is then picked up by the template automatically.
+Note that being a widget controller object, this component automatically has access to certain properties provided by LaxarJS:
+Most importantly, there are `eventBus` (corresponding to the `axEventBus` injection seen in the dummy-articles-activity), and `features` (corresponding to `axFeatures`).
+
+For full information on the `"vue"` integration technology, consult the [Vue.js adapter documentation](https://laxarjs.org/docs/laxar-vue-adapter-v2-latest/).
 
 
 ### Allowing the User to Select an Article
 
-Now we'll cover the second feature of the article-browser-widget, called [*selection*](../../includes/widgets/shop-demo/article-browser-widget/widget.json#L29-40):
+Now we'll cover the second feature of the article-browser-widget, called [*selection*](../../application/widgets/shop-demo/article-browser-widget/widget.json).
+For this you'll need to add a second feature configuration, so that the widget can publish the currently selected article under a configured name:
 
 ```json
 "selection": {
@@ -219,80 +249,125 @@ Now we'll cover the second feature of the article-browser-widget, called [*selec
       "resource": {
          "type": "string",
          "description": "Name of the resource for the user selection",
-         "format": "topic"
+         "format": "topic",
+         "axRole": "outlet"
       }
    }
 }
 ```
 
-This feature requires the configuration of a resource name under which the selected article will be published on the event bus.
-In our application the article-teaser-widget and the shopping-cart-widget (implemented in the next steps) will listen for changes to this resource.
+This will allow other widgets (created over the next steps) to display details on the currently selected article, and to add it to the shopping cart.
+Let us modify the component as follows:
 
-In our [HTML template](../../includes/widgets/shop-demo/article-browser-widget/default.theme/article-browser-widget.html#L25) we use the directive `ngClick` to detect the selection of an article by the user:
+```vue
+<template>
+   <!-- ... headline, table, thead ... -->
+   <tr v-for="article in articles.entries"
+      @click="selectArticle( article )"
+      :class="{ selected: article.id === selectedArticle.id }">
+      <!-- cells -->
+   </tr>
+   <!-- ... closing tags ... -->
+</template>
 
-```html
-<tr class="selectable"
-    data-ng-repeat="article in resources.articles.entries"
-    data-ng-click="selectArticle( article )"
-    data-ng-class="{ selected: article.id === selectedArticle.id }">...</tr>
-```
-
-To give the user a visual feedback of the selected article, `ngClass` is used.
-
-Finally, we implement the method [`$scope.selectArticle`](../../includes/widgets/shop-demo/article-browser-widget/article-browser-widget.js#L26-34) which is invoked by `ngClick`.
-It publishes the selected article on the event bus:
-
-```javascript
-$scope.selectArticle = function( article ) {
-   $scope.selectedArticle = article;
-
-   var selectionResource = $scope.features.selection.resource;
-   eventBus.publish( 'didReplace.' + selectionResource, {
-      resource: selectionResource,
-      data: article
-   } );
+<script>
+export default {
+   data: () => ({
+      selectedArticle: { id: null },
+      articles: { entries: [] }
+   }),
+   created() {
+      this.eventBus.subscribe( `didReplace.${this.features.articles.resource}`, ({ data }) => {
+         this.articles = data;
+         this.selectArticle( null );
+      } );
+   },
+   methods: {
+      selectArticle( data ) {
+         this.selectedArticle = data || { id: null };
+         const { resource } = this.features.selection;
+         this.eventBus.publish( `didReplace.${resource}`, { resource, data } );
+      }
+   }
 };
+</script>
 ```
+
+Now, the component has another data attribute, the current `selectedArticle`.
+It exposes a _method_ `selectArticle` to allow changing the selection, which also _publishes_ the article over the event bus.
+
+The template uses a _method binding_ (`@click`) to update the selection when the user clicks a row.
+It also uses an _attribute binding_ (`:class`) to visually highlight the currently selected article.
+Both of these are provided by Vue.js, and not specific to using the component as a LaxarJS widget.
+
+Additionally, you might want to add CSS styles, to improve the presentation of your widget.
+In this case, we are using an external [SCSS file](../../application/widgets/article-browser-widget/scss/article-browser-widget.scss).
+Because LaxarJS only looks for regular CSS files (not SCSS) by default, we need to some information to the widget descriptor:
+
+```json
+   "styleSource": "scss/article-browser-widget.scss",
+```
+
+To make best use of the additional styles, you'll need to add more CSS classes to your widget template.
+Refer to the [full component template](../../application/widgets/article-browser-widget/article-browser-widget.vue) for details.
 
 
 ### Adding the article-browser-widget to our Application
 
-We update the [*shop_demo* page](../../application/pages/shop_demo.json#L30-42) and add the article-browser-widget to the area `contentA`:
+Finally, we need to add our new widget to the `"content"` area of the *home* page.
+To recapitulate, here is the entire page configuration, with _headline-widget_, _dummy-articles-activity_ and _article-browser-widget_:
 
 ```json
-"contentA": [
-   {
-      "widget": "shop-demo/article-browser-widget",
-      "features": {
-         "articles": {
-            "resource": "filteredArticles"
-         },
-         "selection": {
-            "resource": "selectedArticle"
+{
+   "layout": "one-column",
+
+   "areas": {
+      "activities": [
+         {
+            "widget": "dummy-articles-activity",
+            "features": {
+               "articles": {
+                  "resource": "articles"
+               }
+            }
          }
-      }
+      ],
+      "content": [
+         {
+            "widget": "headline-widget",
+            "features": {
+               "headline": {
+                  "htmlText": "LaxarJS ShopDemo"
+               }
+            }
+         },
+         {
+            "widget": "article-browser-widget",
+            "features": {
+               "articles": {
+                  "resource": "articles"
+               },
+               "selection": {
+                  "resource": "selectedArticle"
+               }
+            }
+         }
+      ]
    }
-]
+}
 ```
 
-Because the article-search-box-widget is configured to publish the filtered list of articles under the name [*filteredArticles*](../../application/pages/shop_demo.json#L24), we configure the article-browser-widget accordingly.
-The selection resource will be used in the next step of this tutorial.
-Now we have the following setup:
+Most importantly, the _dummy-articles-activity_ and the _article-browser-widget_ share the same event bus topic (`"articles"`).
+This effectively _connects_ the two artifacts, without their implementations using knowing about each other, and without need for additional glue code.
+You can see that we also changed the headline text to `"LaxarJS ShopDemo"`, but feel free to pick a title of your own.
 
-![Step 5](img/step5.png)
+*TODO: add event wiring diagram*
 
-Note that since the resource topics are configurable on all participating widgets, we could change the way that we obtain or display our articles anytime.
-For example, we could add a new activity to read articles from a web service, without having to touch any of the existing widgets.
-Alternatively, we could simply cut out the middle-man by removing the article-search-box-widget completely:
-Then, we would simply rewire the dummy articles and feed them into our browser widget directly, just by editing the page configuration.
-This _resource pattern_ is one of several collaboration patterns that are commonly used with LaxarJS, and is described in more detail in the [resource manual](https://github.com/LaxarJS/laxar-patterns/blob/master/docs/patterns/resources.md#resource-patterns) of the [LaxarJS Patterns](https://github.com/LaxarJS/laxar-patterns) documentation.
-
-To have a look at our article browser, we stop the server if we have not already (`Ctrl-C`) and start it again using `npm start`.
-The application should allow to select among ten articles now, and display a search box at the top of the browser window.
+When visited in the browser, the application should allow to select among ten articles now, and display a search box at the top of the browser window.
 
 
 ## The Next Step
 
-The next step is to add the [article-teaser-widget](06_article_teaser_widget.md) in order to display details on the selected article.
+The next step is to add the [article-teaser-widget](04_article_teaser_widget.md) in order to display a detailed preview of the selected article.
 
-[« The article-search-box-widget](04_article_search_box_widget.md) | The article-browser-widget | [The article-teaser-widget »](06_article_teaser_widget.md)
+[« Hello, World!](02_hello_world.md) | The article-browser-widget | [The article-teaser-widget »](04_article_teaser_widget.md)
