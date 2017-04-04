@@ -21,7 +21,7 @@ A simple widget does not need a lot of code.
 However, you can use the Yeoman generator *laxarjs:widget* to quickly setup a starting stub.
 
 ```console
-yo laxarjs:widget headline-widget
+yo laxarjs2:widget headline-widget
 ```
 
 The Yeoman generator that was installed in the [previous step](01_getting_started.md), will now ask for some details about the widget and make suggestions.
@@ -37,7 +37,7 @@ Please answer the following:
 ? Project homepage (optional): http://www.laxarjs.org
 ? Author name (optional): LaxarJS
 ? Integration technology: plain
-? Create project infrastructure (README.md, pacage.json)? No
+? Create project infrastructure (README.md, package.json)? No
 ```
 
 First, you will learn to create a widget _without_ using a View-Framework such as _Vue.js_, just based on plain web technologies.
@@ -234,6 +234,6 @@ In case you are curious, here is [a simple test](../../application/widgets/headl
 
 ## The Next Step
 
-The [next step](03_application_flow.md) is to add a second page to the application, forming _the application flow._
+The [next step](03_application_flow.md) is to add a second widget to the application, and learning about the _event bus._
 
-[« Getting Started](01_getting_started.md) | Hello, World! | [Defining the Application Flow »](03_application_flow.md)
+[« Getting Started](01_getting_started.md) | Hello, World! | [The article-browser-widget »](03_article_browser_widget.md)

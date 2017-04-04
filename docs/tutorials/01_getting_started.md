@@ -20,7 +20,7 @@ First, you will need to create a new LaxarJS application.
 To simplify this process, install the *Yeoman* scaffolding tool as well as the *Yeoman generator for LaxarJS 2*:
 
 ```shell
-npm install -g yo generator-laxarjs
+npm install -g yo generator-laxarjs2
 ```
 
 Depending on your setup you may need to use `sudo` for this.
@@ -35,7 +35,7 @@ Since you just installed the generator, all you need to do is:
 ```console
 mkdir shop-demo
 cd shop-demo
-yo laxarjs
+yo laxarjs2
 ```
 
 The generator will ask for some details about the application, offering helpful suggestions where possible.
