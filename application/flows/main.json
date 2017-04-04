@@ -19,7 +19,7 @@
 
       "confirmation": {
          "patterns": [ "/confirm" ],
-         "page":  "confirm"
+         "page":  "confirmation"
       },
 
       "error404": {

@@ -267,7 +267,7 @@ Let us now add the widget to the area `contentC` of the [home page](../../applic
             "onActions": [ "addArticle" ]
          },
          "order": {
-            "target": "finishOrder"
+            "target": "next"
          }
       }
    }

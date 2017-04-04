@@ -3,11 +3,12 @@
 The _article-teaser-widget_ that we will implement in this step is going to have two features:
 It will display details on a given *article*, and it will allow the user to *confirm* adding that article to the shopping cart.
 Having learned about the event bus and the *resource*-pattern already, this part of the tutorial will introduce the *action*-pattern and explain how widgets may respond to events asynchronously.
+We will also change the _layout_ to a more sophisticated _three-column_ version.
 
 In the previous chapter we implemented the article-browser-widget which publishes its selected article as a resource on the event bus.
 This is exactly the information that the article-teaser-widget will use.
 Whenever the user presses the _"add to cart"_ button, the widget publishes a `takeActionRequest` event.
-This event is processed by the shopping-cart-widget (described in the next chapter) to add the selected article to the cart.
+This event is processed by the shopping-cart-widget (described in the next chapter) to add the currently selected article to the cart.
 
 *TODO: diagram with short explanation*
 
@@ -192,7 +193,7 @@ All that is left is to adjust the page definition accordingly, and to add config
 
    "areas": {
       "activities": [ /* ... dummy-articles-activity ... */ ],
-      "contentA": [ /* ... headline-widget, article-browser-widget ... */ ],
+      "contentA": [ /* ... article-browser-widget ... */ ],
       "contentB": [
          {
             "widget": "article-teaser-widget",
@@ -210,6 +211,11 @@ All that is left is to adjust the page definition accordingly, and to add config
    }
 }
 ```
+
+We removed the _headline-widget_ for now as it is no longer needed on this page.
+However, do not delete it just yet: it will be reintroduced in one of the later steps.
+For further information about layouts, refer to the [manual on pages and layouts](http://laxarjs.org/docs/laxar-v2-latest/manuals/writing_pages/).
+
 
 In the browser, you should now be able to select articles from the _article-browser-widget_, with the _article-teaser-widget_ updating accordingly.
 

@@ -1,80 +1,159 @@
 # Defining the Application Flow
 
-After completing the initial two steps, we have a simple application with a first page, its layout and a first widget.
-In this step we are going to make some modification in order to add _a second page_ and to make for a nicer _appearance_ of the application.
-This allows us to get familiar with the declarative way that _navigation_ is implemented in LaxarJS, and to gain a deeper understanding of _layouts._
+After completing the previous steps, we already have a real application with a first page, its layout and a first widget.
+In this step we are going to make some modification in order to add _a second page_ and to navigate between those pages.
+This allows us to get familiar with the declarative way that _flow navigation_ is implemented in LaxarJS.
 
 
 ## Pages and the Flow
 
-Under `application/pages` we rename `home.json` to `browse.json` and copy it to a second page, `finish_order.json` which we will come back to later.
+Under `application/pages` we rename `home.json` to `browse.json` and create a second page, `confirmation.json` which we will complete below.
 The `shop_demo` page will allow the user to search for articles, to add them to the shopping cart and to submit an order.
 The `finish_order` page will be shown after submitting an order to display a confirmation message.
 
-For this, we need to modify the *application flow* which is defined at [`application/flow/flow.json`](../../application/flow/flow.json).
-The flow defines the available navigation *places* (available as URLs) and the corresponding pages.
-It also defines the *entry point* of the application which is the place initially displayed to the user.
-The collaboration of the flow, places and pages is explained in detail in the [flow manual](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/flow_and_places.md#flow-and-places).
+For this, we need to modify the *application flow* which is defined at [`application/flows/main.json`](../../application/flows/main.json).
+The flow defines the navigation *places* with their URL routing patterns, and associates the corresponding pages.
+It also defines *semantic pointers* between the places, called *targets*.
+The collaboration of the flow, places and pages is explained in full detail in the [flow manual](https://laxarjs.org/docs/laxar-v2-latest/manuals/).
+
+Here is a flow definition that includes a second place for the confirmation page:
 
 ```json
 {
    "places": {
+
       "entry": {
-         "redirectTo": "shopDemo"
+         "patterns": [ "/" ],
+         "redirectTo": "browse"
       },
 
-      "shopDemo": {
-         "page":  "shop_demo"
+      "browse": {
+         "patterns": [ "/browse" ],
+         "targets": {
+            "next": "confirmation"
+         },
+         "page":  "home"
       },
 
-      "finishOrder": {
-         "page":  "finish_order"
+      "confirmation": {
+         "patterns": [ "/confirm" ],
+         "page":  "confirmation"
       }
+
    }
 }
 ```
 
-Now we have a place for each of our two pages and an entry place, used whenever no place was specified in the URL, which redirects to the `shopDemo` place.
+This flow definition consists of three places.
+First, there is the `entry` place that matches just `/` as a URL path, and simply redirects to the `browse` place.
+The `browse` place uses the _home_ page that we have already completed (the `.json` is added automatically).
+
+The third place (`confirmation`) uses the newly created confirmation page.
+It is also configured as the `next` target from the `browse` place.
+
+The names of the places have no special meaning, except being used to identify them when used in redirects or targets.
+The targets can also be named freely, but it is recommended to use `"next"` and `"previous"` whenever they make sense.
 
 
-## Theme and Layout
+## Adding a "Not Found" Page
 
-At the moment our layout only has one column.
-The final version of our [ShopDemo](http://laxarjs.github.io/shop-demo/#/shopDemo) has a header, three columns and a footer.
-The header will contain a logo, an _article-search-box-widget_ to filter articles, and the _headline-widget_ we already created.
-The main contents consist of an _article-browser-widget_ to view matching articles, an _article-teaser-widget_ for details on a specific item and a _shopping-cart-widget_ to keep track of what will be "bought".
+Sometimes users may enter your application by following a bookmark or link that is no longer valid.
+Of course, you should always try to have stable, permanent URLs, but even then users might make typing mistakes when entering an application URL.
+For this, a good application should provide a suitable "404 Not Found" error page.
 
-We delete the directory `application/layouts/one-column` with the template files and create our own [application layout](../../application/layouts/application/default.theme/application.html) with associated [styles](https://github.com/LaxarJS/shop-demo/blob/master/application/layouts/application/default.theme/css/application.css).
+To add such a place to your LaxarJS flow, modify it as follows:
 
-Then, we change both of the pages to use the new layout:
+```js
+{
+   "redirectOn": {
+      "unknownPlace": "error404"
+   },
+   "places": {
+
+      // ... start, browse, confirmation ...
+
+      "error404": {
+         "patterns": [ "/not-found" ],
+         "page": "404"
+      }
+
+   }
+}
+```
+
+This will forward all invalid paths to the `"error404"` place, and the associated page, `404.json`.
+Here is some example content for that page.
 
 ```json
-   "layout": "application"
+{
+   "layout": "one-column",
+
+   "areas": {
+      "content": [
+         {
+            "widget": "headline-widget",
+            "features": {
+               "headline": {
+                  "htmlText": "404 - Page not Found"
+               },
+               "intro": {
+                  "htmlText": "This page does not exist. Try going <a href='/' title='home'>home</a>."
+               }
+            }
+         }
+      ]
+   }
+}
 ```
 
-We add the *cube* theme to our application:
+Now, let us get back to the confirmation page.
 
-```shell
-git clone https://github.com/LaxarJS/cube.theme.git includes/themes/cube.theme
+
+## The Confirmation Page
+
+For the confirmation page, we can re-use the _headline-widget_ created in the first step:
+
+```json
+{
+   "layout": "one-column",
+
+   "areas": {
+      "content": [
+         {
+            "widget": "headline-widget",
+            "features": {
+               "headline": {
+                  "htmlText": "Thank you!"
+               }
+            }
+         }
+      ]
+   }
+}
 ```
+
+The [actual confirmation page](../../application/pages/confirmation.json) includes some additional markup for a friendlier appearance.
+
+
+## Changing the Theme
+
+*TODO: explain theme change. Possibly move this to an earlier step.*
 
 Change the using theme in the file `application/application.js` from `default` to `cube`:
 
-```javascript
+```js
 theme: 'cube',
 ```
 
-
-For further information about layouts, refer to the [manual on pages and layouts](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/writing_pages.md#writing-pages).
 To learn more about themes, have a look at the [creating themes manual](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/creating_themes.md#creating-themes).
 
 After restarting the development server, the application should look similar to this:
 
-![screenshot after changing the layout](img/screenshot_step3.png)
+*TODO: screenshot with the new theme*
 
 
 ## The Next Step
 
-The next step is to fetch and filter the articles that we are going to offer for sale, using the *dummy-articles-activity* and the [article-search-box-widget](04_article_search_box_widget.md).
+The next step is to allow interactive filtering of the available articles, using the [article-search-box-widget](07_article_search_box_widget.md).
 
-[« Hello, World!](02_hello_world.md) | Defining the Application Flow | [The article-search-box-widget »](04_article_search_box_widget.md)
+[« Hello, World!](02_hello_world.md) | Defining the Application Flow | [The article-search-box-widget »](07_article_search_box_widget.md)
