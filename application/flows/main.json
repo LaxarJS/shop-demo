@@ -12,12 +12,12 @@
       "browse": {
          "patterns": [ "/browse/:search", "/browse" ],
          "targets": {
-            "next": "confirmation"
+            "next": "confirm"
          },
          "page":  "home"
       },
 
-      "confirmation": {
+      "confirm": {
          "patterns": [ "/confirm" ],
          "page":  "confirmation"
       },

@@ -2,7 +2,6 @@
 
 In this step we are going to implement the _article-browser-widget_ which displays a list of articles to the user and allows to select an individual article.
 To obtain the articles in the first place, we also create an _activity_.
-Another widget (to be implemented in the next step) will show details on the currently selected article.
 This part of the tutorial will allow you to learn how widgets safely share resources through the event bus, and how resources can be displayed to the user.
 
 
@@ -37,32 +36,32 @@ First, let us add the feature configuration option to the activity's [descriptor
 }
 ```
 
-We just added a _configurable event bus topic_ to our activity, in this case the name of a _resource_.
-The activity will publish a list of available articles under this topic.
-Using the page configuration, we will use this to _connect_ widgets and activities by having them _share the same_ event bus topics.
+We just defined a _configurable event bus topic_ for our activity, in this case the name of a _resource_.
+The activity will publish a list of available shopping articles under this topic.
+Using the page configuration, we will use the topic to _connect_ widgets and activities by _assigning shared event bus topics._
 The _format_ `"topic"` is used to check if the page configuration uses a valid event bus topic (containing just letters, numbers and dashes).
 Finally, `"axRole"` is a schema-property defined by LaxarJS: It indicates that this activity _publishes_ the configurable resource.
 
 Now, you can implement the [activity controller](../../application/widgets/dummy-articles-activity/dummy-articles-activity.js):
 
 ```javascript
-import { articles as entries } from './articles';
+import { articles } from './articles';
 
 export const injections = [ 'axEventBus', 'axFeatures' ];
 export function create( eventBus, features ) {
    eventBus.subscribe( 'beginLifecycleRequest', () => {
       const { resource } = features.articles;
-      eventBus.publish( `didReplace.${resource}`, { resource, data: { entries } } );
+      eventBus.publish( `didReplace.${resource}`, { resource, data: articles } );
    } );
 }
 ```
 
 The structure of the controller is very similar to that of the _headline-widget_ created in the previous step:
 First, a [static list of articles](../../application/widgets/articles.js) is imported.
-In an actual web shop, you would probably make a _fetch_ request to a REST API to get the articles from a database.
+In an actual web shop, you would probably make a [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) request to a REST API to get the articles from a database.
 
 Then, you have the two exports (_injections_ and _create_) like in the _headline-widget_.
-This time the activity requests another injection: the _event bus_, allowing us to communicate with the rest of the page.
+This time the activity requests an additional injection: the _event bus_, allowing us to communicate with the rest of the page.
 Also, this time no `onDomAvailable` callback is returned, because an activity has no HTML template.
 
 
@@ -75,9 +74,9 @@ We use it to _publish_ an event of our own: the `didReplace` event, which announ
 To identify _which_ resource we have replaced, we specify its name using the second topic of our event (the part after the dot).
 As _payload_ of our event, we also provide the configured _resource_ name, along with the _data_ imported from the articles list.
 
-If you would like to know more about events, there is [a manual on events](https://laxarjs.org/docs/laxar-v2-latest/manuals/events/) as well as the [event bus API reference](https://laxarjs.org/docs/laxar-v2-latest/api/runtime.event_bus/)
-The format of the didReplace event and its payload is not arbitrary, it follows the so-called _resource pattern_, allowing widgets to collaborating without even knowing which other widgets are there.
-The [LaxarJS patterns documentation]() has more information on these patterns.
+If you would like to know more about events, there is [a manual on events](https://laxarjs.org/docs/laxar-v2-latest/manuals/events/) as well as the [event bus API reference](https://laxarjs.org/docs/laxar-v2-latest/api/runtime.event_bus/).
+The format of the didReplace event and its payload is not arbitrary, it follows the so-called _resource pattern_, allowing widgets to collaborate without directly depending on another.
+The [LaxarJS patterns documentation](https://laxarjs.org/docs/laxar-patterns-v2-latest/) has more information on these patterns.
 
 
 ### Adding the Activity to the Page
@@ -119,7 +118,7 @@ yo laxarjs2:widget article-browser-widget
 ```
 
 This time, make sure to pick `"vue"` as the integration technology.
-Using this technology mean that your widget is a _Vue.js_ component (article-browser-widget.vue) at the same time.
+Using this technology mean that your widget is a _Vue.js_ component (saved as `article-browser-widget.vue`) at the same time.
 Compared to a `"plain"` widget, this should make it much simpler to synchronize HTML DOM and data.
 
 Going into a full-depth explanation of Vue.js would take things too far, especially considering that there is a comprehensive [Guide on Vue.js](https://vuejs.org/v2/guide/) anyway.
@@ -127,7 +126,7 @@ Let us quickly cover the basics:
 
   - a Vue.js _component_ consists of an HTML template, a JavaScript object and optional CSS styles - much like a LaxarJS widget,
 
-  - the template may contain _bindings_ to render data from the JS object, and _events_ to trigger methods of the object,
+  - the template may contain _bindings_ to render data from the JS object, and _event handlers_ to trigger methods of the object,
 
   - the object contains the "business logic", interpreting events from the template (or from the event bus) in order to change the data for the template,
 
@@ -152,8 +151,6 @@ The widget configuration supports two features: display a list of *articles* and
 
 
 #### Displaying a List of Articles
-
-*TODO: line numbers*
 
 For the first feature *articles*, we allow to configure the name of the resource containing the articles.
 Here is an appropriate JSON schema that you can add to the *properties* of you [widget descriptor](../../application/widgets/article-browser-widget/widget.json) features:
@@ -184,7 +181,7 @@ The implementation of the _vue component_ starts out like this:
 <template>
 <div>
    <h3><i class="fa fa-gift"></i> Articles</h3>
-   <table v-if="articles.entries.length"
+   <table v-if="articles.length"
       class="table table-hover table-striped">
       <thead>
          <tr>
@@ -194,7 +191,7 @@ The implementation of the _vue component_ starts out like this:
          </tr>
       </thead>
       <tbody>
-         <tr v-for="article in articles.entries">
+         <tr v-for="article in articles">
             <td>{{ article.id }}</td>
             <td>{{ article.name }}</td>
             <td>{{ article.price }}</td>
@@ -207,33 +204,34 @@ The implementation of the _vue component_ starts out like this:
 <script>
 export default {
    data: () => ({
-      articles: { entries: [] }
+      articles: []
    }),
    created() {
-      this.eventBus.subscribe( `didReplace.${this.features.articles.resource}`, ({ data }) => {
-         this.articles = data;
+      this.eventBus.subscribe( `didReplace.${this.features.articles.resource}`, event => {
+         this.articles = event.data;
       } );
    }
 };
 </script>
 ```
 
-The template contains a headline, containing the [Font Awesome](http://fontawesome.io/) icon `fa-gift`.
+The template contains a headline, using the [Font Awesome](http://fontawesome.io/) icon `fa-gift`.
 Font Awesome is automatically available when using the LaxarJS _default.theme_.
-Some [Bootstrap CSS classes](https://getbootstrap.com/css/#tables) are used as well, causing the table rows to use alternating colors.
+The same goes for the [Bootstrap CSS classes](https://getbootstrap.com/css/#tables) used here, causing table rows to use alternating colors.
 
-Then, there is a table displaying the `articles` from the component data.
-The _Vue.js directive_ `v-if` is used to show the header row only if there are articles.
+A table renders the `articles` from the component data, one row per article.
+The _Vue.js directive_ `v-if` is used to show the header row only if there are any articles.
 Another directive `v-for` is used to loop over the list of available articles, and render a table row for each of them.
 Vue.js binding expressions (sometimes also called _mustache_ expressions, because they are surrounded by `{{ }}`) are used to render the properties of each article.
-The surrounding `div` is required because Vue.js demands that component templates have only a single direct child element.
+The surrounding `div` is required because Vue.js requires that component templates have only a single direct child element.
 
-The controller object has a `data` method that determines what component properties are available for binding in the template.
-It also has a `created` method (much like the `created` export of the plain activity).
-This method subscribes to _didReplace_-events for the configured resource and updates its data accordingly, which is then picked up by the template automatically.
+The controller object has a `data` method to initialize the properties available for binding in the template.
+It also has a `created` method (much like the `create` function exported by the plain activity).
+The `created` method subscribes to _didReplace_-events for the configured resource and updates the component articles accordingly, which is then automatically reflected by the template.
+Make sure not to confuse the `data` method of the _Vue.js_ component (defined by the [Vue.js component API](https://vuejs.org/v2/api/#Options-Data)) with the `data` property of the `didReplace` event (defined by the [LaxarJS resource pattern](https://laxarjs.org/docs/laxar-patterns-v2-latest/patterns/resources/)).
 
-Note that being a _widget component controller,_ this object automatically has access to certain additional properties provided by LaxarJS:
-Most prominently, there are `eventBus` (corresponding to the `axEventBus` injection seen in the _dummy-articles-activity_), and `features` (corresponding to `axFeatures`).
+Note that being a _widget controller_, this object automatically has access to certain additional properties provided by LaxarJS:
+Most prominently, there are the `eventBus` (corresponding to the `axEventBus` injection seen in the _dummy-articles-activity_), and `features` (corresponding to `axFeatures`).
 For full information on the `"vue"` integration technology, consult the [Vue.js adapter documentation](https://laxarjs.org/docs/laxar-vue-adapter-v2-latest/).
 
 
@@ -264,7 +262,7 @@ Let us modify the component as follows:
 ```vue
 <template>
    <!-- ... headline, table, thead ... -->
-   <tr v-for="article in articles.entries"
+   <tr v-for="article in articles"
       @click="selectArticle( article )"
       :class="{ selected: article.id === selectedArticle.id }">
       <!-- cells -->
@@ -276,11 +274,11 @@ Let us modify the component as follows:
 export default {
    data: () => ({
       selectedArticle: { id: null },
-      articles: { entries: [] }
+      articles: []
    }),
    created() {
-      this.eventBus.subscribe( `didReplace.${this.features.articles.resource}`, ({ data }) => {
-         this.articles = data;
+      this.eventBus.subscribe( `didReplace.${this.features.articles.resource}`, event => {
+         this.articles = event.data;
          this.selectArticle( null );
       } );
    },
@@ -302,22 +300,11 @@ The template uses a _method binding_ (`@click`) to update the selection when the
 It also uses an _attribute binding_ (`:class`) to visually highlight the currently selected article.
 Both of these are provided by Vue.js, and not specific to using the component as a LaxarJS widget.
 
-Additionally, you might want to add CSS styles, to improve the presentation of your widget.
-In this case, we are using an external [SCSS file](../../application/widgets/article-browser-widget/scss/article-browser-widget.scss).
-Because LaxarJS only looks for regular CSS files (not SCSS) by default, we need to some information to the widget descriptor:
-
-```json
-   "styleSource": "scss/article-browser-widget.scss",
-```
-
-To make best use of the additional styles, you'll need to add more CSS classes to your widget template.
-Refer to the [full component template](../../application/widgets/article-browser-widget/article-browser-widget.vue) for details.
-
 
 ### Adding the article-browser-widget to our Application
 
 Finally, we need to add our new widget to the `"content"` area of the *home* page.
-To recapitulate, here is the entire page configuration, with _headline-widget_, _dummy-articles-activity_ and _article-browser-widget_:
+To recapitulate, here is the entire page configuration, with the _headline-widget_ from the previous step along with the _dummy-articles-activity_ and the _article-browser-widget_:
 
 ```json
 {
@@ -360,12 +347,39 @@ To recapitulate, here is the entire page configuration, with _headline-widget_, 
 ```
 
 Most importantly, the _dummy-articles-activity_ and the _article-browser-widget_ share the same event bus topic (`"articles"`).
-This effectively _connects_ the two artifacts, without their implementations using knowing about each other, and without need for additional glue code.
+This effectively _connects_ the two artifacts, without their implementations knowing about each other, and without need for additional glue code.
 You can see that we also changed the headline text to `"LaxarJS ShopDemo"`, but feel free to pick a title of your own.
 
-*TODO: add event wiring diagram*
+*TODO: event wiring diagram*
 
-When visited in the browser, the application should allow to select among ten articles now, and display a search box at the top of the browser window.
+
+### Styling the Widget using SCSS
+
+By following these steps, you have created your first _interactive_ widget.
+But compared to the image above, it does not look quite right.
+The reason is that there is no CSS styling yet!
+
+While you styled the _headline-widget_ using plain old CSS, let us go for something more sophisticated with this widget by using [SCSS](http://sass-lang.com/) instead.
+The SCSS language is a superset of CSS, meaning that all CSS code is also valid SCSS.
+In addition, SCSS defines useful additions such as `$variables`, and `.nested { .selectors {} }`.
+We recommend using SCSS rather than CSS for any non-trivial styling.
+Since the goal of this tutorial is teaching LaxarJS rather than CSS or SCSS, go ahead and grab the [prepared SCSS file](../../application/widgets/article-browser-widget/default.theme/scss/article-browser-widget.scss) for now, saving its contents under `default.theme/scss/article-browser-widget.scss`.
+
+As briefly mentioned above, you could alternatively have put the styles into a `<style type="scss">` section of your `.vue` component definition.
+However, using a dedicated file enables you to swap out the styles by changing the _theme_, which is explained in the [final step](08_final_steps.md) of this tutorial.
+
+Because LaxarJS only looks for regular CSS files (not SCSS) _by default,_ you need to add some information to the widget descriptor:
+
+```json
+   "styleSource": "scss/article-browser-widget.scss",
+```
+
+Because webpack was pre-configured by the LaxarJS application generator to process all `.scss` files with [libsass](http://sass-lang.com/libsass), this should work out-of-the-box.
+You can remove the original `.css` file of the widget as it is no longer needed.
+To make best use of the additional style definitions, you'll need to add more CSS classes to your widget template.
+Refer to the [full component template](../../application/widgets/article-browser-widget/article-browser-widget.vue) for details.
+
+When visited in the browser, your application should allow to select among ten articles now, and highlight the article that was selected by clicking.
 
 
 ## The Next Step

@@ -45,13 +45,13 @@
 export default {
    data: () => ({ article: { id: null } }),
    created() {
-      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, ({ data }) => {
-         this.article = data || { id: null };
+      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, event => {
+         this.article = event.data || { id: null };
       } );
    },
    methods: {
       formatted( price ) {
-         return price == null ? null : `€ ${price.toFixed( 2 )}`;
+         return price == null ? '' : `€ ${price.toFixed( 2 )}`;
       },
       addToCart() {
          const { action } = this.features.confirmation;

@@ -1,201 +1,96 @@
 # The article-search-box-widget
 
-By this time, our application only displays a headline and does not allow the user to do anything.
-To change this we implement the _dummy-articles-activity_ that provides articles for us, simulating an actual network-based data source.
-Also, we add another widget, the  _article-search-box-widget,_ helping us to filter articles by name and description.
-The activity and widget will use *events* to publish and filter a list of articles to each other and to other widgets.
+We already have a working application with articles provided by the _dummy-articles-activity_, an _article-browser-widget_ to choose items from, an _article-teaser-widget_ for preview, and a _shopping-cart-widget_ to review and submit our order.
+At this point, you might call it a day and skip right to the [final step](08_final_steps.md).
 
-After going through this chapter, you will be familiar with the event bus and how it is accessed by a widget.
-It is recommended to have a look at the manual about [events and publish-subscribe](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/events.md#events-and-publish-subscribe) first, to allow for a better understanding.
-
-
-## Creating the dummy-articles-activity
-
-This dummy activity has _one job:_ publish a resource that contains a list of _articles_.
-Each article in the list has title, price, and description as well as a URL to a teaser image.
-
-Because activities have no visual appearance, all we need to do is to create the activity using `yo laxarjs:activity`, allow configuration of an event bus topic, and implement the activity controller.
-
-Create the activity with *yo* and select the integration technology *angular*:
-
-```shell
-yo laxarjs:activity dummy-articles-activity --directory=includes/widgets/shop-demo/
-```
-
-First, let us add the feature configuration option to the activity's [descriptor](../../includes/widgets/shop-demo/dummy-articles-activity/widget.json#L16-26):
-
-```json
-"articles": {
-   "required": [ "resource" ],
-   "type": "object",
-   "properties": {
-      "resource": {
-         "type": "string",
-         "format": "topic"
-      }
-   }
-}
-```
-
-The only configuration option is the resource topic under which to publish our articles resource.
-Using the format `topic` ensures that only valid event bus topic IDs will be configured.
-
-
-Then, we can implement the [controller](../../includes/widgets/shop-demo/dummy-articles-activity/dummy-articles-activity.js#L14-23):
-
-```javascript
-   function Controller( context, eventBus ) {
-      eventBus.subscribe( 'beginLifecycleRequest', function() {
-         var articleResource = context.features.articles.resource;
-         eventBus.publish( 'didReplace.' + articleResource, {
-            resource: articleResource,
-            data: {
-               entries: articles
-            }
-         } );
-      } );
-   }
-```
-
-Inject the `axContext` and the `axEventBus` to use them in the controller function as `context` and `eventBus`.
-The `axContext` allows the controller to have access to the feature configuration of the widget.
-
-Create a [static file "articles.js"](../../includes/widgets/shop-demo/dummy-articles-activity/articles.js) in the widget directory and load it in the controller.
-
-First the controller waits for the _beginLifecycleRequest_ event, to make sure that all other widgets are ready to receive.
-Then it uses the feature configuration to determine the _topic_ under which to publish the articles.
-
-The actual `articles` list has already been loaded from a [static file](../../includes/widgets/shop-demo/dummy-articles-activity/articles.js), and is now published under the `data` property of a _didReplace_ event.
-For this, the method `eventBus.publish` is used, which expects three parameters: *name, payload* and (if needed) additional *options*:
-
-* The _event name_ for this event consists of the event type (`didReplace`), a dot as a topic separator, and the resource name.
-
-* The _event payload_ has two properties in this case, namely the configured *resource* (`$scope.features.articles.resource`) and the articles as data.
-  Note that the example uses the configured topic as part of the event name (to allow for subscription-based filtering) as well as in the event *payload* for inspection by the receiver.
-
-* The additional _options_ are not required most of the time.
-  Have a look at the [events manual](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/events.md) for the full story.
-
-When publishing an *array* as a resource on the event bus, it is a good idea to always wrap it as an *entries* property of an *object*, like we do here.
-This allows you to extend the resource in the future, and to add meta-data such as a self-link which can be very useful in a REST-ful application.
-Keep in mind that all event payloads must be directly representable as JSON, so we cannot just add properties to the `articles` array itself.
-
-
-### Adding the Activity to the Page
-
-Finally, we modify the page `application/pages/shop_demo.json`.
-Delete the areas *header*, *content* and *footer* and add instead the following areas:
-
-```json
-"searchBox": [],
-"contentA": [],
-"contentB": [],
-"contentC": []
-```
-
-Now add our activity to the `activities` area:
-```json
-"activities": [
-         {
-            "widget": "shop-demo/dummy-articles-activity",
-            "features": {
-               "articles": {
-                  "resource": "articles"
-               }
-            }
-         }
-      ],
-```
+However, there is one more feature you might want to implement:
+Filtering the list of available articles using a text input.
+To this end, this steps illustrates how to create an _article-search-box-widget_ which intercepts and filters the list of articles, _without touching any of the other widgets._
 
 
 ## Creating the article-search-box-widget
 
-This is what the article-search-box-widget will look like:
+This is what the _article-search-box-widget_ will look like:
 
 ![article-search-box-widget](img/article_search_box_widget.png)
 
-The widget has a simple input field and a submit button, and allows the user to filter a list of articles.
+The widget contains a simple input field and a submit button, and allows the user to filter a list of articles.
 
-Create the widget with the generator:
-```shell
-yo laxarjs:widget article-search-box-widget --directory=includes/widgets/shop-demo/
+As before create the widget with the generator, picking `"vue"` as the integration technology:
+
+```console
+yo laxarjs:widget article-search-box-widget
 ```
 
 ### Implementing the Widget Features
 
-The article-search-box-widget subscribes to a resource containing incoming *articles* and publishes a resource containing *filteredArticles* that match a user-specified term.
-Accordingly, we require the configuration of two resource topics using the [widget descriptor](../../includes/widgets/shop-demo/article-search-box-widget/widget.json#L16-38).
+The _article-search-box-widget_ subscribes to a resource containing incoming *articles* and publishes a resource containing *filteredArticles* that match a user-specified search term.
+Accordingly, we require the configuration of two resource topics in the [widget descriptor](../../application/widgets/article-search-box-widget/widget.json), using the _inlet_ role for the _articles_ resource, and the _outlet_ role for the _filteredArticles_ resource.
 If no filter term has been entered by the user, the incoming articles are simply passed through in their entirety.
 
-To allow the user to manipulate the search term from the view, we have to [add it to the scope](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L15-17) of the AngularJS controller.
+Let us start with the _template_ of the widget component [article-search-box-widget.vue](../../application/widgets/article-search-box-widget/article-search-box-widget.vue):
 
-```javascript
-$scope.model = {
-   searchTerm: ''
-};
+```vue
+<form role="form" @submit="search()">
+   <div class="form-group">
+      <div class="input-group">
+         <input class="form-control"
+            type="text"
+            placeholder="Search for articles"
+            v-model="searchTerm">
+         <span class="input-group-btn">
+            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+         </span>
+      </div>
+   </div>
+</form>
 ```
 
-This allows us to bind `$scope.model.searchTerm` to the input field in the [HTML template](../../includes/widgets/shop-demo/article-search-box-widget/default.theme/article-search-box-widget.html#L7).
+This time, the `v-model` directive is used for bi-directional synchronization of the `searchTerm` property of the component data, and its DOM representation.
+The actual filtering is triggered by the `@submit` event handler.
+The widget controller looks like this:
 
-After creating the widget template we finalize the widget controller `article-search-box-widget.js`.
+*TODO*
 
-We inject the `axEventbus` to the [controller](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L11-13 and use it as `eventBus`.
-Now, we store any incoming articles and invoke the `search` method whenever they have changed.
+```vue
 
-```javascript
-eventBus.subscribe( 'didReplace.' + articlesResource, function( event ) {
-   unfilteredArticles = event.data.entries || [];
-   search();
-} );
 ```
 
-The [`search` method](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L34-54), which is also invoked whenever the _search_-button is activated, performs the actual filtering work:
 
-```javascript
-function search() {
-   var newFilteredArticles = unfilteredArticles;
-   var searchTerm = $scope.model.searchTerm;
-   if( searchTerm ) {
-      newFilteredArticles = unfilteredArticles.filter( function( article ) {
-         return infixMatch( article.name, searchTerm ) ||
-            infixMatch( article.id, searchTerm ) ||
-            infixMatch( article.htmlDescription, searchTerm );
-      } );
-   }
+### Styling the Widget
 
-   if( !ng.equals( newFilteredArticles, filteredArticles ) ) {
-      filteredArticles = newFilteredArticles;
-      eventBus.publish( 'didReplace.' + filterArticlesResource, {
-         resource: filterArticlesResource,
-         data: {
-            entries: filteredArticles
-         }
-      } );
-   }
-}
-```
+As before, you may want to create an SCSS stylesheet to improve the appearance of the widget, while adding the appropriate CSS classes in the template.
 
-The `search` method simply filters the article if a search term was specified and then checks if the result has changed since the last invocation.
-If so, the new resource contents are published using a *didReplace* event under the resource topic configured for the  *filteredArticle* feature.
-For the filtering itself, the [`infixMatch` helper](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L58-60) is used:
+  - [full widget descriptor](../../application/widgets/article-search-box-widget/widget.json), including `styleSource` attribute for SCSS support
+  - [full .vue-component](../../application/widgets/article-search-box-widget/shopping-cart-widget.vue), with additional classes inserted
+  - [full SCSS stylesheet](../../application/widgets/article-search-box-widget/default.theme/scss/article-search-box-widget.scss)
 
-```javascript
-function infixMatch( subject, query ) {
-   return ( subject || '' ).toLowerCase().indexOf( query.toLowerCase() ) !== -1;
-}
-```
-
-Make sure that you have all used variables [defined.](../../includes/widgets/shop-demo/article-search-box-widget/article-search-box-widget.js#L18-25)
+Now, all that is left is adding the widget to your page definition.
 
 
 ## Adding the Widget to the Page
 
-Finally, we include the [article-search-box-widget](../../includes/widgets/shop-demo/article-search-box-widget) into our [shop_demo](../../application/pages/shop_demo.json#L16-28) page:
+To display the search box above the other widgets, let us add another widget area to the _three-colums_ layout:
+
+```html
+<div class="container">
+   <div class="row">
+      <div class="col col-md-12" data-ax-widget-area="searchBox"></div>
+   </div>
+   <div class="row">
+      <div class="col col-md-4" data-ax-widget-area="contentA"></div>
+      <div class="col col-md-4" data-ax-widget-area="contentB"></div>
+      <div class="col col-md-4" data-ax-widget-area="contentC"></div>
+   </div>
+</div>
+```
+
+Finally, we include the _article-search-box-widget_ into our [home](../../application/pages/home.json) page:
 
 ```json
 "searchBox": [
    {
-      "widget": "shop-demo/article-search-box-widget",
+      "widget": "article-search-box-widget",
       "features": {
          "articles": {
             "resource": "articles"
@@ -208,10 +103,9 @@ Finally, we include the [article-search-box-widget](../../includes/widgets/shop-
 ]
 ```
 
+For the filtering to work, you just need to change the `articles.resource` of the _article-browser-widget_ to use the `"filteredArticles"` topic.
+
 
 ## The Next Step
 
-Now the user can search for articles but the results are still not visible.
-To change this, the next step is to implement the [article-browser-widget](05_article_browser_widget.md) which actually *displays* the matching articles.
-
-[« Defining the Application Flow](03_application_flow.md) | The article-browser-widget | [The article-browser-widget »](05_article_browser_widget.md)
+[« Defining the Application Flow](06_application_flow.md) | The article-browser-widget | [Final Steps »](08_final_steps.md)

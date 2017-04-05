@@ -71,8 +71,8 @@
 export default {
    data: () => ({ cart: [], article: { id: null } }),
    created() {
-      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, ({ data }) => {
-         this.article = data || { id: null };
+      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, event => {
+         this.article = event.data || { id: null };
       } );
       this.features.article.onActions.forEach( action => {
          this.eventBus.subscribe( `takeActionRequest.${action}`, () => {
@@ -94,7 +94,7 @@ export default {
    },
    methods: {
       format( price ) {
-         return price == null ? null : `€ ${price.toFixed( 2 )}`;
+         return price == null ? '' : `€ ${price.toFixed( 2 )}`;
       },
       increment( article ) {
          const isInCart = this.cart.some( item => item.article.id === article.id );

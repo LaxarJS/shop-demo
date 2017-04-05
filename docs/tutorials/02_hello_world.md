@@ -10,7 +10,7 @@ A LaxarJS application consists of _pages,_ each of which embeds several smaller 
 
 A _widget_ is responsible for a part of the screen and allows the user to perform specific tasks within the application, while network communication with any backing services is usually carried out by _activities_.
 The technical difference between widgets and activities is that an activity does not render HTML or manipulate the DOM at all, whereas a widget renders UI and is intended for display in the web browser.
-As every widget and activity is an isolated artifact with no JavaScript API, communication among widgets takes place solely over the _event bus,_ described later in this tutorial.
+As every widget and activity is an isolated artifact with _no JavaScript API_, communication among widgets takes place solely over the _event bus_, described later in this tutorial.
 
 For comprehensive information, consult the [widgets and activities manual](https://laxarjs.org/docs/laxar-v2-latest/manuals/widgets_and_activities/) from the [LaxarJS documentation](https://laxarjs.org/docs/laxar-v2-latest/).
 
@@ -18,10 +18,10 @@ For comprehensive information, consult the [widgets and activities manual](https
 ## Developing a Simple LaxarJS Widget
 
 A simple widget does not need a lot of code.
-However, you can use the Yeoman generator *laxarjs:widget* to quickly setup a starting stub.
+However, you can use the Yeoman generator *laxarjs:widget* anyway, to quickly setup a starting stub.
 
 ```console
-yo laxarjs2:widget headline-widget
+../shop-demo/ > yo laxarjs2:widget headline-widget
 ```
 
 The Yeoman generator that was installed in the [previous step](01_getting_started.md), will now ask for some details about the widget and make suggestions.
@@ -40,19 +40,19 @@ Please answer the following:
 ? Create project infrastructure (README.md, package.json)? No
 ```
 
-First, you will learn to create a widget _without_ using a View-Framework such as _Vue.js_, just based on plain web technologies.
+First, you will learn to create a widget _without_ using a templating framework such as _Vue.js_, instead just relying on plain old web technologies.
 For this reason, make sure to pick `"plain"` when asked for an _integration technology._
 
 The headline-widget, placed under `application/widgets/headline-widget`, now consists of the following files:
 
 * A _descriptor_ (named `widget.json`) containing the widget configuration options.
 
-* The _widget controller_ (`headline-widget.js`) contains the widget logic and associated helper functions.
+* The _widget controller_ (`headline-widget.js`) contains the widget logic.
 
 * The _HTML template_ (`default.theme/headline-widget.html`) defines the DOM-structure of the widget.
-  Multiple _themes_ may be added for a widget, resulting in multiple directories (not part of this tutorial) but there is always a _default.theme._
+  Multiple _theme folders_ may be defined for a widget, resulting in multiple directories (not part of this tutorial) but there is always a _default.theme_.
 
-* The _widget styles_ (`default.theme/css/headline-widget.css`) for styling the widget using _CSS._
+* The _widget styles_ (`default.theme/css/headline-widget.css`) for defining the widget appearance using _CSS Stylesheets._ Also theme-dependent. Using [SCSS](http://sass-lang.com/) or [LESS](http://lesscss.org/) instead is also possible and explained in the next step.
 
 Note that the files that make up the *actual implementation* are named after the widget, in our case the _headline-widget._
 Finally, there is a _spec test_ (`spec/headline-widget.spec.js`) for testing the functionality of the widget, for example using [Jasmine](https://jasmine.github.io/).
@@ -65,7 +65,7 @@ Everything that should be configurable when adding the widget to a page is speci
 Before instantiating your widget into a page, LaxarJS validates its configuration using a [schema validator](https://www.npmjs.com/package/ajv), filling in the defaults as needed.
 
 Note that this is not required for LaxarJS widgets:
-If you remove the `features` block from the `widget.json`, your widget will simply accept _any_ configuration!
+If you remove the `features` block from the `widget.json`, your widget will simply accept _any_ configuration, which can be useful for prototyping new ideas.
 However, using a schema is _recommended_ because it automatically documents and checks the configuration options for your widget.
 
 Let us now specify the features *headline* and *intro*, each with a property *htmlText*.
@@ -100,7 +100,7 @@ JSON schemas are nested (corresponding to the tree-like structure of JSON docume
 However, this is just the tip of the iceberg.
 The possibilities of JSON schema are enormous: for further study, refer to the [JSON schema documentation](http://json-schema.org/documentation.html).
 
-Pages that violate your widget's schema definition will cause an error to be reported in your terminal, since schemas are processed _at build-time_.
+Pages that violate your widget's schema definition will cause an error to be reported in your terminal, since schemas are processed _at build-time_, avoiding runtime-overhead.
 If on the other hand the validation was successful, the widget controller (see below) will be able to access its feature configuration.
 
 
@@ -116,7 +116,7 @@ The HTML template is located within the `default.theme` sub-folder of the widget
 ```
 
 The HTML template is selected based on the configured theme, and loaded as your widget's DOM (document object model).
-In _plain widgets,_ the JavaScript widget controller will be notified when the template HTML has been loaded, so that it can add dynamic contents.
+In _plain widgets,_ the JavaScript widget controller will be notified when the Dom is available, so that the controller can start adding dynamic content and listening for user input.
 
 In the upcoming chapters, you will learn how to create a _Vue.js_ template for your widget, which is a lot more powerful than a plain HTML template.
 
@@ -152,20 +152,39 @@ Under the hood, this transpilation is performed by [webpack](https://webpack.js.
 
 Let us dissect the controller step-by-step:
 
-  - first, `injections` are exported, telling the LaxarJS runtime that this widget controller wants to read the widget feature configuration (to get the configuration for _headline_ and _intro_),
+  - first, an array of requested `injections` is exported, in this case telling the LaxarJS runtime that the widget controller wants to read the widget feature configuration (to get the configuration for _headline_ and _intro_),
 
   - then, a `create` function is exported, which is called for each _instance_ of this widget, on any page.
   Its arguments correspond to the requested injections,
 
-  - the `create` function returns an object with a single `onDomAvailable` hook. As soon as the widget is rendered, that hook is called with the parsed contents of our HTML template. Our widget controller simply applies the feature configuration to the HTML elements that were already prepared by the template. In case no _htmlText_ is specified for a feature, the corresponding element is discarded using `remove()`.
+  - finally, the `create` function returns an object with a single `onDomAvailable` hook. As soon as the widget is rendered, the hook is called with the parsed contents of our HTML template.
 
-Note that you should _never put user-input_ (from input fields or the URL) into `innerHTML`.
+In this case, the widget controller simply applies the feature configuration to the HTML elements that were already prepared by the template.
+If no _htmlText_ was specified for a feature, the corresponding element is discarded using `remove()`.
+
+Aside: make sure to **never put user-input into `innerHTML`**, unless you have done some research on proper escaping.
+User-input is anything that was at some point provided by an untrusted source, for example read from input fields or URL parameters.
 In this case however, we know that the `htmlText` comes from the page configuration, so we regard it as trusted.
 
-While this is not a lot of code, you may think that just displaying two HTML texts should be even simpler.
+While the _headline-widget_ does not have a lot of code, you may think that just displaying two HTML texts should be even simpler.
 Because we feel the same way, LaxarJS allows to easily create widgets using popular templating technologies such as _Vue.js_.
 We just wanted to demonstrate how you can create widgets without adding fancy frameworks, by using the `"plain"` integration technology.
 For anything more complex, you may want to chose a different integration technology, as will be described in the next step.
+
+
+### Widget Styles
+
+The generator has prepared a stylesheet under `default.theme/css/headline-widget.css`.
+Using a simple CSS rule, you can change the appearance of your widget, in this case changing the headline text color to a soft gray:
+
+```css
+.headline-widget .headline-html-text {
+   color: #999;
+}
+```
+
+The name of the widget should be used to _scope_ your selectors as shown in this example, to avoid conflicts among the rules from different widgets.
+LaxarJS generates the corresponding `class` attribute when inserting your widget into its DOM container.
 
 
 ### Adding the Widget to Your Application
@@ -218,9 +237,9 @@ The widget's configured for that area (if any) are inserted as DOM children of t
 Within such an area definition the widgets are listed in the order that they should appear in within the browser's DOM tree.
 In our ShopDemo application we add the headline-widget to the area called `header`.
 
-*TODO: Verify that stopping/restarting the development server is still needed in LaxarJS v2*
+*TODO: Verify that stopping/restarting the development server is still needed for this in LaxarJS v2*
 
-Having added the new widget, we can restart the development server (`npm start` in the project directory) to see **Hello, World!** being displayed in our browser.
+Having added the new widget, we can restart the development server (`Ctrl-C`, then `npm start` in the project directory) to see **Hello, World!** being displayed in our browser.
 
 
 ### Testing your Widget

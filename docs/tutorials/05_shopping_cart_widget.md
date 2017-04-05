@@ -4,7 +4,7 @@ The next step for our ShopDemo application is to implement the _shopping-cart-wi
 It will display the current shopping cart contents with all articles added by the user and allows the user change the order quantity for each article.
 You will also learn how widgets can use events to trigger flow-based navigation.
 
-*TODO: diagram*
+*TODO: event wiring diagram*
 
 The _shopping-cart-widget_ subscribes to the currently selected article (`didReplace` event), as well as to the user intent to add the article to the cart (`takeActionRequest` event).
 It also allows to increase or decrease the quantity of each shopping cart item.
@@ -125,8 +125,8 @@ Finally, there are _event bindings_ for the _increment_ and _decrement_ buttons,
 export default {
    data: () => ({ cart: [], article: { id: null } }),
    created() {
-      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, ({ data }) => {
-         this.article = data || { id: null };
+      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, event => {
+         this.article = event.data || { id: null };
       } );
       this.features.article.onActions.forEach( action => {
          this.eventBus.subscribe( `takeActionRequest.${action}`, () => {
@@ -151,7 +151,7 @@ export default {
    },
    methods: {
       format( price ) {
-         return price == null ? null : `€ ${price.toFixed( 2 )}`;
+         return price == null ? '' : `€ ${price.toFixed( 2 )}`;
       },
       increment( article ) {
          const isInCart = this.cart.some( item => item.article.id === article.id );
@@ -236,7 +236,7 @@ The component needs to be extended as follows, adding a button and a correspondi
 export default {
    // ... data(), created(), computed() ...
    methods: {
-      // ... format, increment, decrement ...
+      // ... format(), increment(), decrement() ...
       placeOrder() {
          const { target } = this.features.order;
          this.eventBus.publish( `navigateRequest.${target}`, { target } );
@@ -248,9 +248,20 @@ export default {
 ```
 
 The `placeOrder` event handler publishes a new type of event called `navigateRequest`.
-This event instructs the LaxarJS runtime to change to the URL associated with the given _target_, usually causing the page to be replaced.
+This event instructs the LaxarJS runtime to change to the URL associated with the given _target_, usually causing the current page to be replaced.
 Right now, we only have a single page in our application, so this will not do much.
-The [next step]() of the tutorial gives instructions on adding another page and configuring the application flow.
+The [next step](06_application_flow.md) of the tutorial gives instructions on adding another page and configuring the application flow.
+
+
+### Styling the Widget
+
+As before, you may want to create an SCSS stylesheet to improve the appearance of the widget, while adding the appropriate CSS classes in the template.
+
+  - [full widget descriptor](../../application/widgets/shopping-cart-widget/widget.json), including `styleSource` attribute for SCSS support
+  - [full .vue-component](../../application/widgets/shopping-cart-widget/shopping-cart-widget.vue), with additional classes inserted
+  - [full SCSS stylesheet](../../application/widgets/shopping-cart-widget/default.theme/scss/shopping-cart-widget.scss)
+
+Now, all that is left is adding the widget to your page definition.
 
 
 ## Adding the Widget to our Application
@@ -281,4 +292,4 @@ The user can now select an article, have a look at its details and add it to the
 But when trying to order, nothing happens because the second page is still missing!
 Let us create that page in the [next step](06_application_flow.md).
 
-[« The article-teaser-widget](04_article_teaser_widget.md)  | The shopping-cart-widget | [Final steps »](06_application_flow.md)
+[« The article-teaser-widget](04_article_teaser_widget.md)  | The shopping-cart-widget | [Defining the Application Flow »](06_application_flow.md)

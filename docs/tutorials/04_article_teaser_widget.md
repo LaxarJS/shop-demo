@@ -1,6 +1,6 @@
 # The article-teaser-widget
 
-The _article-teaser-widget_ that we will implement in this step is going to have two features:
+The _article-teaser-widget_ introduced in this step is going to have two features:
 It will display details on a given *article*, and it will allow the user to *confirm* adding that article to the shopping cart.
 Having learned about the event bus and the *resource*-pattern already, this part of the tutorial will introduce the *action*-pattern and explain how widgets may respond to events asynchronously.
 We will also change the _layout_ to a more sophisticated _three-column_ version.
@@ -10,7 +10,7 @@ This is exactly the information that the article-teaser-widget will use.
 Whenever the user presses the _"add to cart"_ button, the widget publishes a `takeActionRequest` event.
 This event is processed by the shopping-cart-widget (described in the next chapter) to add the currently selected article to the cart.
 
-*TODO: diagram with short explanation*
+*TODO: event wiring diagram*
 
 
 ## Appearance of the article-teaser-widget
@@ -85,13 +85,13 @@ The implementation of this feature is similar to the *articles* feature of the a
 export default {
    data: () => ({ article: { id: null } }),
    created() {
-      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, ({ data }) => {
-         this.article = data || { id: null };
+      this.eventBus.subscribe( `didReplace.${this.features.article.resource}`, event => {
+         this.article = event.data || { id: null };
       } );
    },
    methods: {
       formatted( price ) {
-         return price == null ? null : `€ ${price.toFixed( 2 )}`;
+         return price == null ? '' : `€ ${price.toFixed( 2 )}`;
       }
    }
 };
@@ -145,7 +145,7 @@ Here are the necessary changes to the component:
 
 <script>
 export default {
-   // ... data, created ...
+   // ... data(), created() ...
    methods: {
       // ... formatted() ...
       addToCart() {
@@ -162,6 +162,17 @@ This method simply publishes a `takeActionRequest` event using the configured ac
 Like the resource pattern, the [action pattern](http://laxarjs.org/docs/laxar-patterns-v2-latest/patterns/actions/) is described in-depth in the [LaxarJS Patterns documentation](http://laxarjs.org/docs/laxar-patterns-v2-latest/).
 Note that when compared to resource events, action events do not necessarily need a payload.
 Often, they just _signal_ a user intent.
+
+
+### Styling the Widget
+
+As before, you may want to create an SCSS stylesheet to improve the appearance of the widget, while adding the appropriate CSS classes in the template.
+
+  - [full widget descriptor](../../application/widgets/article-teaser-widget/widget.json), including `styleSource` attribute for SCSS support
+  - [full .vue-component](../../application/widgets/article-teaser-widget/article-teaser-widget.vue), with additional classes inserted
+  - [full SCSS stylesheet](../../application/widgets/article-teaser-widget/default.theme/scss/article-teaser-widget.scss)
+
+Now, all that is left is adding the widget to your page definition.
 
 
 ## Adding the New Widget to the Application

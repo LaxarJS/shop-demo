@@ -1,5 +1,5 @@
 <template>
-   <form role="form" @submit="search()">
+   <form role="form" @submit="updateSearch()">
       <div class="form-group">
          <div class="input-group">
             <input class="form-control"
@@ -16,13 +16,13 @@
 
 
 <script>
-const searchFields = [ 'some', 'id', 'htmlDescription' ];
-
 /**
  * Copyright 2017 aixigo AG
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
+const searchFields = [ 'some', 'id', 'htmlDescription' ];
+
 export default {
    data: () => ({
       searchTerm: '',
@@ -32,13 +32,13 @@ export default {
    created() {
       const articlesResource = this.features.articles.resource;
 
-      this.eventBus.subscribe( `didReplace.${articlesResource}`, ({ data }) => {
-         this.articles = data.entries || [];
+      this.eventBus.subscribe( `didReplace.${articlesResource}`, event => {
+         this.articles = event.data || [];
          this.search();
       } );
 
-      this.eventBus.subscribe( 'didNavigate', ({ data }) => {
-         this.searchTerm = data[ this.features.navigation.parameterName ] || '';
+      this.eventBus.subscribe( 'didNavigate', event => {
+         this.searchTerm = event.data[ this.features.navigation.parameterName ] || '';
          this.search();
       } );
    },
@@ -58,20 +58,20 @@ export default {
       search() {
          const search = this.searchTerm.toLowerCase();
          const matches = subject => ( subject || '' ).toLowerCase().indexOf( search ) !== -1;
-         const entries = search ?
+         const articles = search ?
             this.articles.filter( article => searchFields.some( field => matches( article[ field ] ) ) ) :
             this.articles;
 
          const hasChanged =
-            this.filteredArticles.length !== entries.length ||
-            this.filteredArticles.some( (article, i) => article.id !== entries[ i ].id );
+            this.filteredArticles.length !== articles.length ||
+            this.filteredArticles.some( (article, i) => article.id !== articles[ i ].id );
 
          if( hasChanged ) {
-            this.filteredArticles = entries;
+            this.filteredArticles = articles;
             const { resource } = this.features.filteredArticles;
             this.eventBus.publish( `didReplace.${resource}`, {
                resource,
-               data: { entries }
+               data: articles
             } );
          }
       }
