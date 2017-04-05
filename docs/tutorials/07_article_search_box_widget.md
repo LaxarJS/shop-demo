@@ -5,7 +5,7 @@ At this point, you might call it a day and skip right to the [final step](08_fin
 
 However, there is one more feature you might want to implement:
 Filtering the list of available articles using a text input.
-To this end, this steps illustrates how to create an _article-search-box-widget_ which intercepts and filters the list of articles, _without touching any of the other widgets._
+To this end, this steps illustrates how to create an _article-search-box-widget_ which intercepts and filters the list of articles, _without touching any of the other widgets._ You will also learn how to access and modify URL parameters from your widget.
 
 
 ## Creating the article-search-box-widget
@@ -22,7 +22,8 @@ As before create the widget with the generator, picking `"vue"` as the integrati
 yo laxarjs:widget article-search-box-widget
 ```
 
-### Implementing the Widget Features
+
+### Filtering a Resource
 
 The _article-search-box-widget_ subscribes to a resource containing incoming *articles* and publishes a resource containing *filteredArticles* that match a user-specified search term.
 Accordingly, we require the configuration of two resource topics in the [widget descriptor](../../application/widgets/article-search-box-widget/widget.json), using the _inlet_ role for the _articles_ resource, and the _outlet_ role for the _filteredArticles_ resource.
@@ -31,7 +32,8 @@ If no filter term has been entered by the user, the incoming articles are simply
 Let us start with the _template_ of the widget component [article-search-box-widget.vue](../../application/widgets/article-search-box-widget/article-search-box-widget.vue):
 
 ```vue
-<form role="form" @submit="search()">
+<template>
+<form role="form" @submit="filter()">
    <div class="form-group">
       <div class="input-group">
          <input class="form-control"
@@ -44,17 +46,140 @@ Let us start with the _template_ of the widget component [article-search-box-wid
       </div>
    </div>
 </form>
+</template>
 ```
 
 This time, the `v-model` directive is used for bi-directional synchronization of the `searchTerm` property of the component data, and its DOM representation.
 The actual filtering is triggered by the `@submit` event handler.
 The widget controller looks like this:
 
-*TODO*
+```vue
+<script>
+export default {
+   data: () => ({
+      searchTerm: '',
+      articles: [],
+      filteredArticles: []
+   }),
+   created() {
+      const { articles } = this.features;
+      this.eventBus.subscribe( `didReplace.${articles.resource}`, event => {
+         this.articles = event.data || [];
+         this.filter();
+      } );
+   },
+   methods: {
+      filter() {
+         const search = this.searchTerm.toLowerCase();
+         const matches = subject => ( subject || '' ).toLowerCase().indexOf( search ) !== -1;
+         const articles = search ?
+            this.articles.filter( article =>
+               [ 'some', 'id', 'htmlDescription' ].some( field => matches( article[ field ] ) )
+            ) :
+            this.articles;
+
+         const hasChanged =
+            this.filteredArticles.length !== articles.length ||
+            this.filteredArticles.some( (article, i) => article.id !== articles[ i ].id );
+
+         if( hasChanged ) {
+            this.filteredArticles = articles;
+            const { resource } = this.features.filteredArticles;
+            this.eventBus.publish( `didReplace.${resource}`, {
+               resource,
+               data: articles
+            } );
+         }
+      }
+   }
+};
+</script>
+```
+
+Except for the `filter()` method, you will probably recognize this as being similar to the previous widgets.
+The filtering procedure simply applies the (lowercased) search term to the current list of articles in order to generate the `filteredArticles`.
+If these have changed since the last time the filter was run, they are published over the event bus.
+
+The _article-search-box-widget_ can now filter articles according to a search term.
+However, it would be nice if we could create links to individual search results and share or bookmark them.
+For this, LaxarJS provides _place parameters_ that help to encode elements of the application state in the browser URL.
+
+
+### Encoding State in a Place Parameter
+
+To store parts of the application state in a _place parameter,_ you will need to extend the routing definition so that the parameter is encoded in the URL of your place.
+To that end, modify the `"browse"` place in the [flow definition](../../application/flows/main.json) as follows:
+
+```js
+"browse": {
+   "patterns": [ "/browse/:search", "/browse" ],
+   // ...
+}
+```
+
+By prepending `"/browse/:search"` to the place patterns, LaxarJS will now _decode_ the second URL path segment during routing, and include its value under `data.search` in the event payload of the `didNavigate` event.
+LaxarJS will also process the `data.search` attribute when present in `navigateRequest` events leading to the `"browse"` place and _encode_ it into the URL.
+
+To avoid a hard coupling between widget and flow definition, let us make the name of the parameter configurable.
+Adding a new feature `"navigation"` with a configurable `"parameterName"` should do the trick.
+
+```json
+"navigation": {
+   "type": "object",
+   "required": [ "parameterName" ],
+   "properties": {
+      "parameterName": {
+         "type": "string",
+         "format": "topic",
+         "axRole": "inlet",
+         "description": "Place parameter to use for the search string."
+      }
+   }
+}
+```
+
+In the _article-search-box-widget_, this allows you to reflect the `searchTerm` in the URL and to treat external changes (URL was modified by user or by another widget) just like changes to the input text.
+All you need to do is adjust the controller to subscribe to `didNavigate` events in order to read the search term, and to generate `navigateRequest` events when the user has modified the input field:
 
 ```vue
+<template>
+<form role="form" @submit="search()"><!-- ... --></form>
+</template>
 
+<script>
+export default {
+   data: () => ({
+      searchTerm: '',
+      articles: [],
+      filteredArticles: []
+   }),
+   created() {
+      const { articles, navigation } = this.features;
+      this.eventBus.subscribe( `didReplace.${articles.resource}`, event => {
+         this.articles = event.data || [];
+         this.filter();
+      } );
+      this.eventBus.subscribe( 'didNavigate', event => {
+         this.searchTerm = event.data[ navigation.parameterName ] || '';
+         this.filter();
+      } );
+   },
+   methods: {
+      search() {
+         const target = '_self';
+         const data = {
+            [ this.features.navigation.parameterName ]: this.searchTerm || null
+         };
+         this.eventBus.publish( `navigateRequest.${target}`, { target, data } );
+      },
+      filter() { /* ... */ }
+   }
+};
+</script>
 ```
+
+This version synchronizes URL and internal model.
+After integration of the widget (see below) try changing the URL in the browser to see it reflected in the search box, and vice versa.
 
 
 ### Styling the Widget
@@ -97,6 +222,9 @@ Finally, we include the _article-search-box-widget_ into our [home](../../applic
          },
          "filteredArticles": {
             "resource": "filteredArticles"
+         },
+         "navigation": {
+            "parameterName": "search"
          }
       }
    }

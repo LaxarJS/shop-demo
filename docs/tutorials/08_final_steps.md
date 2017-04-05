@@ -85,13 +85,13 @@ Start the server with `npm start` and visit the [production version](http://loca
 In contrast to the `debug.html`, the optimized version (`index.html`) does not pick up changes automatically.
 However, the download size of the application is greatly reduced when using the optimized version, making for a much better user experience, especially on mobile devices.
 For this reason, it is strongly recommended to always use this version for production.
-In case you are familiar with webpack:
+In case you are familiar with _webpack_:
 The above command simply runs `webpack -p --env.production`.
 
 Of course, when creating you own application, you do not have to use the HTML files provided by the LaxarJS scaffolding _as-is_.
 Instead, you should be able to include the relevant sections from the `index.html` file into any server side templating system:
 Only the stylesheet reference and the `body` contents (container `div`, `script`) are required.
-Depending on you setup, you may need to change update the paths to resources under `dist/`.
+Depending on you setup, you may need to update the paths to resources under `dist/`.
 For more advanced production configuration, consult the [webpack documentation](https://webpack.js.org).
 
 

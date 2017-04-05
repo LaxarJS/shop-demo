@@ -1,5 +1,5 @@
 <template>
-   <form role="form" @submit="updateSearch()">
+   <form role="form" @submit="search()">
       <div class="form-group">
          <div class="input-group">
             <input class="form-control"
@@ -21,8 +21,6 @@
  * Released under the MIT license.
  * http://laxarjs.org/license
  */
-const searchFields = [ 'some', 'id', 'htmlDescription' ];
-
 export default {
    data: () => ({
       searchTerm: '',
@@ -30,36 +28,31 @@ export default {
       filteredArticles: []
    }),
    created() {
-      const articlesResource = this.features.articles.resource;
-
-      this.eventBus.subscribe( `didReplace.${articlesResource}`, event => {
+      const { articles, navigation } = this.features;
+      this.eventBus.subscribe( `didReplace.${articles.resource}`, event => {
          this.articles = event.data || [];
-         this.search();
+         this.filter();
       } );
-
       this.eventBus.subscribe( 'didNavigate', event => {
-         this.searchTerm = event.data[ this.features.navigation.parameterName ] || '';
-         this.search();
+         this.searchTerm = event.data[ navigation.parameterName ] || '';
+         this.filter();
       } );
-   },
-   computed: {
-      isSelected() {
-         return this.article.id !== null;
-      }
    },
    methods: {
-      updateSearch() {
+      search() {
          const target = '_self';
          const data = {
             [ this.features.navigation.parameterName ]: this.searchTerm || null
          };
          this.eventBus.publish( `navigateRequest.${target}`, { target, data } );
       },
-      search() {
+      filter() {
          const search = this.searchTerm.toLowerCase();
          const matches = subject => ( subject || '' ).toLowerCase().indexOf( search ) !== -1;
          const articles = search ?
-            this.articles.filter( article => searchFields.some( field => matches( article[ field ] ) ) ) :
+            this.articles.filter( article =>
+               [ 'name', 'id', 'htmlDescription' ].some( field => matches( article[ field ] ) )
+            ) :
             this.articles;
 
          const hasChanged =
