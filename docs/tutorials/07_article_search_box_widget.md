@@ -1,7 +1,7 @@
 # The article-search-box-widget
 
 We already have a working application with articles provided by the _dummy-articles-activity_, an _article-browser-widget_ to choose items from, an _article-teaser-widget_ for preview, and a _shopping-cart-widget_ to review and submit our order.
-At this point, you might call it a day and skip right to the [final step](08_final_steps.md).
+At this point, you might call it a day and skip right to the [final steps](08_final_steps.md).
 
 However, there is one more feature you might want to implement:
 Filtering the list of available articles using a text input.
@@ -29,7 +29,7 @@ The _article-search-box-widget_ subscribes to a resource containing incoming *ar
 Accordingly, we require the configuration of two resource topics in the [widget descriptor](../../application/widgets/article-search-box-widget/widget.json), using the _inlet_ role for the _articles_ resource, and the _outlet_ role for the _filteredArticles_ resource.
 If no filter term has been entered by the user, the incoming articles are simply passed through in their entirety.
 
-Let us start with the _template_ of the widget component [article-search-box-widget.vue](../../application/widgets/article-search-box-widget/article-search-box-widget.vue):
+Let us start with the _template_ of the widget component, [article-search-box-widget.vue](../../application/widgets/article-search-box-widget/article-search-box-widget.vue):
 
 ```vue
 <template>
@@ -49,7 +49,7 @@ Let us start with the _template_ of the widget component [article-search-box-wid
 </template>
 ```
 
-This time, the `v-model` directive is used for bi-directional synchronization of the `searchTerm` property of the component data, and its DOM representation.
+This time, the `v-model` directive is used for bidirectional synchronization of the `searchTerm` property of the component data, and its DOM representation.
 The actual filtering is triggered by the `@submit` event handler.
 The widget controller looks like this:
 
@@ -102,7 +102,7 @@ If these have changed since the last time the filter was run, they are published
 
 The _article-search-box-widget_ can now filter articles according to a search term.
 However, it would be nice if we could create links to individual search results and share or bookmark them.
-For this, LaxarJS provides _place parameters_ that help to encode elements of the application state in the browser URL.
+For this, LaxarJS provides _place parameters_ that help to encode elements of the application state into the browser URL.
 
 
 ### Encoding State in a Place Parameter
@@ -138,8 +138,8 @@ Adding a new feature `"navigation"` with a configurable `"parameterName"` should
 }
 ```
 
-In the _article-search-box-widget_, this allows you to reflect the `searchTerm` in the URL and to treat external changes (URL was modified by user or by another widget) just like changes to the input text.
-All you need to do is adjust the controller to subscribe to `didNavigate` events in order to read the search term, and to generate `navigateRequest` events when the user has modified the input field:
+In the _article-search-box-widget_, this allows you to reflect the `searchTerm` in the URL and to treat external changes (when the URL was modified by user or by another widget) just like changes to the input text.
+All you need to do is modify the controller to subscribe to `didNavigate` events in order to read the search term, and to generate `navigateRequest` events when the user has modified the input field:
 
 ```vue
 <template>
@@ -178,8 +178,13 @@ export default {
 </script>
 ```
 
-This version synchronizes URL and internal model.
+This version synchronizes the browser URL with the internal component model.
 After integration of the widget (see below) try changing the URL in the browser to see it reflected in the search box, and vice versa.
+
+Using place parameters in this manner allows you to safely compose multiple widgets that interact with the browser URL, without running into conflicts.
+You can also let LaxarJS generate URLs for use in regular old _hyperlinks_ instead of manipulating the browser location through events, making your application more search-engine friendly.
+For this, LaxarJS provides the [`axFlowService`]() injection.
+The [laxar-vue-adapter documentation](http://laxarjs.org/docs/laxar-vue-adapter-v1-latest/) explains how to inject the `axFlowService` into a widget that uses the `"vue"` integration technology.
 
 
 ### Styling the Widget
