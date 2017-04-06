@@ -3,6 +3,10 @@
 We already have a working application with articles provided by the _dummy-articles-activity_, an _article-browser-widget_ to choose items from, an _article-teaser-widget_ for preview, and a _shopping-cart-widget_ to review and submit our order.
 At this point, you might call it a day and skip right to the [final steps](08_final_steps.md).
 
+<!--
+*TODO: event wiring diagram*
+-->
+
 However, there is one more feature you might want to implement:
 Filtering the list of available articles using a text input.
 To this end, this steps illustrates how to create an _article-search-box-widget_ which intercepts and filters the list of articles, _without touching any of the other widgets._ You will also learn how to access and modify URL parameters from your widget.
@@ -183,8 +187,8 @@ After integration of the widget (see below) try changing the URL in the browser 
 
 Using place parameters in this manner allows you to safely compose multiple widgets that interact with the browser URL, without running into conflicts.
 You can also let LaxarJS generate URLs for use in regular old _hyperlinks_ instead of manipulating the browser location through events, making your application more search-engine friendly.
-For this, LaxarJS provides the [`axFlowService`]() injection.
-The [laxar-vue-adapter documentation](http://laxarjs.org/docs/laxar-vue-adapter-v1-latest/) explains how to inject the `axFlowService` into a widget that uses the `"vue"` integration technology.
+For this, LaxarJS provides the [`axFlowService`](https://laxarjs.org/docs/laxar-v2-latest/api/runtime.flow_service/) injection.
+The [laxar-vue-adapter documentation](https://laxarjs.org/docs/laxar-vue-adapter-v1-latest/) explains how to inject the `axFlowService` into a widget that uses the `"vue"` integration technology.
 
 
 ### Styling the Widget
@@ -215,7 +219,7 @@ To display the search box above the other widgets, let us add another widget are
 </div>
 ```
 
-Finally, we include the _article-search-box-widget_ into our [home](../../application/pages/home.json) page:
+Let us now include the _article-search-box-widget_ into our [home](../../application/pages/home.json) page:
 
 ```json
 "searchBox": [
@@ -236,7 +240,7 @@ Finally, we include the _article-search-box-widget_ into our [home](../../applic
 ]
 ```
 
-For the filtering to work, you just need to change the `articles.resource` of the _article-browser-widget_ to use the `"filteredArticles"` topic.
+Finally, For the filtering to work, you just need to change the `articles.resource` of the _article-browser-widget_ to use the `"filteredArticles"` topic.
 
 
 ## The Next Step

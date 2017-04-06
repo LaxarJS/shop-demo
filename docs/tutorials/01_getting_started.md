@@ -12,7 +12,7 @@ Still, links to the relevant project source files are provided from each section
 
 ## Get the Prerequisites
 
-To create projects with LaxarJS you need [*Node.js*](https://nodejs.org) (v6 or later).
+To create projects with LaxarJS, [*Node.js*](https://nodejs.org) (v6 or later) is required.
 Everything else will be obtained as we go.
 
 First, you will need to create a new LaxarJS application.
@@ -40,15 +40,20 @@ yo laxarjs2
 The generator will ask for some details about the application, offering helpful suggestions where possible.
 Let us answer the questions of the LaxarJS generator as follows:
 
+<!--
 *TODO: update to v2 generator*
-*TODO: make sure that Vue.js support is selected*
-
+-->
 ```console
 ? The application name: (shop-demo)
 ? Description (optional): A demo application to learn how LaxarJS works
 ? Licenses: MIT
 ? Project homepage (optional): https://www.laxarjs.org
 ? Author name (optional): LaxarJS
+? Select integration technologies to include
+  ( ) angular
+  ( ) angular2
+  ( ) react
+  (x) vue
 ? Should a set of example widgets be generated? No
 ```
 

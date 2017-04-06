@@ -10,7 +10,9 @@ This is exactly the information that the article-teaser-widget will use.
 Whenever the user presses the _"add to cart"_ button, the widget publishes a `takeActionRequest` event.
 This event is processed by the shopping-cart-widget (described in the next chapter) to add the currently selected article to the cart.
 
+<!--
 *TODO: event wiring diagram*
+-->
 
 
 ## Appearance of the article-teaser-widget
@@ -159,7 +161,7 @@ export default {
 
 The new button triggers the `addToCart` method of the widget controller component.
 This method simply publishes a `takeActionRequest` event using the configured action topic.
-Like the resource pattern, the [action pattern](http://laxarjs.org/docs/laxar-patterns-v2-latest/patterns/actions/) is described in-depth in the [LaxarJS Patterns documentation](http://laxarjs.org/docs/laxar-patterns-v2-latest/).
+Like the resource pattern, the [action pattern](https://laxarjs.org/docs/laxar-patterns-v2-latest/patterns/actions/) is described in-depth in the [LaxarJS Patterns documentation](https://laxarjs.org/docs/laxar-patterns-v2-latest/).
 Note that when compared to resource events, action events do not necessarily need a payload.
 Often, they just _signal_ a user intent.
 
@@ -225,7 +227,7 @@ All that is left is to adjust the page definition accordingly, and to add config
 
 We removed the _headline-widget_ for now as it is no longer needed on this page.
 However, do not delete it just yet: it will be reintroduced in one of the later steps.
-For further information about layouts, refer to the [manual on pages and layouts](http://laxarjs.org/docs/laxar-v2-latest/manuals/writing_pages/).
+For further information about layouts, refer to the [manual on pages and layouts](https://laxarjs.org/docs/laxar-v2-latest/manuals/writing_pages/).
 
 
 In the browser, you should now be able to select articles from the _article-browser-widget_, with the _article-teaser-widget_ updating accordingly.

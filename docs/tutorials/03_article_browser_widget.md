@@ -203,9 +203,7 @@ The implementation of the _vue component_ starts out like this:
 
 <script>
 export default {
-   data: () => ({
-      articles: []
-   }),
+   data: () => ({ articles: [] }),
    created() {
       this.eventBus.subscribe( `didReplace.${this.features.articles.resource}`, event => {
          this.articles = event.data;
@@ -283,10 +281,10 @@ export default {
       } );
    },
    methods: {
-      selectArticle( data ) {
-         this.selectedArticle = data || { id: null };
+      selectArticle( article ) {
+         this.selectedArticle = article || { id: null };
          const { resource } = this.features.selection;
-         this.eventBus.publish( `didReplace.${resource}`, { resource, data } );
+         this.eventBus.publish( `didReplace.${resource}`, { resource, data: article } );
       }
    }
 };
@@ -350,13 +348,15 @@ Most importantly, the _dummy-articles-activity_ and the _article-browser-widget_
 This effectively _connects_ the two artifacts, without their implementations knowing about each other, and without need for additional glue code.
 You can see that we also changed the headline text to `"LaxarJS ShopDemo"`, but feel free to pick a title of your own.
 
+<!--
 *TODO: event wiring diagram*
+-->
 
 
 ### Styling the Widget using SCSS
 
 By following these steps, you have created your first _interactive_ widget.
-But compared to the image above, it does not look quite right.
+But compared to the screenshot of the widget above, it does not look quite right.
 The reason is that there is no CSS styling yet!
 
 While you styled the _headline-widget_ using plain old CSS, let us go for something more sophisticated with this widget by using [SCSS](http://sass-lang.com/) instead.

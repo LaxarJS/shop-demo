@@ -57,10 +57,10 @@ export default {
       } );
    },
    methods: {
-      selectArticle( data ) {
-         this.selectedArticle = data || { id: null };
+      selectArticle( article ) {
+         this.selectedArticle = article || { id: null };
          const { resource } = this.features.selection;
-         this.eventBus.publish( `didReplace.${resource}`, { resource, data } );
+         this.eventBus.publish( `didReplace.${resource}`, { resource, data: article } );
       }
    }
 };

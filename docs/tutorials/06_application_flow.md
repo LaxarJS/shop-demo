@@ -138,4 +138,4 @@ The [actual confirmation page](../../application/pages/confirmation.json) includ
 
 The next step is to allow interactive filtering of the available articles, using the [article-search-box-widget](07_article_search_box_widget.md).
 
-[« Hello, World!](02_hello_world.md) | Defining the Application Flow | [The article-search-box-widget »](07_article_search_box_widget.md)
+[« The shopping-cart-widget](05_shopping_cart_widget.md) | Defining the Application Flow | [The article-search-box-widget »](07_article_search_box_widget.md)

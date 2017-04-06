@@ -27,8 +27,9 @@ However, you can use the Yeoman generator *laxarjs:widget* anyway, to quickly se
 The Yeoman generator that was installed in the [previous step](01_getting_started.md), will now ask for some details about the widget and make suggestions.
 You will want to change the description and some of the other default answers as shown below.
 
-*TODO: update to v2 generator*
-
+<!--
+*TODO: Verify generator-laxarjs2 output*
+-->
 ```console
 Please answer the following:
 ? The widget name (headline-widget)
@@ -169,7 +170,7 @@ In this case however, we know that the `htmlText` comes from the page configurat
 While the _headline-widget_ does not have a lot of code, you may think that just displaying two HTML texts should be even simpler.
 Because we feel the same way, LaxarJS allows to easily create widgets using popular templating technologies such as _Vue.js_.
 We just wanted to demonstrate how you can create widgets without adding fancy frameworks, by using the `"plain"` integration technology.
-For anything more complex, you may want to chose a different integration technology, as will be described in the next step.
+For anything more complex, you may want to chose a different integration technology, as will be described in the [next step](03_article_browser_widget.md).
 
 
 ### Widget Styles
@@ -193,8 +194,6 @@ Now that you have created a simple widget, you will need to add it to a *page* o
 A page combines _JSON configuration_ for a number of widgets and activities with an _HTML layout_ to visually arrange the widgets.
 Each page represents a single "screen" or "step" within the application _flow._
 There is also a [manual on writing pages](https://laxarjs.org/docs/laxar-v2-latest/manuals/writing_pages/) with more information.
-
-*TODO: Use defaults from generator where possible. Provide additional instructions where not.*
 
 Let us start with this simple page for our demo application, and save it as `home.json` under `application/pages`:
 
@@ -235,10 +234,11 @@ Each `data-ax-widget-area` attribute in the layout's HTML corresponds to one of 
 The widget's configured for that area (if any) are inserted as DOM children of the widget area element, in the order they are configured.
 
 Within such an area definition the widgets are listed in the order that they should appear in within the browser's DOM tree.
-In our ShopDemo application we add the headline-widget to the area called `header`.
+In our ShopDemo application we add the headline-widget to the area called `content`.
 
+<!--
 *TODO: Verify that stopping/restarting the development server is still needed for this in LaxarJS v2*
-
+-->
 Having added the new widget, we can restart the development server (`Ctrl-C`, then `npm start` in the project directory) to see **Hello, World!** being displayed in our browser.
 
 

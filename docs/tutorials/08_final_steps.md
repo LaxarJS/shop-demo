@@ -3,7 +3,7 @@
 In this final part of the tutorial, you will learn to use a different theme as well as to create an optimized version of your application for production.
 
 
-## Theming Widgets and Layouts
+## Adding a Second Theme to the Application
 
 The CSS files that we have written for our widgets and layouts only cover the basics that are necessary for displaying our application.
 For a more sophisticated styling, let us add a _theme_ based on [Bootstrap CSS](http://getbootstrap.com) under `application/themes/cube.theme`:
@@ -54,22 +54,24 @@ For this, the following element needs to be added to the `module.rules` array in
 ```
 
 
-### Theming Layouts and Widgets
+### Themed SCSS for Layouts and Widgets
 
 This already goes a long way in changing the appearance of the application.
 But the individual layouts and widgets will still fall back to their _default.theme_ folders, using the slightly different set of variables from vanilla Bootstrap CSS.
-To _fully_ theme your application, you'll need to use SCSS stylesheets that are customized for the cube.theme:
+To _fully_ theme your application, you'll have to use SCSS stylesheets that are customized for the cube.theme for some of the artifacts:
 
   - [application/layouts/one-column/cube.theme/scss/one-column.scss](../../application/layouts/one-column/cube.theme/scss/one-column.scss)
   - [application/layouts/three-columns/cube.theme/scss/three-columns.scss](../../application/layouts/three-columns/cube.theme/scss/three-columns.scss)
-  - [application/widgets/article-browser-widget/cube.theme/scss/article-teaser-widget.scss](../../application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss)
+  - [application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss](../../application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss)
   - [application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss](../../application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss)
   - [application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss](../../application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss)
 
 
 After restarting the development server, your application should look similar to this:
 
-*TODO: screenshot with the cube.theme active*
+<!--
+*TODO: screenshot of home-page
+-->
 
 
 ## Deploying the Application

@@ -4,7 +4,9 @@ The next step for our ShopDemo application is to implement the _shopping-cart-wi
 It will display the current shopping cart contents with all articles added by the user and allows the user change the order quantity for each article.
 You will also learn how widgets can use events to trigger flow-based navigation.
 
+<!--
 *TODO: event wiring diagram*
+-->
 
 The _shopping-cart-widget_ subscribes to the currently selected article (`didReplace` event), as well as to the user intent to add the article to the cart (`takeActionRequest` event).
 It also allows to increase or decrease the quantity of each shopping cart item.
@@ -188,9 +190,9 @@ Action handling is implemented using a _will/did_ pattern:
 First, the widget subscribes to _takeActionRequest_ events for each configured action topic.
 When receiving a request to take action, the widget first acknowledges the request by publishing a _willTakeAction_ event.
 This signals that an action has begun and that a response will eventually follow, which can happen _asynchronously_, allowing us to e.g. complete a call some REST API first.
-However, in this case the widget is done right away after adding the article to its cart model, so that the _didTakeAction_ event is published right away.
+However, in this case the widget is already done after adding the article to its cart model, so that the _didTakeAction_ event is published right away.
 
-Using this [will/did-pattern for actions](http://laxarjs.org/docs/laxar-patterns-v2-latest/patterns/actions/), it is even possible to track _any_ action in progress, by subscribing just to `takeActionRequest` without specifying an action name.
+Using this [will/did-pattern for actions](https://laxarjs.org/docs/laxar-patterns-v2-latest/patterns/actions/), it is even possible to track _any_ action in progress, by subscribing just to `takeActionRequest` without specifying an action name.
 This may be done by the requesting widget or by completely different widget that has been configured to "listen in", for example to show a global progress indicator.
 Then, there are handler methods for incrementing/decrementing the number of articles.
 These simply update the cart model with the new article quantities, adding or removing items as needed.
@@ -200,9 +202,9 @@ Note that unlike the previous examples, this widget also uses _Vue.js computed p
 
 ### Navigating to the Order Confirmation
 
-Now that we can manage our shopping cart contents, we would like to be able to move on to another page for order confirmation.
+Now that we can manage our shopping cart contents, we would like to be able to navigate on to another page for order confirmation.
 
-In order to trigger navigation to a another page, your widget should allow to configure an _order_ feature with a _target_ string:
+To trigger navigation to a another page, your widget should allow to configure an _order_ feature with a _target_ string:
 
 ```json
 "order": {

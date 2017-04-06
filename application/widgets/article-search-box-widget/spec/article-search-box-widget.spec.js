@@ -61,7 +61,7 @@ describe( 'A ArticleSearchBoxWidget', () => {
 
          beforeEach( () => {
             vueComponent.searchTerm = 'beer';
-            vueComponent.updateSearch();
+            vueComponent.search();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,9 +97,7 @@ describe( 'A ArticleSearchBoxWidget', () => {
       it( 'publishes the matching articles only', () => {
          expect( vueComponent.eventBus.publish ).toHaveBeenCalledWith( 'didReplace.filteredArticles', {
             resource: 'filteredArticles',
-            data: {
-               entries: [ data.entries[ 1 ] ]
-            }
+            data: data.slice( 1, 2 )
          } );
       } );
 
