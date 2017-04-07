@@ -22,3 +22,6 @@ notifications:
    irc:
       channels: "chat.freenode.net#laxarjs"
       template: "%{repository_slug} (%{commit}) [%{branch}]: %{message}"
+
+script:
+   - "./runtests"
