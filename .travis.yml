@@ -9,12 +9,14 @@ before_script:
    - "export DISPLAY=:99.0"
    - "sh -e /etc/init.d/xvfb start"
    - sleep 3
+
 env:
    - BROWSER="phantomjs"
    - BROWSER="chrome"
    - BROWSER="firefox"
    - BROWSER="internet explorer"
    - BROWSER="safari"
+   - BROWSER="sauce"
 branches:
    except:
       - /^feature\/.*$/
@@ -24,4 +26,7 @@ notifications:
       template: "%{repository_slug} (%{commit}) [%{branch}]: %{message}"
 
 script:
-   - "./runtests"
+   - |
+     if [ $BROWSER == "sauce" ]; then
+         ./runtests
+     fi
