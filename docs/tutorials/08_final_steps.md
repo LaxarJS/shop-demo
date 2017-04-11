@@ -6,12 +6,14 @@ In this final part of the tutorial, you will learn to use a different theme as w
 ## Adding a Second Theme to the Application
 
 The CSS files that we have written for our widgets and layouts only cover the basics that are necessary for displaying our application.
-For a more sophisticated styling, let us add a _theme_ based on [Bootstrap CSS](http://getbootstrap.com) under `application/themes/cube.theme`:
+For a more sophisticated styling, let us add another _theme_ based on [Bootstrap CSS](http://getbootstrap.com), called _cube.theme_.
+You can obtain the theme from NPM:
 
 ```sh
-git clone https://github.com/LaxarJS/cube.theme.git application/themes/cube.theme
+npm install laxar-cube.theme
 ```
 
+You could also create your own theme under `application/themes/`, using the _cube.theme_ as a template.
 The LaxarJS documentation contains a [manual on themes](https://laxarjs.org/docs/laxar-v2-latest/manuals/creating_themes/) related to this shop demo, which goes into more detail.
 
 
@@ -19,15 +21,13 @@ The LaxarJS documentation contains a [manual on themes](https://laxarjs.org/docs
 
 The theme used by the application can be changed in the file `init.js`, by replacing `"default"` with `"cube"`:
 
--  …in the artifacts import:
-
 ```js
+// in the artifacts import:
 import artifacts from 'laxar-loader/artifacts?flow=main&theme=cube';
-```
 
-- …and in the LaxarJS application configuration:
+// ...
 
-```js
+// and in the LaxarJS application configuration:
 const configuration = {
    // name, ...
    theme: 'cube'
@@ -39,17 +39,9 @@ For this, the following element needs to be added to the `module.rules` array in
 
 ```js
 {
-   test: /\/cube[.]theme\/.*\.s[ac]ss$/,
+   test: /[/](laxar-)?cube[.]theme[/].*[.]s[ac]ss$/,
    loader: 'sass-loader',
-   options: {
-      includePaths: [
-         './application/themes/cube.theme/scss',
-         './node_modules/laxar-uikit/themes/default.theme/scss',
-         './node_modules/laxar-uikit/scss',
-         './node_modules/bootstrap-sass/assets/stylesheets',
-         './node_modules'
-      ].map( p => path.resolve( __dirname, p ) )
-   }
+   options: require( 'laxar-cube.theme/sass-options' )
 }
 ```
 

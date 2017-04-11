@@ -2,9 +2,6 @@
 
 @import "variables_all";
 
-$app-laxarjs-logo: "../images/laxarjs-logo.svg";
-$app-pot-flower: "../images/pot-flower.svg";
-
 .app-header {
    height: 60px;
    padding-top: 27px;
@@ -23,13 +20,11 @@ $app-pot-flower: "../images/pot-flower.svg";
    display: block;
    width: 229px;
    height: 60px;
-   background: url( $app-laxarjs-logo ) no-repeat;
    background-size: contain;
 }
 
 .app-flower {
    margin: 3em 0;
-   background-image: url( $app-pot-flower );
    background-repeat: no-repeat;
    background-position: center right;
    background-size: contain;

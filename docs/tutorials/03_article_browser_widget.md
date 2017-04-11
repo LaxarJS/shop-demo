@@ -59,6 +59,8 @@ export function create( eventBus, features ) {
 The structure of the controller is very similar to that of the _headline-widget_ created in the previous step:
 First, a [static list of articles](../../application/widgets/articles.js) is imported.
 In an actual web shop, you would probably make a [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) request to a REST API to get the articles from a database.
+Note that the articles listing references [several images].
+To follow along, either download them individually, clone the [demo repository](https://github.com/LaxarJS/shop-demo), or use images of your own choice and modify the `articles.js` accordingly.
 
 Then, you have the two exports (_injections_ and _create_) like in the _headline-widget_.
 This time the activity requests an additional injection: the _event bus_, allowing us to communicate with the rest of the page.
