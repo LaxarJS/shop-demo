@@ -1,0 +1,38 @@
+{
+  "name": "laxar-shop-demo-nightwatch",
+  "version": "1.0.0",
+  "description": "testarmada tests for shop demo",
+  "main": "index.js",
+  "scripts": {
+    "test": "failsafe test-default test-no-ssl-bump",
+    "test-default": "DPRO=local magellan --sauce_create_tunnels --sauce_tunnel_config conf/default-tunnel.json --max_workers=5 --profile default",
+    "test-no-ssl-bump": "DPRO=local magellan --sauce_create_tunnels --sauce_tunnel_config conf/no-ssl-bump-tunnel.json --profile no-ssl-bump",
+    "test-fast": "DPRO=local magellan --sauce_create_tunnels --sauce_tunnel_config conf/default-tunnel.json --profile chrome",
+    "test-local": "DPRO=local magellan --local_browsers chrome",
+    "magellan:setup": "exit 0",
+    "magellan:teardown": "exit 0"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "appium": "^1.6.3",
+    "chromedriver": "2.27.x",
+    "dpro": "^1.0.0",
+    "drydock": "^0.4.3",
+    "geckodriver": "^1.4.0",
+    "jimp": "^0.2.27",
+    "nightwatch": "^0.9.11",
+    "npm-failsafe": "^0.2.1",
+    "phantomjs": "^2.1.3",
+    "saucelabs": "^1.4.0",
+    "selenium-server": "^3.1.0",
+    "testarmada-bloop": "0.0.4",
+    "testarmada-magellan": "^10.0.0",
+    "testarmada-magellan-local-executor": "^1.0.0",
+    "testarmada-magellan-nightwatch-plugin": "^6.0.0",
+    "testarmada-magellan-saucelabs-executor": "^1.0.0",
+    "testarmada-nightwatch-extra": "^4.0.0",
+    "xmldom": "^0.1.27",
+    "yargs": "1.3.2"
+  }
+}
