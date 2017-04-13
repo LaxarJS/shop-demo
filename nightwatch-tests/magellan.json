@@ -1,0 +1,55 @@
+{
+  "framework": "testarmada-magellan-nightwatch-plugin",
+  "executors": [
+    "testarmada-magellan-local-executor",
+    "testarmada-magellan-saucelabs-executor"
+  ],
+  "profiles": {
+    "default": [
+      {
+        "browser": "chrome_latest_OS_X_10_9_Desktop",
+        "resolution": "1280x960"
+      },
+      {
+        "browser": "chrome_latest_Windows_10_Desktop",
+        "resolution": "1280x960"
+      },
+      {
+         "browser": "firefox_latest_Windows_10_Desktop",
+         "resolution": "1280x960"
+      },
+      {
+        "browser": "microsoftedge_14_Windows_10_Desktop",
+        "resultion": "1280x1024"
+      },
+      {
+        "browser": "IE_11_Windows_10_Desktop",
+        "resolution": "1280x1024"
+      },
+      {
+        "browser": "IE_10_Windows_2012_Desktop",
+        "resolution": "1280x1024"
+      },
+      {
+        "browser": "safari_7_OS_X_10_9_Desktop",
+        "resolution": "1280x1024"
+      },
+      {
+        "browser": "iphone_9_3_iOS_iPhone_6_Simulator",
+        "orientation": "portrait"
+      }
+    ],
+    "no-ssl-bump": [
+      {
+        "browser": "android_4_4_Android_Google_Nexus_7_HD_Emulator",
+        "orientation": "portrait"
+      }
+    ],
+    "chrome": [
+      {
+        "browser": "chrome_latest_Windows_10_Desktop",
+        "resolution": "1280x960"
+      }
+    ]
+  }
+}
