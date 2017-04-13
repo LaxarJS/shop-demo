@@ -1,4 +1,5 @@
 #! /bin/bash -x
+npm run dist
 npm start &
 sleep 10
 cd nightwatch-tests/
