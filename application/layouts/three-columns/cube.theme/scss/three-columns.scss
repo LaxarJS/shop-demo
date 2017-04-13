@@ -1,8 +1,6 @@
 @charset "UTF-8";
 
 @import "variables_all";
-$app-laxarjs-logo: "../images/laxarjs-logo.svg";
-$app-pot-flower: "../images/pot-flower.svg";
 
 .app-header {
    height: 60px;
@@ -22,7 +20,6 @@ $app-pot-flower: "../images/pot-flower.svg";
    display: block;
    width: 229px;
    height: 60px;
-   background: url( $app-laxarjs-logo ) no-repeat;
    background-size: contain;
 }
 

@@ -14,7 +14,7 @@ module.exports = ( env = {} ) =>
       Object.assign( config( env ), {
          entry: WebpackJasmineHtmlRunnerPlugin.entry( './application/widgets/**/spec/*.spec.js' ),
          output: {
-            path: path.resolve( __dirname, 'spec-output' ),
+            path: resolve( 'spec-output' ),
             publicPath: '/spec-output/',
             filename: '[name].bundle.js'
          }
@@ -26,9 +26,7 @@ function config( env ) {
 
    return {
       devtool: '#source-map',
-      entry: {
-         'app': './init.js'
-      },
+      entry: { 'init': './init.js' },
 
       output: {
          path: path.resolve( __dirname, `./${publicPath}` ),
@@ -41,10 +39,12 @@ function config( env ) {
          [ new WebpackJasmineHtmlRunnerPlugin() ],
 
       resolve: {
-         modules: [ path.resolve( __dirname, 'node_modules' ) ],
+         modules: [ resolveModule() ],
          extensions: [ '.js', '.vue' ],
          alias: {
-            'default.theme': 'laxar-uikit/themes/default.theme'
+            'default.theme': 'laxar-uikit/themes/default.theme',
+            'cube.theme': 'laxar-cube.theme',
+            'vue': 'vue/dist/vue'
          }
       },
 
@@ -52,17 +52,17 @@ function config( env ) {
          rules: [
             {
                test: /\.js$/,
-               exclude: /node_modules/,
+               exclude: resolveModule(),
                loader: 'babel-loader'
             },
             {
                test: /\.vue$/,
-               exclude: /node_modules/,
+               exclude: resolveModule(),
                loader: 'vue-loader'
             },
             {
                test: /.spec.js$/,
-               exclude: /node_modules/,
+               exclude: resolveModule(),
                loader: 'laxar-mocks/spec-loader'
             },
 
@@ -86,31 +86,19 @@ function config( env ) {
                   'style-loader!css-loader'
             },
             {
-               test: /\/default[.]theme\/.*\.s[ac]ss$/,
+               test: /[/]default[.]theme[/].*[.]s[ac]ss$/,
                loader: 'sass-loader',
-               options: {
-                  includePaths: [
-                     './node_modules/laxar-uikit/themes/default.theme/scss',
-                     './node_modules/laxar-uikit/scss',
-                     './node_modules/bootstrap-sass/assets/stylesheets',
-                     './node_modules'
-                  ].map( p => path.resolve( __dirname, p ) )
-               }
+               options: require( 'laxar-uikit/themes/default.theme/sass-options' )
             },
             {
-               test: /\/cube[.]theme\/.*\.s[ac]ss$/,
+               test: /[/](laxar-)?cube[.]theme[/].*[.]s[ac]ss$/,
                loader: 'sass-loader',
-               options: {
-                  includePaths: [
-                     './application/themes/cube.theme/scss',
-                     './node_modules/laxar-uikit/themes/default.theme/scss',
-                     './node_modules/laxar-uikit/scss',
-                     './node_modules/bootstrap-sass/assets/stylesheets',
-                     './node_modules'
-                  ].map( p => path.resolve( __dirname, p ) )
-               }
+               options: require( 'laxar-cube.theme/sass-options' )
             }
          ]
       }
    };
 }
+
+function resolveModule( p ) { return path.resolve( resolve( './node_modules' ), p || '' ); }
+function resolve( p ) { return path.resolve( __dirname, p ); }
