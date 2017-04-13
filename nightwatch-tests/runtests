@@ -1,4 +1,6 @@
 #! /bin/bash -x
+# Test script for travis.
+cd ../
 npm run dist
 return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 npm start &
