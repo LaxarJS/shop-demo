@@ -9,16 +9,27 @@ before_script:
    - "export DISPLAY=:99.0"
    - "sh -e /etc/init.d/xvfb start"
    - sleep 3
+
 env:
    - BROWSER="phantomjs"
    - BROWSER="chrome"
    - BROWSER="firefox"
    - BROWSER="internet explorer"
    - BROWSER="safari"
+   - BROWSER="sauce"
 branches:
    except:
       - /^feature\/.*$/
+
 notifications:
    irc:
       channels: "chat.freenode.net#laxarjs"
       template: "%{repository_slug} (%{commit}) [%{branch}]: %{message}"
+
+script:
+   - |
+      if [ $BROWSER == "sauce" ]; then
+         nightwatch-tests/runtests
+      else
+         yarn test
+      fi
