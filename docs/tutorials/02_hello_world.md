@@ -27,19 +27,21 @@ However, you can use the Yeoman generator *laxarjs:widget* anyway, to quickly se
 The Yeoman generator that was installed in the [previous step](01_getting_started.md), will now ask for some details about the widget and make suggestions.
 You will want to change the description and some of the other default answers as shown below.
 
-<!--
-*TODO: Verify generator-laxarjs2 output*
--->
-```console
-Please answer the following:
-? The widget name (headline-widget)
-? Description (optional): Displays a simple headline and an intro html text.
-? Licenses: (MIT)
-? Project homepage (optional): http://www.laxarjs.org
-? Author name (optional): LaxarJS
-? Integration technology: plain
-? Create project infrastructure (README.md, package.json)? No
-```
+<pre>
+? <b>The widget name:</b> <em>headline-widget</em>
+? <b>Description (optional):</b> <em>show a headline and optional intro text</em>
+? <b>License:</b> <em>none</em>
+? <b>Project homepage (optional):</b>
+? <b>Author name (optional):</b>
+? <b>Integration Technology:</b>
+❯ <em><b>Plain</b> ("plain")</em>
+  AngularJS 1.x ("angular")
+  Angular 2.x/4.x ("angular2")
+  React ("react")
+  Vue.js ("vue")
+? <b>Create project infrastructure (README.md, package.json, webpack.config.js)?</b> <em>No</em>
+</pre>
+
 
 First, you will learn to create a widget _without_ using a templating framework such as _Vue.js_, instead just relying on plain old web technologies.
 For this reason, make sure to pick `"plain"` when asked for an _integration technology._
@@ -236,10 +238,10 @@ The widget's configured for that area (if any) are inserted as DOM children of t
 Within such an area definition the widgets are listed in the order that they should appear in within the browser's DOM tree.
 In our ShopDemo application we add the headline-widget to the area called `content`.
 
-<!--
-*TODO: Verify that stopping/restarting the development server is still needed for this in LaxarJS v2*
--->
-Having added the new widget, we can restart the development server (`Ctrl-C`, then `npm start` in the project directory) to see **Hello, World!** being displayed in our browser.
+If you kept it running, the webpack development server should have picked up your new widget automatically.
+Sometimes, especially after removing an artifact, you may need to restart the server using `Ctrl-C` followed by `npm start` in the project directory.
+
+Finally, you should be able to see **Hello, World!** being displayed in our browser.
 
 
 ### Testing your Widget

@@ -42,6 +42,7 @@ function config( env ) {
          modules: [ resolveModule() ],
          extensions: [ '.js', '.vue' ],
          alias: {
+            laxar: './tmp/laxar',
             'default.theme': 'laxar-uikit/themes/default.theme',
             'cube.theme': 'laxar-cube.theme',
             'vue': 'vue/dist/vue'
