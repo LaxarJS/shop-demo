@@ -27,6 +27,9 @@ notifications:
 
 script:
    - |
-     if [ $BROWSER == "sauce" ]; then
+      if [ $BROWSER == "sauce" ]; then
          nightwatch-tests/runtests
-     fi
+      else
+         yarn test
+      fi
+     
