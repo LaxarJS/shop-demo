@@ -43,7 +43,7 @@
       "karma-webpack": "^2.0.1",
       "laxar": "^2.0.0-alpha.20",
       "laxar-cube.theme": "^2.0.0-alpha.0",
-      "laxar-loader": "^2.0.0-alpha.2",
+      "laxar-loader": "^2.0.0-alpha.3",
       "laxar-mocks": "^2.0.0-beta.3",
       "laxar-uikit": "^2.0.0-beta.1",
       "laxar-vue-adapter": "^2.0.0-alpha.3",

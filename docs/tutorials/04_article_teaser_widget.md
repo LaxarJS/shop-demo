@@ -185,9 +185,19 @@ It seems that a _three-column_ layout would be more useful, where _article-brows
 This allows you to make use of wider screens, and for mobile devices, the columns can still be stacked vertically.
 
 To get started, create a new layout HTML file `three-columns/default.theme/three-columns.html` under `application/layouts`, side-by-side to the existing `"one-column"` layout.
-Here is the required HTML:
+
+Here is the required descriptor:
+```js
+// application/layouts/three-columns/layout.json
+{
+   "name": "three-columns"
+}
+```
+
+And the necessary HTML:
 
 ```html
+<!-- application/layouts/three-columns/default.theme/three-columns.html -->
 <div class="container">
    <div class="row">
       <div class="col col-md-4" data-ax-widget-area="contentA"></div>
