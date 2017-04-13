@@ -38,24 +38,21 @@ yo laxarjs2
 ```
 
 The generator will ask for some details about the application, offering helpful suggestions where possible.
-Let us answer the questions of the LaxarJS generator as follows:
+Let us answer the questions of the LaxarJS generator as follows, making sure to include the integration technology `"vue"`:
 
-<!--
-*TODO: update to v2 generator*
--->
-```console
-? The application name: (shop-demo)
-? Description (optional): A demo application to learn how LaxarJS works
-? Licenses: MIT
-? Project homepage (optional): https://www.laxarjs.org
-? Author name (optional): LaxarJS
-? Select integration technologies to include
-  ( ) angular
-  ( ) angular2
-  ( ) react
-  (x) vue
-? Should a set of example widgets be generated? No
-```
+<pre>
+? <b>The application name:</b> <em>shop-demo</em>
+? <b>Description (optional):</b> <em>a small web shop</em>
+? <b>License:</b> <em>none</em>
+? <b>Project homepage (optional):</b>
+? <b>Author name (optional):</b>
+? <b>Select integration technologies to include:</b>
+  ◯ AngularJS 1.x ("angular")
+  ◯ Angular 2.x/4.x ("angular2")
+  ◯ React ("react")
+  ◉ <em><b>Vue.js</b> ("vue")</em>
+? <b>Should an example set of widgets be generated?</b> <em>No</em>
+</pre>
 
 Provided with this information, the generator will create a basic LaxarJS application for you.
 It also prepares a `package.json` containing its dependencies.

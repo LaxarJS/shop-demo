@@ -2,6 +2,7 @@
  * Copyright 2015-2017 aixigo AG
  * Released under the MIT license
  */
+/* global require */
 import vue from 'vue';
 vue.config.productionTip = false;
 
@@ -21,5 +22,6 @@ const configuration = {
 };
 
 create( [ vueAdapter ], artifacts, configuration )
+   .tooling( require( 'laxar-loader/debug-info?flow=main&theme=cube' ) )
    .flow( 'main', document.querySelector( '[data-ax-page]' ) )
    .bootstrap();

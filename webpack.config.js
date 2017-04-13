@@ -31,7 +31,8 @@ function config( env ) {
       output: {
          path: path.resolve( __dirname, `./${publicPath}` ),
          publicPath,
-         filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
+         filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js',
+         chunkFilename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
       },
 
       plugins: env.production ?
@@ -43,8 +44,7 @@ function config( env ) {
          extensions: [ '.js', '.vue' ],
          alias: {
             'default.theme': 'laxar-uikit/themes/default.theme',
-            'cube.theme': 'laxar-cube.theme',
-            'vue': 'vue/dist/vue'
+            'cube.theme': 'laxar-cube.theme'
          }
       },
 
