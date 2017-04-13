@@ -1,5 +1,5 @@
 #! /bin/bash -x
-# Test script for travis.
+# Test script for Travis-CI:
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 cd ../

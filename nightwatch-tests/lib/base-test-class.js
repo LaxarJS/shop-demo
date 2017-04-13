@@ -1,5 +1,5 @@
 /*
- * This is an example ' base class'  from which your tests can inherit.
+ * This is an example 'base class'  from which your tests can inherit.
  * See /tests for examples of tests which inherit from this base class.
  * If you need a common setup/teardown (eg: for resetting the state of
  * a mock server, for example), put it in before() and after() in the base

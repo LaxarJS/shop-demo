@@ -19,10 +19,6 @@ module.exports = new Test( {
          .waitForElementVisible( '@shoppingCartWidget' )
          .click( getArticleFromTableRow( 3 ) )
          .waitForElementVisible( '@appTeaserImage' );
-         // .verify.attributeContains(
-         //   '@appTeaserImage',
-         //   'src',
-      //   dpro.urls.imageRow3 )
       test.expect.element( '@appTeaserImage' ).to.have.attribute( 'src' ).which.contains(
          dpro.urls.imageRow3
       );
