@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-   url: 'http://localhost:3000/index.html#/browse/',
+   url: 'http://localhost:8080/index.html#/browse/',
    elements: {
       container: {
          selector: 'body > div > div.container'
