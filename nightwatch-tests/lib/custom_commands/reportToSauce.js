@@ -1,4 +1,3 @@
-//see https://github.com/saucelabs-sample-test-frameworks/JS-Nightwatch.js/blob/master/custom_commands/customSauceEnd.js
 'use strict';
 
 exports.command = function( ) {

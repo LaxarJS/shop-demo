@@ -18,11 +18,15 @@ module.exports = new Test( {
          .waitForElementVisible( '@articleTeaserWidget' )
          .waitForElementVisible( '@shoppingCartWidget' )
          .click( getArticleFromTableRow( 3 ) )
-         .waitForElementVisible( '@appTeaserImage' )
-         //.verify.attributeContains(
+         .waitForElementVisible( '@appTeaserImage' );
+         // .verify.attributeContains(
          //   '@appTeaserImage',
          //   'src',
-         //   dpro.urls.imageRow3 )
+      //   dpro.urls.imageRow3 )
+      test.expect.element( '@appTeaserImage' ).to.have.attribute( 'src' ).which.contains(
+         dpro.urls.imageRow3
+      );
+      test
          .click( getArticleFromTableRow( 2 ) )
          .click( '@addToCartButton' )
          .verify.containsText('@cartRow1Price', dpro.prices.cartRow1Price )

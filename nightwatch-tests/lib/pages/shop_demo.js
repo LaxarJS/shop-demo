@@ -25,7 +25,8 @@ module.exports = {
          selector: '#ax-shoppingCartWidget-id4'
       },
       appTeaserImage: {
-         selector: '#ax-articleTeaserWidget-id3 > div > div.app-teaser-wrapper.clearfix.app-selection > div:nth-child(2) > div > img'
+         selector: `#ax-articleTeaserWidget-id3 > div >
+            div.app-teaser-wrapper.clearfix.app-selection > div:nth-child(2) > div > img`
       },
       addToCartButton: {
          selector: '#ax-articleTeaserWidget-id3 > div > div:nth-child(3) > button'
@@ -49,20 +50,20 @@ module.exports = {
          selector: '#ax-shoppingCartWidget-id4 > div > table > tfoot > tr > td:nth-child( 3 )'
       },
       secondItemMinus: {
-         selector: `#ax-shoppingCartWidget-id4 > div >table > tbody > tr:nth-child(2) > td.app-increase-buttons
-            > button:nth-child(2)`
+         selector: `#ax-shoppingCartWidget-id4 > div > table > tbody >
+            tr:nth-child(2) > td.app-increase-buttons > button:nth-child(2)`
       },
       secondItemPlus: {
-         selector: `#ax-shoppingCartWidget-id4 > div >table > tbody > tr:nth-child(2) > td.app-increase-buttons
-            > button:nth-child(1)`
+         selector: `#ax-shoppingCartWidget-id4 > div >table > tbody > tr:nth-child(2) >
+            td.app-increase-buttons > button:nth-child(1)`
       },
       firstItemMinus: {
-         selector: `#ax-shoppingCartWidget-id4 > div >table > tbody > tr:nth-child(1) > td.app-increase-buttons
-            > button:nth-child(2)`
+         selector: `#ax-shoppingCartWidget-id4 > div >table > tbody > tr:nth-child(1) >
+            td.app-increase-buttons > button:nth-child(2)`
       },
       firstItemPlus: {
-         selector: `#ax-shoppingCartWidget-id4 > div >table > tbody > tr:nth-child(1) > td.app-increase-buttons
-            > button:nth-child(1)`
+         selector: `#ax-shoppingCartWidget-id4 > div >table > tbody > tr:nth-child(1) >
+            td.app-increase-buttons > button:nth-child(1)`
       },
       orderButton: {
          selector: '#ax-shoppingCartWidget-id4 > div > div > button'

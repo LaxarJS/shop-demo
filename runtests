@@ -1,8 +1,16 @@
 #! /bin/bash -x
 npm run dist
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 npm start &
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 sleep 10
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 cd nightwatch-tests/
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 npm install
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 npm test
+test_exit_code=$?
 kill %1
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
+exit $test_exit_code
