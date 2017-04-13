@@ -20,6 +20,7 @@ env:
 branches:
    except:
       - /^feature\/.*$/
+
 notifications:
    irc:
       channels: "chat.freenode.net#laxarjs"
@@ -32,4 +33,3 @@ script:
       else
          yarn test
       fi
-     
