@@ -1,6 +1,9 @@
 #! /bin/bash -x
 # Test script for travis.
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 cd ../
+return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 npm run dist
 return_code=$?; if [[ $return_code != 0 ]]; then exit $return_code; fi
 npm start &
