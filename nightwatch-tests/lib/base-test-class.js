@@ -18,13 +18,13 @@ const BaseClass = function( steps ) {
 util.inherits( BaseClass, Base );
 
 BaseClass.prototype = {
-   before(client, callback) {
+   before( client, callback ) {
       Base.prototype.before.call( this, client, () => {
          //call super-after
          callback();
       } );
    },
-   after(client, callback) {
+   after( client, callback ) {
       Base.prototype.after.call( this, client, () => {
          //call super-after
          client.reportToSauce();
