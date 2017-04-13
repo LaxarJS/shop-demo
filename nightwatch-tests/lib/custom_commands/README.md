@@ -1,1 +1,1 @@
-Put your custom commands in this directory
+Put your custom nightwatch-commands in this directory.
