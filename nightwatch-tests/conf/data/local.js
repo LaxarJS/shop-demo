@@ -1,6 +1,6 @@
 module.exports = {
    urls: {
-      imageRow3: 'bottle'
+      imageRow3: 'dummy-bottle'
    },
    prices: {
       'maxSubtotal': '€ 27.88',
