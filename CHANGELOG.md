@@ -1,6 +1,7 @@
 # Changelog
 
 ## Last Changes
+
 - [#46](https://github.com/LaxarJS/shop-demo/issues/46): added nightwatch tests for saucelabs
 - [#45](https://github.com/LaxarJS/shop-demo/issues/45): added missing polyfills
 - [#43](https://github.com/LaxarJS/shop-demo/issues/43): updated tutorial for LaxarJS v2
