@@ -4,9 +4,8 @@ The next step for our ShopDemo application is to implement the _shopping-cart-wi
 It will display the current shopping cart contents with all articles added by the user and allows the user change the order quantity for each article.
 You will also learn how widgets can use events to trigger flow-based navigation.
 
-<!--
-*TODO: event wiring diagram*
--->
+![The event wiring diagram with newly added shopping-cart-widget](img/step5.png)
+
 
 The _shopping-cart-widget_ subscribes to the currently selected article (`didReplace` event), as well as to the user intent to add the article to the cart (`takeActionRequest` event).
 It also allows to increase or decrease the quantity of each shopping cart item.

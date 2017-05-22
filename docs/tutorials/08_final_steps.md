@@ -61,9 +61,7 @@ To _fully_ theme your application, you'll have to use SCSS stylesheets that are 
 
 After restarting the development server, your application should look similar to this:
 
-<!--
-*TODO: screenshot of home-page
--->
+![The appearance of the final application](img/final_shop_demo.png)
 
 
 ## Deploying the Application
