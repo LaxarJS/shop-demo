@@ -374,7 +374,26 @@ Because LaxarJS only looks for regular CSS files (not SCSS) _by default,_ you ne
    "styleSource": "scss/article-browser-widget.scss",
 ```
 
-Because webpack was pre-configured by the LaxarJS application generator to process all `.scss` files with [libsass](http://sass-lang.com/libsass), this should work out-of-the-box.
+Then install the _sass-loader_ and its dependencies for webpack:
+
+```
+npm install --save-dev sass-loader node-sass
+```
+
+Finally, the webpack configuration needs to be extended to let webpack process all `.scss` files with [libsass](http://sass-lang.com/libsass).
+
+For this, the following element needs to be added to the `module.rules` array in the `webpack.config.js`:
+
+```
+{
+   test: /[/]default[.]theme[/].*[.]s[ac]ss$/,
+   loader: 'sass-loader',
+   options: require( 'laxar-uikit/themes/default.theme/sass-options' )
+}
+```
+
+Restart the development server using `Ctrl-C` followed by `npm start` in the project directory.
+
 You can remove the original `.css` file of the widget as it is no longer needed.
 To make best use of the additional style definitions, you'll need to add more CSS classes to your widget template.
 Refer to the [full component template](../../application/widgets/article-browser-widget/article-browser-widget.vue) for details.
