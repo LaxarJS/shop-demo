@@ -10,9 +10,7 @@ This is exactly the information that the article-teaser-widget will use.
 Whenever the user presses the _"add to cart"_ button, the widget publishes a `takeActionRequest` event.
 This event is processed by the shopping-cart-widget (described in the next chapter) to add the currently selected article to the cart.
 
-<!--
-*TODO: event wiring diagram*
--->
+![The event wiring diagram with newly added article-teaser-widget](img/step4.png)
 
 
 ## Appearance of the article-teaser-widget

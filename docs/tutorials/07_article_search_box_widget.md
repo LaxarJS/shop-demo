@@ -6,7 +6,7 @@ At this point, you might call it a day and skip right to the [final steps](08_fi
 However, there is one more feature you might want to implement:
 Filtering the list of available articles using a text input.
 
-![The complete demno application](img/step7.png)
+![The complete demo application](img/step7.png)
 
 To this end, this steps illustrates how to create an _article-search-box-widget_ which intercepts and filters the list of articles, _without touching any of the other widgets._ You will also learn how to access and modify URL parameters from your widget.
 

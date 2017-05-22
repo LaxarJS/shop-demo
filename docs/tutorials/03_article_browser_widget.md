@@ -350,9 +350,7 @@ Most importantly, the _dummy-articles-activity_ and the _article-browser-widget_
 This effectively _connects_ the two artifacts, without their implementations knowing about each other, and without need for additional glue code.
 You can see that we also changed the headline text to `"LaxarJS ShopDemo"`, but feel free to pick a title of your own.
 
-<!--
-*TODO: event wiring diagram*
--->
+![The event wiring diagram with dummy-article-activity and article-browser-widget](img/step3.png)
 
 
 ### Styling the Widget using SCSS
