@@ -276,7 +276,7 @@ Let us now add the widget to the area `contentC` of the [home page](../../applic
       "features": {
          "article": {
             "resource": "selectedArticle",
-            "onActions": [ "addArticle" ]
+            "onActions": [ "addToCart" ]
          },
          "order": {
             "target": "next"
