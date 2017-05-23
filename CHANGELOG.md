@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#51](https://github.com/LaxarJS/shop-demo/issues/51): documentation: added missing hints and fixed a link
+- [#49](https://github.com/LaxarJS/shop-demo/issues/44): documentation: added missing graphics
 - [#44](https://github.com/LaxarJS/shop-demo/issues/44): fixed some of the remaining TODO items, explained `layout.json`
 - [#46](https://github.com/LaxarJS/shop-demo/issues/46): added nightwatch tests for saucelabs
 - [#45](https://github.com/LaxarJS/shop-demo/issues/45): added missing polyfills

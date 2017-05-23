@@ -61,9 +61,7 @@ To _fully_ theme your application, you'll have to use SCSS stylesheets that are 
 
 After restarting the development server, your application should look similar to this:
 
-<!--
-*TODO: screenshot of home-page
--->
+![The appearance of the final application](img/final_shop_demo.png)
 
 
 ## Deploying the Application
@@ -94,4 +92,4 @@ For more advanced production configuration, consult the [webpack documentation](
 Go ahead and develop your own application!
 Check out the [LaxarJS manuals](https://github.com/LaxarJS/laxar/blob/master/docs/manuals/index.md#manuals) for more information, and get familiar with the [LaxarJS Patterns](https://github.com/LaxarJS/laxar-patterns/blob/master/docs/index.md#laxarjs-patterns) to learn how to create the best and most reusable widgets.
 
-[« The shopping-cart-widget](07_shopping_cart_widget.md)  | Final steps
+[« The article-search-box-widget](07_article_search_box_widget.md) | Final steps
