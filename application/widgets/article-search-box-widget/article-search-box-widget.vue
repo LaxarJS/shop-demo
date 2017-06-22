@@ -1,5 +1,5 @@
 <template>
-   <form role="form" @submit="search()">
+   <form role="form" @submit="updateFilter()">
       <div class="form-group">
          <div class="input-group">
             <input class="form-control"
@@ -39,7 +39,7 @@ export default {
       } );
    },
    methods: {
-      search() {
+      updateFilter() {
          const target = '_self';
          const data = {
             [ this.features.navigation.parameterName ]: this.searchTerm || null

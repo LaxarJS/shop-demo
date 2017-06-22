@@ -22,16 +22,23 @@ The LaxarJS documentation contains a [manual on themes](https://laxarjs.org/docs
 The theme used by the application can be changed in the file `init.js`, by replacing `"default"` with `"cube"`:
 
 ```js
-// in the artifacts import:
+// 1/3 in the artifacts import:
 import artifacts from 'laxar-loader/artifacts?flow=main&theme=cube';
-
 // ...
 
-// and in the LaxarJS application configuration:
+// 2/3 in the LaxarJS application configuration
 const configuration = {
-   // name, ...
-   theme: 'cube'
+   // ...
+   theme: 'cube',
+   // ...
 };
+
+
+create( [ vueAdapter ], artifacts, configuration )
+   // 3/3 if tooling is used, adjust it as well
+   .tooling( require( 'laxar-loader/debug-info?flow=main&theme=cube' ) )
+   .flow( 'main', document.querySelector( '[data-ax-page]' ) )
+   .bootstrap();
 ```
 
 Finally, the webpack configuration needs to be extended to support the SCSS-import paths required by the _cube.theme_.
@@ -52,11 +59,11 @@ This already goes a long way in changing the appearance of the application.
 But the individual layouts and widgets will still fall back to their _default.theme_ folders, using the slightly different set of variables from vanilla Bootstrap CSS.
 To _fully_ theme your application, you'll have to use SCSS stylesheets that are customized for the cube.theme for some of the artifacts:
 
-  - [application/layouts/one-column/cube.theme/scss/one-column.scss](../../application/layouts/one-column/cube.theme/scss/one-column.scss)
-  - [application/layouts/three-columns/cube.theme/scss/three-columns.scss](../../application/layouts/three-columns/cube.theme/scss/three-columns.scss)
-  - [application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss](../../application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss)
-  - [application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss](../../application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss)
-  - [application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss](../../application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss)
+- [application/layouts/one-column/cube.theme/scss/one-column.scss](../../application/layouts/one-column/cube.theme/scss/one-column.scss)
+- [application/layouts/three-columns/cube.theme/scss/three-columns.scss](../../application/layouts/three-columns/cube.theme/scss/three-columns.scss)
+- [application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss](../../application/widgets/article-browser-widget/cube.theme/scss/article-browser-widget.scss)
+- [application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss](../../application/widgets/article-teaser-widget/cube.theme/scss/article-teaser-widget.scss)
+- [application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss](../../application/widgets/shopping-cart-widget/cube.theme/scss/shopping-cart-widget.scss)
 
 
 After restarting the development server, your application should look similar to this:
