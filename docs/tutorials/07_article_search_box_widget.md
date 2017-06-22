@@ -36,7 +36,7 @@ Let us start with the _template_ of the widget component, [article-search-box-wi
 
 ```vue
 <template>
-<form role="form" @submit="filter()">
+<form role="form" @submit.prevent="filter()">
    <div class="form-group">
       <div class="input-group">
          <input class="form-control"
@@ -77,7 +77,7 @@ export default {
          const matches = subject => ( subject || '' ).toLowerCase().indexOf( search ) !== -1;
          const articles = search ?
             this.articles.filter( article =>
-               [ 'some', 'id', 'htmlDescription' ].some( field => matches( article[ field ] ) )
+               [ 'name', 'id', 'htmlDescription' ].some( field => matches( article[ field ] ) )
             ) :
             this.articles;
 
@@ -146,7 +146,7 @@ All you need to do is modify the controller to subscribe to `didNavigate` events
 
 ```vue
 <template>
-<form role="form" @submit="search()"><!-- ... --></form>
+<form role="form" @submit.prevent="updateFilter()"><!-- ... --></form>
 </template>
 
 <script>
@@ -168,14 +168,16 @@ export default {
       } );
    },
    methods: {
-      search() {
+      updateFilter() {
          const target = '_self';
          const data = {
             [ this.features.navigation.parameterName ]: this.searchTerm || null
          };
          this.eventBus.publish( `navigateRequest.${target}`, { target, data } );
       },
-      filter() { /* ... */ }
+      filter() {
+         // ... see above
+      }
    }
 };
 </script>
