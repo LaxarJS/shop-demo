@@ -126,13 +126,13 @@ Compared to a `"plain"` widget, this should make it much simpler to synchronize 
 Going into a full-depth explanation of Vue.js would take things too far, especially considering that there is a comprehensive [Guide on Vue.js](https://vuejs.org/v2/guide/) anyway.
 Let us quickly cover the basics:
 
-  - a Vue.js _component_ consists of an HTML template, a JavaScript object and optional CSS styles - much like a LaxarJS widget,
+- a Vue.js _component_ consists of an HTML template, a JavaScript object and optional CSS styles - much like a LaxarJS widget,
 
-  - the template may contain _bindings_ to render data from the JS object, and _event handlers_ to trigger methods of the object,
+- the template may contain _bindings_ to render data from the JS object, and _event handlers_ to trigger methods of the object,
 
-  - the object contains the "business logic", interpreting events from the template (or from the event bus) in order to change the data for the template,
+- the object contains the "business logic", interpreting events from the template (or from the event bus) in order to change the data for the template,
 
-  - LaxarJS connects your components to the event bus, provides various injections, and takes care of theming as needed.
+- LaxarJS connects your components to the event bus, provides various injections, and takes care of theming as needed.
 
 At first, your component is empty:
 

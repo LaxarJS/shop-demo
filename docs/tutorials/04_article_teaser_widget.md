@@ -168,9 +168,9 @@ Often, they just _signal_ a user intent.
 
 As before, you may want to create an SCSS stylesheet to improve the appearance of the widget, while adding the appropriate CSS classes in the template.
 
-  - [full widget descriptor](../../application/widgets/article-teaser-widget/widget.json), including `styleSource` attribute for SCSS support
-  - [full .vue-component](../../application/widgets/article-teaser-widget/article-teaser-widget.vue), with additional classes inserted
-  - [full SCSS stylesheet](../../application/widgets/article-teaser-widget/default.theme/scss/article-teaser-widget.scss)
+- [full widget descriptor](../../application/widgets/article-teaser-widget/widget.json), including `styleSource` attribute for SCSS support
+- [full .vue-component](../../application/widgets/article-teaser-widget/article-teaser-widget.vue), with additional classes inserted
+- [full SCSS stylesheet](../../application/widgets/article-teaser-widget/default.theme/scss/article-teaser-widget.scss)
 
 Now, all that is left is adding the widget to your page definition.
 
