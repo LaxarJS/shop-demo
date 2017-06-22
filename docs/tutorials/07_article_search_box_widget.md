@@ -196,9 +196,9 @@ The [laxar-vue-adapter documentation](https://laxarjs.org/docs/laxar-vue-adapter
 
 As before, you may want to create an SCSS stylesheet to improve the appearance of the widget, while adding the appropriate CSS classes in the template.
 
-  - [full widget descriptor](../../application/widgets/article-search-box-widget/widget.json), including `styleSource` attribute for SCSS support
-  - [full .vue-component](../../application/widgets/article-search-box-widget/shopping-cart-widget.vue), with additional classes inserted
-  - [full SCSS stylesheet](../../application/widgets/article-search-box-widget/default.theme/scss/article-search-box-widget.scss)
+- [full widget descriptor](../../application/widgets/article-search-box-widget/widget.json), including `styleSource` attribute for SCSS support
+- [full .vue-component](../../application/widgets/article-search-box-widget/shopping-cart-widget.vue), with additional classes inserted
+- [full SCSS stylesheet](../../application/widgets/article-search-box-widget/default.theme/scss/article-search-box-widget.scss)
 
 Now, all that is left is adding the widget to your page definition.
 

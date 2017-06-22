@@ -24,10 +24,10 @@ The shopping-cart-widget displays a headline, a table of current contents and bu
 
 The widget needs to do two things:
 
-* It has to subscribe to changes of the selected *article* resource and to the action that expresses the user intent to add that article to the cart.
+- It has to subscribe to changes of the selected *article* resource and to the action that expresses the user intent to add that article to the cart.
   The user should also be able to change the quantity of individual articles, possibly causing positions to be removed from the shopping cart completely.
 
-* To simulate the actual shopping process, the widget should also offer an *order* button.
+- To simulate the actual shopping process, the widget should also offer an *order* button.
   In a real shop, this would start the (server-side) checkout/payment process.
   For the purpose of this demo, let us be content with simply navigating to a confirmation page.
 
@@ -179,9 +179,9 @@ function adjuster( articleToMatch, increment ) {
 
 The controller object of the _shopping-cart-widget_ component manages two data properties:
 
-  - the currently selected article, to correctly handle the `addToCart` action,
+- the currently selected article, to correctly handle the `addToCart` action,
 
-  - the contents of the shopping cart, as items with `quantity` and `article`.
+- the contents of the shopping cart, as items with `quantity` and `article`.
 
 The `created` hook sets up subscriptions to the resource containing the currently selected article, and to the action for adding the article to the cart.
 Action handling is implemented using a _will/did_ pattern:
@@ -258,9 +258,9 @@ The [next step](06_application_flow.md) of the tutorial gives instructions on ad
 
 As before, you may want to create an SCSS stylesheet to improve the appearance of the widget, while adding the appropriate CSS classes in the template.
 
-  - [full widget descriptor](../../application/widgets/shopping-cart-widget/widget.json), including `styleSource` attribute for SCSS support
-  - [full .vue-component](../../application/widgets/shopping-cart-widget/shopping-cart-widget.vue), with additional classes inserted
-  - [full SCSS stylesheet](../../application/widgets/shopping-cart-widget/default.theme/scss/shopping-cart-widget.scss)
+- [full widget descriptor](../../application/widgets/shopping-cart-widget/widget.json), including `styleSource` attribute for SCSS support
+- [full .vue-component](../../application/widgets/shopping-cart-widget/shopping-cart-widget.vue), with additional classes inserted
+- [full SCSS stylesheet](../../application/widgets/shopping-cart-widget/default.theme/scss/shopping-cart-widget.scss)
 
 Now, all that is left is adding the widget to your page definition.
 

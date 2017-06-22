@@ -48,17 +48,18 @@ For this reason, make sure to pick `"plain"` when asked for an _integration tech
 
 The headline-widget, placed under `application/widgets/headline-widget`, now consists of the following files:
 
-* A _descriptor_ (named `widget.json`) containing the widget configuration options.
+- A _descriptor_ (named `widget.json`) containing the widget configuration options.
 
-* The _widget controller_ (`headline-widget.js`) contains the widget logic.
+- The _widget controller_ (`headline-widget.js`) contains the widget logic.
 
-* The _HTML template_ (`default.theme/headline-widget.html`) defines the DOM-structure of the widget.
+- The _HTML template_ (`default.theme/headline-widget.html`) defines the DOM-structure of the widget.
   Multiple _theme folders_ may be defined for a widget, resulting in multiple directories (not part of this tutorial) but there is always a _default.theme_.
 
-* The _widget styles_ (`default.theme/css/headline-widget.css`) for defining the widget appearance using _CSS Stylesheets._ Also theme-dependent. Using [SCSS](http://sass-lang.com/) or [LESS](http://lesscss.org/) instead is also possible and explained in the next step.
+- The _widget styles_ (`default.theme/css/headline-widget.css`) for defining the widget appearance using _CSS Stylesheets._ Also theme-dependent.
+  Using [SCSS](http://sass-lang.com/) or [LESS](http://lesscss.org/) instead is also possible and explained in the next step.
 
 Note that the files that make up the *actual implementation* are named after the widget, in our case the _headline-widget._
-Finally, there is a _spec test_ (`spec/headline-widget.spec.js`) for testing the functionality of the widget, for example using [Jasmine](https://jasmine.github.io/).
+Finally, there is a _spec test_ (`spec/headline-widget.spec.js`) for testing the functionality of the widget using [Jasmine](https://jasmine.github.io/).
 
 
 ### Widget Features
@@ -151,16 +152,19 @@ export function create( features ) {
 
 First, note that this widget controller uses [EcmaScript 2015](https://babeljs.io/learn-es2015/).
 Because not all browsers support this syntax, your application is set up for automatic _transpilation_ to regular JavaScript (EcmaScript 5) code.
-Under the hood, this transpilation is performed by [webpack](https://webpack.js.org/) and [Babel](http://babeljs.io/).
+Under the hood, this transpilation is performed by [webpack](https://webpack.js.org/) and [Babel](https://babeljs.io/).
 
 Let us dissect the controller step-by-step:
 
-  - first, an array of requested `injections` is exported, in this case telling the LaxarJS runtime that the widget controller wants to read the widget feature configuration (to get the configuration for _headline_ and _intro_),
+- first, an array of requested `injections` is exported, in this case telling the LaxarJS runtime that the widget controller wants to read the widget feature configuration `axFeatures`.
+  LaxarJS provides offers its _widget services_ using a number of injections.
+  This allows for easy mocking from tests and allows LaxarJS to generate implementations tailored to the requesting widget.
+  For a list of available services, consult the [LaxarJS widget services API doc](https://laxarjs.org/docs/laxar-v2-latest/api/runtime.widget_services/).
 
-  - then, a `create` function is exported, which is called for each _instance_ of this widget, on any page.
-  Its arguments correspond to the requested injections,
+- then, a `create` function is exported, which is called for each _instance_ of this widget, on any page.
+  Its runtime arguments correspond to the list of requested injections.
 
-  - finally, the `create` function returns an object with a single `onDomAvailable` hook. As soon as the widget is rendered, the hook is called with the parsed contents of our HTML template.
+- finally, the `create` function returns an object with a single `onDomAvailable` hook. As soon as the widget is rendered, the hook is called with the parsed contents of our HTML template.
 
 In this case, the widget controller simply applies the feature configuration to the HTML elements that were already prepared by the template.
 If no _htmlText_ was specified for a feature, the corresponding element is discarded using `remove()`.
