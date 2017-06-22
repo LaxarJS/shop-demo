@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#53](https://github.com/LaxarJS/shop-demo/issues/53): do not submit HTML form when filtering articles
 - [#50](https://github.com/LaxarJS/shop-demo/issues/50): documentation: added a short explanation of injections
 - [#52](https://github.com/LaxarJS/shop-demo/issues/52): documentation: simplified chapters 7 and 8
 - [#51](https://github.com/LaxarJS/shop-demo/issues/51): documentation: added missing hints and fixed a link

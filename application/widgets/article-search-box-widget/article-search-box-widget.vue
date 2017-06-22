@@ -1,5 +1,5 @@
 <template>
-   <form role="form" @submit="updateFilter()">
+   <form role="form" @submit.prevent="updateFilter()">
       <div class="form-group">
          <div class="input-group">
             <input class="form-control"
