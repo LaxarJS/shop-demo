@@ -22,15 +22,15 @@ module.exports = ( env = {} ) =>
       config( env );
 
 function config( env ) {
-   const publicPath = env.production ? '/dist/' : '/build/';
+   const outputPath = env.production ? 'dist/' : 'build/';
 
    return {
       devtool: '#source-map',
       entry: { 'init': './init.js' },
 
       output: {
-         path: path.resolve( __dirname, `./${publicPath}` ),
-         publicPath,
+         path: path.resolve( __dirname, `./${outputPath}` ),
+         publicPath: outputPath,
          filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js',
          chunkFilename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
       },
@@ -82,8 +82,12 @@ function config( env ) {
                // (extract-loader extracts the CSS string from the JS module returned by the css-loader)
                test: /\.(css|s[ac]ss)$/,
                loader: env.production ?
-                  ExtractTextPlugin.extract( { fallback: 'style-loader', use: 'css-loader' } ) :
-                  'style-loader!css-loader'
+                  ExtractTextPlugin.extract( {
+                     fallback: 'style-loader',
+                     use: 'css-loader',
+                     publicPath: ''
+                  } ) :
+                  'style-loader!css-loader?sourceMap!resolve-url-loader?sourceMap'
             },
             {
                test: /[/]default[.]theme[/].*[.]s[ac]ss$/,

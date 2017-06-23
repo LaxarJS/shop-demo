@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#56](https://github.com/LaxarJS/shop-demo/issues/56): fixed webpack public path
 - [#55](https://github.com/LaxarJS/shop-demo/issues/55): fixed spec tests, eslint setup
 - [#53](https://github.com/LaxarJS/shop-demo/issues/53): do not submit HTML form when filtering articles
 - [#50](https://github.com/LaxarJS/shop-demo/issues/50): documentation: added a short explanation of injections
