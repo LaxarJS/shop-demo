@@ -61,7 +61,7 @@ describe( 'A ArticleSearchBoxWidget', () => {
 
          beforeEach( () => {
             vueComponent.searchTerm = 'beer';
-            vueComponent.search();
+            vueComponent.updateFilter();
          } );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
