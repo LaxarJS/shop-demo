@@ -20,6 +20,15 @@
       "test": "npm run karma && npm run eslint",
       "yo": "yo"
    },
+   "dependencies": {
+      "laxar": "^2.0.0-rc.3",
+      "laxar-cube.theme": "^2.0.0-alpha.0",
+      "laxar-loader": "^2.0.0-rc.3",
+      "laxar-mocks": "^2.0.0-rc.2",
+      "laxar-uikit": "^2.0.0-rc.1",
+      "laxar-vue-adapter": "^2.0.0-rc.1",
+      "vue": "^2.2.6"
+   },
    "devDependencies": {
       "babel-core": "^6.24.0",
       "babel-loader": "^6.4.0",
@@ -41,21 +50,14 @@
       "karma-phantomjs-launcher": "^1.0.2",
       "karma-sourcemap-loader": "^0.3.7",
       "karma-webpack": "^2.0.1",
-      "laxar": "^2.0.0-rc.3",
-      "laxar-cube.theme": "^2.0.0-alpha.0",
-      "laxar-loader": "^2.0.0-rc.3",
-      "laxar-mocks": "^2.0.0-rc.2",
-      "laxar-uikit": "^2.0.0-rc.1",
-      "laxar-vue-adapter": "^2.0.0-rc.1",
       "node-sass": "^4.5.1",
+      "resolve-url-loader": "^2.0.3",
       "sass-loader": "^6.0.3",
       "style-loader": "^0.13.2",
-      "vue": "^2.2.6",
       "vue-loader": "^11.1.4",
       "vue-template-compiler": "^2.2.6",
       "webpack": "^2.3.0",
       "webpack-dev-server": "^2.4.2",
       "webpack-jasmine-html-runner-plugin": "^0.7.0"
-   },
-   "dependencies": {}
+   }
 }
