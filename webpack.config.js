@@ -35,12 +35,12 @@ function config( env ) {
          chunkFilename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
       },
 
-      plugins: env.production ?
-         [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ] :
-         [ new WebpackJasmineHtmlRunnerPlugin() ],
+      plugins:
+         [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ]
+         .concat( env.production ? [] : [ new WebpackJasmineHtmlRunnerPlugin() ] ),
 
       resolve: {
-         modules: [ resolveModule() ],
+         modules: [ resolveModules() ],
          extensions: [ '.js', '.vue' ],
          alias: {
             'default.theme': 'laxar-uikit/themes/default.theme',
@@ -52,17 +52,17 @@ function config( env ) {
          rules: [
             {
                test: /\.js$/,
-               exclude: resolveModule(),
+               exclude: resolveModules(),
                loader: 'babel-loader'
             },
             {
                test: /\.vue$/,
-               exclude: resolveModule(),
+               exclude: resolveModules(),
                loader: 'vue-loader'
             },
             {
                test: /.spec.js$/,
-               exclude: resolveModule(),
+               exclude: resolveModules(),
                loader: 'laxar-mocks/spec-loader'
             },
 
@@ -81,28 +81,34 @@ function config( env ) {
             {  // ... and resolving CSS url()s with the css loader
                // (extract-loader extracts the CSS string from the JS module returned by the css-loader)
                test: /\.(css|s[ac]ss)$/,
-               loader: env.production ?
-                  ExtractTextPlugin.extract( {
-                     fallback: 'style-loader',
-                     use: 'css-loader',
-                     publicPath: ''
-                  } ) :
-                  'style-loader!css-loader?sourceMap!resolve-url-loader?sourceMap'
+               loader: ExtractTextPlugin.extract( {
+                  fallback: 'style-loader',
+                  use: env.production ? 'css-loader' : 'css-loader?sourceMap',
+                  publicPath: ''
+               } )
             },
             {
                test: /[/]default[.]theme[/].*[.]s[ac]ss$/,
                loader: 'sass-loader',
-               options: require( 'laxar-uikit/themes/default.theme/sass-options' )
+               options: Object.assign(
+                  {},
+                  require( 'laxar-uikit/themes/default.theme/sass-options' ),
+                  { sourceMap: true }
+               )
             },
             {
                test: /[/](laxar-)?cube[.]theme[/].*[.]s[ac]ss$/,
                loader: 'sass-loader',
-               options: require( 'laxar-cube.theme/sass-options' )
+               options: Object.assign(
+                  {},
+                  require( 'laxar-cube.theme/sass-options' ),
+                  { sourceMap: true }
+               )
             }
          ]
       }
    };
 }
 
-function resolveModule( p ) { return path.resolve( resolve( './node_modules' ), p || '' ); }
+function resolveModules() { return path.resolve( __dirname, 'node_modules' ); }
 function resolve( p ) { return path.resolve( __dirname, p ); }
