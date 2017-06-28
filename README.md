@@ -4,11 +4,11 @@ The LaxarJS ShopDemo shows a simple web shop application (for ordering LaxarJS m
 
 It consists of a small set of LaxarJS widgets implemented in [Vue.JS](https://vuejs.org/).
 
-- [Show the live demo](http://laxarjs.github.io/shop-demo/)
+- [Show the live demo](https://laxarjs.github.io/shop-demo/)
 
 - [Read the tutorial](https://github.com/LaxarJS/shop-demo/blob/master/docs/tutorials/01_getting_started.md#getting-started)
 
-- [LaxarJS Homepage](http://laxarjs.org)
+- [LaxarJS Homepage](https://laxarjs.org)
 
 - [LaxarJS on GitHub](https://github.com/LaxarJS/laxar)
 

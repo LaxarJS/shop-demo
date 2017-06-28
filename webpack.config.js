@@ -36,7 +36,7 @@ function config( env ) {
       },
 
       plugins:
-         [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ]
+         ( env.production ? [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ] : [] )
          .concat( env.production ? [] : [ new WebpackJasmineHtmlRunnerPlugin() ] ),
 
       resolve: {
@@ -81,11 +81,13 @@ function config( env ) {
             {  // ... and resolving CSS url()s with the css loader
                // (extract-loader extracts the CSS string from the JS module returned by the css-loader)
                test: /\.(css|s[ac]ss)$/,
-               loader: ExtractTextPlugin.extract( {
-                  fallback: 'style-loader',
-                  use: env.production ? 'css-loader' : 'css-loader?sourceMap',
-                  publicPath: ''
-               } )
+               loader: env.production ?
+                  ExtractTextPlugin.extract( {
+                     fallback: 'style-loader',
+                     use: env.production ? 'css-loader' : 'css-loader?sourceMap',
+                     publicPath: ''
+                  } ) :
+                  'style-loader!css-loader?sourceMap'
             },
             {
                test: /[/]default[.]theme[/].*[.]s[ac]ss$/,
