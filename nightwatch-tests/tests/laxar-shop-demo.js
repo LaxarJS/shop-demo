@@ -64,7 +64,7 @@ module.exports = new Test( {
 } );
 
 function getArticleFromTableRow( row ) {
-   const tableSelector = '#ax-articleBrowserWidget-id2 > div > table > tbody > tr:nth-child( ';
+   const tableSelector = '.article-browser-widget > div > table > tbody > tr:nth-child( ';
    if( (typeof row === 'number' ) && ( Math.floor( row ) === row ) ) {
       return tableSelector.concat(row).concat( ' )' );
    }
