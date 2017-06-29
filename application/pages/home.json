@@ -11,6 +11,14 @@
                   "resource": "articles"
                }
             }
+         },
+         {
+            "widget": "laxar-developer-tools-widget",
+            "features": {
+               "open": {
+                  "onGlobalMethod": "goDevelop"
+               }
+            }
          }
       ],
 

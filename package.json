@@ -14,7 +14,7 @@
       "browser-spec-run": "webpack-dev-server --env.browserSpec",
       "eslint": "eslint --ext=.js,.vue application/widgets nightwatch-tests/{lib,tests} *.js",
       "karma": "node karma.config.js",
-      "dist": "webpack -p --env.production",
+      "dist": "webpack --env.production",
       "prepublish": "webpack --progress",
       "start": "webpack-dev-server --inline --hot",
       "test": "npm run karma && npm run eslint",
@@ -23,6 +23,7 @@
    "dependencies": {
       "laxar": "^2.0.0-rc.3",
       "laxar-cube.theme": "^2.0.0-alpha.0",
+      "laxar-developer-tools-widget": "^3.0.0-alpha.1",
       "laxar-loader": "^2.0.0-rc.3",
       "laxar-mocks": "^2.0.0-rc.2",
       "laxar-uikit": "^2.0.0-rc.1",
