@@ -1,7 +1,7 @@
 {
    "name": "shop-demo",
    "description": "A demo application intended to make learning LaxarJS simple.",
-   "version": "2.0.0-pre",
+   "version": "2.0.0",
    "private": true,
    "repository": {
       "type": "git",
@@ -21,13 +21,13 @@
       "yo": "yo"
    },
    "dependencies": {
-      "laxar": "^2.0.0-rc.4",
-      "laxar-cube.theme": "^2.0.0-alpha.0",
-      "laxar-developer-tools-widget": "^3.0.0-alpha.1",
-      "laxar-loader": "^2.0.0-rc.3",
-      "laxar-mocks": "^2.0.0-rc.2",
-      "laxar-uikit": "^2.0.0-rc.1",
-      "laxar-vue-adapter": "^2.0.0-rc.1",
+      "laxar": "^2.0.0",
+      "laxar-cube.theme": "^2.0.0",
+      "laxar-developer-tools-widget": "^3.0.0",
+      "laxar-loader": "^2.0.0",
+      "laxar-mocks": "^2.0.0",
+      "laxar-uikit": "^2.0.0",
+      "laxar-vue-adapter": "^2.0.0",
       "vue": "^2.2.6"
    },
    "devDependencies": {

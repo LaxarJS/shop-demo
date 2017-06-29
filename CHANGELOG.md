@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v2.0.0
+
 - [#54](https://github.com/LaxarJS/shop-demo/issues/54): added laxar-developer-tools-widget
 - [#58](https://github.com/LaxarJS/shop-demo/issues/58): updated style-loader to fix source map problems
 - [#57](https://github.com/LaxarJS/shop-demo/issues/57): fixed CSS font-loading in development

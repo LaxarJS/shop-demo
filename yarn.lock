@@ -3621,20 +3621,20 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-laxar-cube.theme@^2.0.0-alpha.0:
-  version "2.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/laxar-cube.theme/-/laxar-cube.theme-2.0.0-alpha.0.tgz#883995c76173d66fabf64dbe3dff54672833786f"
+laxar-cube.theme@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-cube.theme/-/laxar-cube.theme-2.0.0.tgz#e3b2015b687a68b71388bf199b9f756c4b1ddedc"
   dependencies:
-    laxar-uikit "^2.0.0-beta.0"
+    laxar-uikit "^2.0.0"
     pkg-dir "^1.0.0"
 
-laxar-developer-tools-widget@^3.0.0-alpha.1:
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/laxar-developer-tools-widget/-/laxar-developer-tools-widget-3.0.0-alpha.1.tgz#4be6e52387e344121c08544497d8f035e5cb484d"
+laxar-developer-tools-widget@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-developer-tools-widget/-/laxar-developer-tools-widget-3.0.0.tgz#ee25cf579a92dd5bae440df4b0302a46b29a6c44"
   dependencies:
-    laxar "^2.0.0-rc.3"
+    laxar "^2.0.0"
 
-laxar-loader@^2.0.0-rc.3:
+laxar-loader@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/laxar-loader/-/laxar-loader-2.0.0.tgz#2389eee9c2ba3c5f2a441701e654c09fb59f339e"
   dependencies:
@@ -3644,9 +3644,9 @@ laxar-loader@^2.0.0-rc.3:
     loader-utils "^0.2.15"
     raw-loader "^0.5.1"
 
-laxar-mocks@^2.0.0-rc.2:
-  version "2.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/laxar-mocks/-/laxar-mocks-2.0.0-rc.2.tgz#b97ce149a9816faa77f1fe8d42cf0d0e76257886"
+laxar-mocks@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-mocks/-/laxar-mocks-2.0.0.tgz#f0eca1272d9b8813a7bc4c02f02df01430834b41"
   dependencies:
     laxar-tooling "^2.0.0-rc.2"
 
@@ -3658,28 +3658,22 @@ laxar-tooling@^2.0.0, laxar-tooling@^2.0.0-rc.2:
     jsonlint "^1.6.2"
     source-map-support "^0.4.2"
 
-laxar-uikit@^2.0.0-beta.0, laxar-uikit@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/laxar-uikit/-/laxar-uikit-2.0.0-rc.1.tgz#0f6e5104d0c2ad79378685fb95310d9695071292"
+laxar-uikit@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-uikit/-/laxar-uikit-2.0.0.tgz#5fca9f85066a6d21a2722571b8f3a89126f1c405"
   dependencies:
     bootstrap-sass "~3.3.7"
     font-awesome "~4.7.0"
     moment "^2.17.1"
     pkg-dir "^1.0.0"
 
-laxar-vue-adapter@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/laxar-vue-adapter/-/laxar-vue-adapter-2.0.0-rc.1.tgz#d57188fee6039c205ff968cc610e8a2e41b654dd"
+laxar-vue-adapter@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar-vue-adapter/-/laxar-vue-adapter-2.0.0.tgz#1fd9f2cf20d57622f39054004d7f599e5154bc3f"
 
-laxar@^2.0.0-rc.3:
-  version "2.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/laxar/-/laxar-2.0.0-rc.3.tgz#39d3388b4cfd0a432a11f58c858071b150f4a688"
-  dependencies:
-    navigo "4.3.6"
-
-laxar@^2.0.0-rc.4:
-  version "2.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/laxar/-/laxar-2.0.0-rc.4.tgz#ef68b408566aa0b22a64bd21d38cfb5dda59b17c"
+laxar@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/laxar/-/laxar-2.0.0.tgz#86f3f15b1b9f7a53c6d36518077b66f92dc74fee"
   dependencies:
     navigo "4.3.6"
 
