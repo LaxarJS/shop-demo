@@ -1,0 +1,30 @@
+{
+   "layout": "one-column",
+
+   "areas": {
+      "activities": [
+         {
+            "widget": "laxar-developer-tools-widget",
+            "features": {
+               "open": {
+                  "onGlobalMethod": "goDevelop"
+               }
+            }
+         }
+      ],
+
+      "content": [
+         {
+            "widget": "headline-widget",
+            "features": {
+               "headline": {
+                  "htmlText": "404 - Page not Found"
+               },
+               "intro": {
+                  "htmlText": "This page does not exist. Try going <a href='/' title='home'>home</a>."
+               }
+            }
+         }
+      ]
+   }
+}

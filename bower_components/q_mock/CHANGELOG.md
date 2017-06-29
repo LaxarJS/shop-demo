@@ -1,3 +1,0 @@
-# Changelog
-
-## Last Changes

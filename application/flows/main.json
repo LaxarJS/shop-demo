@@ -1,0 +1,31 @@
+{
+   "redirectOn": {
+      "unknownPlace": "error404"
+   },
+   "places": {
+
+      "start": {
+         "patterns": [ "/" ],
+         "redirectTo": "browse"
+      },
+
+      "browse": {
+         "patterns": [ "/browse/:search", "/browse" ],
+         "targets": {
+            "next": "confirm"
+         },
+         "page":  "home"
+      },
+
+      "confirm": {
+         "patterns": [ "/confirm" ],
+         "page":  "confirmation"
+      },
+
+      "error404": {
+         "patterns": [ "/not-found" ],
+         "page": "404"
+      }
+
+   }
+}

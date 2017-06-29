@@ -1,0 +1,32 @@
+{
+   "layout": "three-columns",
+
+   "areas": {
+      "contentA": [
+         {
+            "widget": "headline-widget",
+            "features": {
+               "headline": {
+                  "htmlText": ""
+               },
+               "intro": {
+                  "htmlText": "<div class='app-flower'><span class='app-flower-helper'></span></div>"
+               }
+            }
+         }
+      ],
+      "contentB": [
+         {
+            "widget": "headline-widget",
+            "features": {
+               "headline": {
+                  "htmlText": "<span class='app-thanks'>Thank you<br>for your order!</span>"
+               },
+               "intro": {
+                  "htmlText": "We will send your stuff as soon as possible.<br>Forgot to buy something? <a href='javascript:history.back()' title='Go back'>Go Back.</a>"
+               }
+            }
+         }
+      ]
+   }
+}

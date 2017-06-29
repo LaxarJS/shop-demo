@@ -1,23 +1,28 @@
-
 /**
- * Copyright 2016 aixigo AG
- * Released under the MIT license.
- * http://laxarjs.org/license
+ * Copyright 2015-2017 aixigo AG
+ * Released under the MIT license
  */
-require( [
-   'laxar',
-   'laxar-react-adapter',
-   'laxar-application/var/flows/main/dependencies',
-   'json!laxar-application/var/flows/main/resources.json'
-], function( ax, axReactAdapter, mainDependencies, mainResources ) {
-   'use strict';
+/* global require */
+import vue from 'vue';
+vue.config.productionTip = false;
 
-   window.laxar.fileListings = {
-      application: mainResources,
-      bower_components: mainResources,
-      includes: mainResources
-   };
+import 'laxar/dist/polyfills';
 
-   ax.bootstrap( mainDependencies, [ axReactAdapter ] );
+import { create } from 'laxar';
+import * as vueAdapter from 'laxar-vue-adapter';
+import artifacts from 'laxar-loader/artifacts?flow=main&theme=cube';
+import debugInfo from 'laxar-loader/debug-info?lazy&flow=main&theme=cube';
 
-} );
+const configuration = {
+   name: 'shop-demo',
+   logging: { threshold: 'TRACE' },
+   theme: 'cube',
+   router: {
+      navigo: { useHash: true }
+   }
+};
+
+create( [ vueAdapter ], artifacts, configuration )
+   .tooling( debugInfo )
+   .flow( 'main', document.querySelector( '[data-ax-page]' ) )
+   .bootstrap();

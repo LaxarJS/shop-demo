@@ -1,0 +1,19 @@
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+@charset "UTF-8";
+
+// load variables from the cube.theme to override the defaults
+@import "variables_all";
+@import "../../default.theme/scss/article-browser-widget";
+
+.article-browser-widget {
+
+   h3.app-articles {
+      i {
+         background-color: $app-articles-color;
+      }
+   }
+}

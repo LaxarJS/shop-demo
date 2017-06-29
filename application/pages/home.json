@@ -1,0 +1,86 @@
+{
+   "layout": "three-columns",
+
+   "areas": {
+
+      "activities": [
+         {
+            "widget": "dummy-articles-activity",
+            "features": {
+               "articles": {
+                  "resource": "articles"
+               }
+            }
+         },
+         {
+            "widget": "laxar-developer-tools-widget",
+            "features": {
+               "open": {
+                  "onGlobalMethod": "goDevelop"
+               }
+            }
+         }
+      ],
+
+      "searchBox": [
+         {
+            "widget": "article-search-box-widget",
+            "features": {
+               "articles": {
+                  "resource": "articles"
+               },
+               "filteredArticles": {
+                  "resource": "filteredArticles"
+               },
+               "navigation": {
+                  "parameterName": "search"
+               }
+            }
+         }
+      ],
+
+      "contentA": [
+         {
+            "widget": "article-browser-widget",
+            "features": {
+               "articles": {
+                  "resource": "filteredArticles"
+               },
+               "selection": {
+                  "resource": "selectedArticle"
+               }
+            }
+         }
+      ],
+
+      "contentB": [
+         {
+            "widget": "article-teaser-widget",
+            "features": {
+               "article": {
+                  "resource": "selectedArticle"
+               },
+               "confirmation": {
+                  "action": "addToCart"
+               }
+            }
+         }
+      ],
+
+      "contentC": [
+         {
+            "widget": "shopping-cart-widget",
+            "features": {
+               "article": {
+                  "resource": "selectedArticle",
+                  "onActions": [ "addToCart" ]
+               },
+               "order": {
+                  "target": "next"
+               }
+            }
+         }
+      ]
+
+   }
+}

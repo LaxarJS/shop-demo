@@ -1,0 +1,4 @@
+{
+   "noSslBumpDomains": "all",
+   "tunnelIdentifier": "no-ssl-bump-tunnel"
+}

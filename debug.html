@@ -6,18 +6,14 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>LaxarJS ShopDemo</title>
 
-   <link rel="icon" sizes="16x16" href="http://laxarjs.org/wp-content/themes/laxar/img/favicons/others/favicon-16.png">
-   <link rel="icon" sizes="32x32" href="http://laxarjs.org/wp-content/themes/laxar/img/favicons/others/favicon-32.png">
-   <!--[if IE]><link rel="shortcut icon" href="http://laxarjs.org/wp-content/themes/laxar/img/favicons/ie/favicon.ico"><![endif]-->
-   <meta name="msapplication-TileColor" content="#ffffff">
-   <meta name="msapplication-TileImage" content="http://laxarjs.org/wp-content/themes/laxar/img/favicons/ie10+/tileicon.png">
+   <link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon">
+
 </head>
 <body>
    <div data-ax-page></div>
-   <div data-ng-view></div>
 
-   <script data-ax-application-mode="DEBUG" src="application/application.js"></script>
-   <script src="require_config.js"></script>
-   <script data-main="../init.js" src="bower_components/requirejs/require.js"></script>
+   <script src="node_modules/source-map-support/browser-source-map-support.js"></script>
+   <script>sourceMapSupport.install();</script>
+   <script src="build/init.bundle.js"></script>
 </body>
 </html>
