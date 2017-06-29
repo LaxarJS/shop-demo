@@ -6,6 +6,7 @@
 /* eslint-env node */
 
 const path = require( 'path' );
+const webpack = require( 'webpack' );
 const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 const WebpackJasmineHtmlRunnerPlugin = require( 'webpack-jasmine-html-runner-plugin' );
 
@@ -29,18 +30,21 @@ function config( env ) {
       entry: { 'init': './init.js' },
 
       output: {
-         path: path.resolve( __dirname, `./${outputPath}` ),
+         path: resolve( `./${outputPath}` ),
          publicPath: outputPath,
          filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js',
          chunkFilename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
       },
 
       plugins:
-         ( env.production ? [ new ExtractTextPlugin( { filename: '[name].bundle.css' } ) ] : [] )
+         ( env.production ? [
+            new ExtractTextPlugin( { filename: '[name].bundle.css' } ),
+            new webpack.optimize.UglifyJsPlugin()
+         ] : [] )
          .concat( env.production ? [] : [ new WebpackJasmineHtmlRunnerPlugin() ] ),
 
       resolve: {
-         modules: [ resolveModules() ],
+         modules: [ resolve( 'node_modules' ) ],
          extensions: [ '.js', '.vue' ],
          alias: {
             'default.theme': 'laxar-uikit/themes/default.theme',
@@ -52,17 +56,17 @@ function config( env ) {
          rules: [
             {
                test: /\.js$/,
-               exclude: resolveModules(),
+               exclude: resolve( 'node_modules' ),
                loader: 'babel-loader'
             },
             {
                test: /\.vue$/,
-               exclude: resolveModules(),
+               exclude: resolve( 'node_modules' ),
                loader: 'vue-loader'
             },
             {
                test: /.spec.js$/,
-               exclude: resolveModules(),
+               exclude: resolve( 'node_modules' ),
                loader: 'laxar-mocks/spec-loader'
             },
 
@@ -112,5 +116,4 @@ function config( env ) {
    };
 }
 
-function resolveModules() { return path.resolve( __dirname, 'node_modules' ); }
 function resolve( p ) { return path.resolve( __dirname, p ); }

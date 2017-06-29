@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#54](https://github.com/LaxarJS/shop-demo/issues/54): added laxar-developer-tools-widget
 - [#58](https://github.com/LaxarJS/shop-demo/issues/58): updated style-loader to fix source map problems
 - [#57](https://github.com/LaxarJS/shop-demo/issues/57): fixed CSS font-loading in development
 - [#56](https://github.com/LaxarJS/shop-demo/issues/56): fixed webpack public path
