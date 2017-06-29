@@ -3677,6 +3677,12 @@ laxar@^2.0.0-rc.3:
   dependencies:
     navigo "4.3.6"
 
+laxar@^2.0.0-rc.4:
+  version "2.0.0-rc.4"
+  resolved "https://registry.yarnpkg.com/laxar/-/laxar-2.0.0-rc.4.tgz#ef68b408566aa0b22a64bd21d38cfb5dda59b17c"
+  dependencies:
+    navigo "4.3.6"
+
 lazy-cache@^0.2.3:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-0.2.7.tgz#7feddf2dcb6edb77d11ef1d117ab5ffdf0ab1b65"

@@ -21,7 +21,7 @@
       "yo": "yo"
    },
    "dependencies": {
-      "laxar": "^2.0.0-rc.3",
+      "laxar": "^2.0.0-rc.4",
       "laxar-cube.theme": "^2.0.0-alpha.0",
       "laxar-developer-tools-widget": "^3.0.0-alpha.1",
       "laxar-loader": "^2.0.0-rc.3",
