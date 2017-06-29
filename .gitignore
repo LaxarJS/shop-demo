@@ -2,7 +2,6 @@
 atlassian-ide-plugin.xml
 *.orig
 .sass-cache
-/dist
 /build
 /spec-output
 /node_modules
