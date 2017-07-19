@@ -26,7 +26,6 @@ function fetchAndEval( url ) {
       var module = { exports };
       var fn = new Function( 'module', 'exports', code );
       fn.call( window, module, exports );
-      console.log(module);
       return module.exports;
    }
 
@@ -62,9 +61,11 @@ function mergeArtifacts( artifacts, ...additionalArtifacts ) {
             const existing = artifacts.aliases[ bucket ][ key ];
 
             if( existing !== undefined ) {
+               console.log( `Replace ${bucket} ${key} at ${existing}` );
                artifacts[ bucket ][ existing ] = artifact;
             }
             else {
+               console.log( `Append ${key} ${bucket}` );
                artifacts.aliases[ bucket ][ key ] = artifacts[ bucket ].length;
                artifacts[ bucket ].push( artifact );
             }
