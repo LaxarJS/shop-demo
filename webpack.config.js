@@ -20,7 +20,7 @@ module.exports = ( env = {} ) =>
             filename: '[name].bundle.js'
          }
       } ) :
-      [
+      ( [
          config( env ),
          Object.assign( config( env ), {
             entry: {
@@ -29,14 +29,14 @@ module.exports = ( env = {} ) =>
             },
             output: {
                path: resolve( env.production ? 'dist/' : 'build/' ),
-               publicPath:  env.production ? 'dist/' : 'build/',
+               publicPath: env.production ? 'dist/' : 'build/',
                library: '[name]',
                libraryTarget: 'umd',
                filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js',
                chunkFilename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
             }
          } )
-      ]
+      ] );
 
 function config( env ) {
    const outputPath = env.production ? 'dist/' : 'build/';

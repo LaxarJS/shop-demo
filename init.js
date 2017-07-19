@@ -2,7 +2,6 @@
  * Copyright 2015-2017 aixigo AG
  * Released under the MIT license
  */
-/* global require */
 import vue from 'vue';
 vue.config.productionTip = false;
 
@@ -22,9 +21,10 @@ const configuration = {
 
 function fetchAndEval( url ) {
    function run( code ) {
-      var exports = {};
-      var module = { exports };
-      var fn = new Function( 'module', 'exports', code );
+      const exports = {};
+      const module = { exports };
+      /* eslint-disable no-new-func */
+      const fn = new Function( 'module', 'exports', code );
       fn.call( window, module, exports );
       return module.exports;
    }
@@ -36,13 +36,14 @@ function fetchAndEval( url ) {
 
 Promise.all( [
    fetchAndEval( '/build/artifacts1.bundle.js' ),
-   fetchAndEval( '/build/artifacts2.bundle.js' ),
+   fetchAndEval( '/build/artifacts2.bundle.js' )
 ] ).then( ( [ artifacts, ...additionalArtifacts ] ) => {
    mergeArtifacts( artifacts, ...additionalArtifacts );
    create( [ vueAdapter ], artifacts, configuration )
       .flow( 'main', document.querySelector( '[data-ax-page]' ) )
       .bootstrap();
 } ).catch( err => {
+   /* eslint-disable no-console */
    console.error( err );
 } );
 
@@ -61,11 +62,9 @@ function mergeArtifacts( artifacts, ...additionalArtifacts ) {
             const existing = artifacts.aliases[ bucket ][ key ];
 
             if( existing !== undefined ) {
-               console.log( `Replace ${bucket} ${key} at ${existing}` );
                artifacts[ bucket ][ existing ] = artifact;
             }
             else {
-               console.log( `Append ${key} ${bucket}` );
                artifacts.aliases[ bucket ][ key ] = artifacts[ bucket ].length;
                artifacts[ bucket ].push( artifact );
             }
