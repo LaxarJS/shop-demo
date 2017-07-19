@@ -20,14 +20,32 @@ module.exports = ( env = {} ) =>
             filename: '[name].bundle.js'
          }
       } ) :
-      config( env );
+      [
+         config( env ),
+         Object.assign( config( env ), {
+            entry: {
+               artifacts1: 'laxar-loader/artifacts?flow=main&theme=cube',
+               artifacts2: 'laxar-loader/artifacts?lazy&page=home&theme=cube'
+            },
+            output: {
+               path: resolve( env.production ? 'dist/' : 'build/' ),
+               publicPath:  env.production ? 'dist/' : 'build/',
+               library: '[name]',
+               libraryTarget: 'umd',
+               filename: env.production ? '[name].bundle.min.js' : '[name].bundle.js',
+               chunkFilename: env.production ? '[name].bundle.min.js' : '[name].bundle.js'
+            }
+         } )
+      ]
 
 function config( env ) {
    const outputPath = env.production ? 'dist/' : 'build/';
 
    return {
       devtool: '#source-map',
-      entry: { 'init': './init.js' },
+      entry: {
+         init: './init.js'
+      },
 
       output: {
          path: resolve( `./${outputPath}` ),
