@@ -1,0 +1,41 @@
+{
+   "name": "last-selected-article-widget",
+   "description": "Widget to reproduce a bug.",
+
+   "integration": {
+      "technology": "vue",
+      "type": "widget"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+
+         "display": {
+            "type": "object",
+            "required": [ "parameterName" ],
+            "properties": {
+               "parameterName": {
+                  "type": "string",
+                  "format": "topic",
+                  "axRole": "inlet",
+                  "description": "Place parameter to use for the articleName."
+               }
+            }
+         },
+
+         "article": {
+            "type": "object",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic",
+                  "axRole": "inlet"
+               }
+            }
+         }
+      }
+   }
+}

@@ -1,8 +1,6 @@
 {
    "layout": "three-columns",
-
    "areas": {
-
       "activities": [
          {
             "widget": "dummy-articles-activity",
@@ -21,7 +19,6 @@
             }
          }
       ],
-
       "searchBox": [
          {
             "widget": "article-search-box-widget",
@@ -38,7 +35,6 @@
             }
          }
       ],
-
       "contentA": [
          {
             "widget": "article-browser-widget",
@@ -52,8 +48,18 @@
             }
          }
       ],
-
       "contentB": [
+         {
+            "widget": "last-selected-article-widget",
+            "features": {
+               "article": {
+                  "resource": "selectedArticle"
+               },
+               "display": {
+                  "parameterName": "articleName"
+               }
+            }
+         },
          {
             "widget": "article-teaser-widget",
             "features": {
@@ -66,14 +72,15 @@
             }
          }
       ],
-
       "contentC": [
          {
             "widget": "shopping-cart-widget",
             "features": {
                "article": {
                   "resource": "selectedArticle",
-                  "onActions": [ "addToCart" ]
+                  "onActions": [
+                     "addToCart"
+                  ]
                },
                "order": {
                   "target": "next"
@@ -81,6 +88,5 @@
             }
          }
       ]
-
    }
 }

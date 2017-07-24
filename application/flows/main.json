@@ -10,7 +10,7 @@
       },
 
       "browse": {
-         "patterns": [ "/browse/:search", "/browse" ],
+         "patterns": [ "/browse/:search/:articleName", "/browse/:search", "/browse" ],
          "targets": {
             "next": "confirm"
          },
