@@ -2,7 +2,6 @@
  * Copyright 2015-2017 aixigo AG
  * Released under the MIT license
  */
-/* global require */
 import vue from 'vue';
 vue.config.productionTip = false;
 

@@ -50,6 +50,12 @@
         "browser": "chrome_latest_Windows_10_Desktop",
         "resolution": "1280x960"
       }
+    ],
+    "win10fx": [
+      {
+         "browser": "firefox_latest_Windows_10_Desktop",
+         "resolution": "1280x960"
+      }
     ]
   }
 }

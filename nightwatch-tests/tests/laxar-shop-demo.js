@@ -17,6 +17,7 @@ module.exports = new Test( {
          .waitForElementVisible( '@tableTableHoverTableStripedAppArticles' )
          .waitForElementVisible( '@articleTeaserWidget' )
          .waitForElementVisible( '@shoppingCartWidget' )
+         .waitForElementVisible( getArticleFromTableRow( 3 ) )
          .click( getArticleFromTableRow( 3 ) )
          .waitForElementVisible( '@appTeaserImage' );
       test.expect.element( '@appTeaserImage' ).to.have.attribute( 'src' ).which.contains(
@@ -64,9 +65,7 @@ module.exports = new Test( {
 } );
 
 function getArticleFromTableRow( row ) {
-   const tableSelector = '.article-browser-widget > div > table > tbody > tr:nth-child( ';
-   if( (typeof row === 'number' ) && ( Math.floor( row ) === row ) ) {
-      return tableSelector.concat(row).concat( ' )' );
-   }
-   return null;
+   // must click table *cell* because of firefox:
+   // https://bugzilla.mozilla.org/show_bug.cgi?id=1413493
+   return '.article-browser-widget > div > table > tbody > tr:nth-child( ' + row + ' ) > td:nth-child(1)';
 }
