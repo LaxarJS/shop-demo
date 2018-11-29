@@ -7,7 +7,7 @@
   "profiles": {
     "default": [
       {
-        "browser": "chrome_latest_OS_X_10_9_Desktop",
+        "browser": "chrome_latest_OS_X_10_13_Desktop",
         "resolution": "1280x960"
       },
       {
@@ -19,7 +19,7 @@
          "resolution": "1280x960"
       },
       {
-        "browser": "microsoftedge_14_Windows_10_Desktop",
+        "browser": "MicrosoftEdge_14_Windows_10_Desktop",
         "resultion": "1280x1024"
       },
       {
@@ -31,11 +31,7 @@
         "resolution": "1280x1024"
       },
       {
-        "browser": "safari_7_OS_X_10_9_Desktop",
-        "resolution": "1280x1024"
-      },
-      {
-        "browser": "iphone_9_3_iOS_iPhone_6_Simulator",
+        "browser": "iphone_11_1_iOS_iPhone_X_Simulator",
         "orientation": "portrait"
       }
     ],
