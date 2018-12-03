@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#62](https://github.com/LaxarJS/shop-demo/issues/62): fix saucelabs tests
 
 ## v2.0.0
 
