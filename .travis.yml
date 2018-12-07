@@ -28,7 +28,7 @@ notifications:
 script:
    - |
       if [ $BROWSER == "sauce" ]; then
-         nightwatch-tests/runtests
+         travis_wait 30 nightwatch-tests/runtests
       else
-         yarn test
+         travis_wait yarn test
       fi
