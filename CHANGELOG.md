@@ -2,7 +2,8 @@
 
 ## Last Changes
 
-- [#64](https://github.com/LaxarJS/shop-demo/issues/64): fix travis timeout 
+- [#66](https://github.com/LaxarJS/shop-demo/issues/64): fix sauce labs tests in travis
+- [#64](https://github.com/LaxarJS/shop-demo/issues/64): fix travis timeout
 - [#62](https://github.com/LaxarJS/shop-demo/issues/62): fix saucelabs tests
 
 ## v2.0.0

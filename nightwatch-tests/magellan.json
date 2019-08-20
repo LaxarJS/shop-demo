@@ -35,12 +35,6 @@
         "orientation": "portrait"
       }
     ],
-    "no-ssl-bump": [
-      {
-        "browser": "android_4_4_Android_Google_Nexus_7_HD_Emulator",
-        "orientation": "portrait"
-      }
-    ],
     "chrome": [
       {
         "browser": "chrome_latest_Windows_10_Desktop",
