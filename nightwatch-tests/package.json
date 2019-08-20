@@ -4,9 +4,8 @@
   "description": "testarmada tests for shop demo",
   "main": "index.js",
   "scripts": {
-    "test": "failsafe test-default test-no-ssl-bump",
+    "test": "failsafe test-default",
     "test-default": "DPRO=local magellan --sauce_create_tunnels --sauce_tunnel_config conf/default-tunnel.json --max_workers=5 --profile default",
-    "test-no-ssl-bump": "DPRO=local magellan --sauce_create_tunnels --sauce_tunnel_config conf/no-ssl-bump-tunnel.json --profile no-ssl-bump",
     "test-fast": "DPRO=local magellan --sauce_create_tunnels --sauce_tunnel_config conf/default-tunnel.json --profile chrome",
     "test-win10fx": "DPRO=local magellan --sauce_create_tunnels --sauce_tunnel_config conf/default-tunnel.json --profile win10fx",
     "test-local": "DPRO=local magellan --local_browsers chrome",
