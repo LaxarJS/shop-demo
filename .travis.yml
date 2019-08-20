@@ -10,7 +10,7 @@ env:
       - BROWSER="firefox"
       - BROWSER="internet explorer"
       - BROWSER="safari"
-    # - BROWSER="sauce"
+      - BROWSER="sauce"
 branches:
    except:
       - /^feature\/.*$/
