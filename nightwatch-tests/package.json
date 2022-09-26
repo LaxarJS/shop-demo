@@ -21,7 +21,7 @@
     "drydock": "^0.4.3",
     "geckodriver": "^1.4.0",
     "jimp": "^0.2.27",
-    "nightwatch": "^0.9.20",
+    "nightwatch": "^2.3.9",
     "npm-failsafe": "^0.2.1",
     "saucelabs": "^1.5.0",
     "selenium-server": "^3.1.0",
